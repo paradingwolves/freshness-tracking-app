@@ -1,11 +1,14 @@
+// import `RouterProvider` component
+import { RouterProvider } from 'react-router-dom';
+//  import `router` property
+import {router} from './lib/routes';
 
 
 function App() {
   return (
-    <div className="App">
-      bitch
-    </div>
+    <RouterProvider router={router} />
   );
 }
 
 export default App;
+
