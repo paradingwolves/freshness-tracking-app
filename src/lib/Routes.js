@@ -1,6 +1,8 @@
 import { createBrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 import Home from "../components/Layout";
+import Header from "../components/Layout/Header";
+import Footer from "../components/Layout/Footer";
 
 /* import Login from '../components/Administrator/Login';
 import Layout from "../components/Layout/Home";
@@ -18,6 +20,7 @@ export const ROOT = "/";
 // create routes
 export const router = createBrowserRouter([
   { path: ROOT, element: <Home /> },
+  { path: "*", element: <NotFound /> }
  /*  { path: LOGIN, element: <Login /> },
   { path: PORTFOLIO, element: <TattooList /> },
   { path: ABOUT, element: <About /> },
@@ -30,7 +33,7 @@ function NotFound() {
   const backgroundStyle = {
     width: "100%",
     height: "100vh",
-    backgroundImage: "url(https://images.unsplash.com/photo-1506057278219-795838d4c2dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aGlwcGllfGVufDB8fDB8fHww&auto=format&fit=crop&w=600&q=60)", // Add your groovy 70's image URL
+    backgroundImage: "url(../../media/cat.jpg)", // Replace with your cat image URL
     backgroundSize: "cover",
     display: "flex",
     flexDirection: "column",
@@ -47,7 +50,7 @@ function NotFound() {
     position: "absolute",
     top: 0,
     left: 0,
-    backgroundColor: "rgba(255, 255, 0, 0.65)", // Yellow background color at 65% opacity
+    backgroundColor: "rgba(255, 255, 255, 0.65)", // White background color at 65% opacity
     zIndex: -1,
   };
 
@@ -65,26 +68,25 @@ function NotFound() {
     marginBottom: "20px",
   };
 
-  const yellowBoxStyle = {
-    backgroundColor: "rgba(240, 191, 97, 0.65)", // Yellow background color at 65% opacity
-    padding: "5%",
-    borderRadius: "10px",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Black box shadow
-  };
-
   return (
-    <div style={backgroundStyle}>
-      <div style={overlayStyle}></div>
-      <div style={yellowBoxStyle}>
-        <h1 style={headerStyle} className="groovy-font">Whoa! How'd you get here?</h1>
-        <p style={paragraphStyle} className="groovy-font">That's not groovy, man. Head on back now.</p>
-        <p style={paragraphStyle} className="groovy-font">
-          You're clearly on a different wavelength. Get back to the vibe by{" "}
-          <a href="/" className="text-warning">following the cosmic trail</a> or you'll be lost in time, man.
-        </p>
+    <div>
+      <Header />
+      <div style={backgroundStyle}>
+        <div style={overlayStyle}></div>
+          <div style={{ padding: "5%", borderRadius: "10px" }}>
+            <h1 style={headerStyle} className="groovy-font">Oops! You've wandered into the cat dimension.</h1>
+            <p style={paragraphStyle} className="groovy-font">It seems you're not quite where you intended to be.</p>
+            <p style={paragraphStyle} className="groovy-font">
+              Don't worry, though! You can get back on track by{" "}
+              <a href="/" className="text-warning">following my paw prints</a> or enjoy some cat time. 😺
+            </p>
+        </div>
       </div>
+      <Footer />
     </div>
+      
   );
 }
+
 
 export default router;
