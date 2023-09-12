@@ -37,6 +37,7 @@ const ExpiringSoon = () => {
                         <p className="card-text">
                             <strong>Name:</strong> {product.name}<br />
                             <strong>Description:</strong> {product.description}<br />
+                            <strong>Item Number:</strong> {product.item_number}<br />
                             <strong>Expiry Date:</strong> {product.expiry_date}<br />
                             <strong>Size:</strong> {product.size}<br />
                             <strong>Quantity:</strong> {product.quantity}<br />
