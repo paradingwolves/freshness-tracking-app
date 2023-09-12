@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase'; // Import Firebase configuration
 import { onSnapshot, collection } from 'firebase/firestore';
-import { startOfWeek, endOfWeek, isWithinInterval, format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
-const useStockSearchByWeek = () => {
+const useStockSearchWithin90Days = () => {
   const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'Stock'), (snapshot) => {
       const currentDate = new Date();
-      const startOfWeekDate = startOfWeek(currentDate);
-      const endOfWeekDate = endOfWeek(currentDate);
+      const ninetyDaysFromNow = addDays(currentDate, 90);
 
       const formattedData = snapshot.docs
         .map((doc) => ({
@@ -21,7 +20,7 @@ const useStockSearchByWeek = () => {
         }))
         .filter((item) => {
           const itemDate = new Date(item.expiry_date);
-          return isWithinInterval(itemDate, { start: startOfWeekDate, end: endOfWeekDate });
+          return itemDate <= ninetyDaysFromNow && itemDate >= currentDate;
         });
 
       setStockData(formattedData);
@@ -35,4 +34,4 @@ const useStockSearchByWeek = () => {
   return { stockData, loading };
 };
 
-export default useStockSearchByWeek;
+export default useStockSearchWithin90Days;

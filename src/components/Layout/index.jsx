@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header';
 import Footer from './Footer';
 import ExpireToday from '../ExpireToday/ExpireToday';
+import ExpireThisWeek from '../ExpireThisWeek/ExpireThisWeek';
 
 
 const Home = () => {
@@ -10,6 +11,7 @@ const Home = () => {
     <div>
       <Header />
       <ExpireToday />
+      <ExpireThisWeek />
       <Footer />
     </div>
   )

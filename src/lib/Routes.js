@@ -3,6 +3,7 @@ import React from "react";
 import Home from "../components/Layout";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
+import ExpiringSoon from "../components/ExpiringSoon/ExpringSoon";
 
 /* import Login from '../components/Administrator/Login';
 import Layout from "../components/Layout/Home";
@@ -13,6 +14,7 @@ import Form from "../components/Contact/Form"; */
 
 // home route 
 export const ROOT = "/";
+export const EXPIRE_SOON = "/expiring_soon";
 
 
 
@@ -20,6 +22,7 @@ export const ROOT = "/";
 // create routes
 export const router = createBrowserRouter([
   { path: ROOT, element: <Home /> },
+  { path: EXPIRE_SOON, element: <ExpiringSoon /> },
   { path: "*", element: <NotFound /> }
  /*  { path: LOGIN, element: <Login /> },
   { path: PORTFOLIO, element: <TattooList /> },

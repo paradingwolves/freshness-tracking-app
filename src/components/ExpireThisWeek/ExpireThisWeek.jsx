@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import useStockSearch from '../../hooks/ExpireToday';
+import useStockSearchByWeek from '../../hooks/ExpireThisWeek';
 import { Modal, Button } from 'react-bootstrap';
 
-const ExpireToday = () => {
-  const { stockData, loading } = useStockSearch();
+const ExpireThisWeek = () => {
+  const { stockData, loading } = useStockSearchByWeek();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -24,12 +24,12 @@ const ExpireToday = () => {
       ) : (
         <>
           {stockData.length === 0 ? (
-            <p>No products are expiring today.</p>
+            <p>No products are expiring this week.</p>
           ) : (
             stockData.map((product) => (
               <div key={product.id} className="card mb-3">
                 <div className="card-body">
-                  <h3 className="card-title fw-bold text-center">Expiring Today!</h3>
+                  <h3 className="card-title fw-bold text-center">Expiring This Week!</h3>
                   <p className="card-text">
                     <strong>Name:</strong> {product.name}<br />
                     <strong>Description:</strong> {product.description}<br />
@@ -71,4 +71,4 @@ const ExpireToday = () => {
   );
 };
 
-export default ExpireToday;
+export default ExpireThisWeek;
