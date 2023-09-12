@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Header from '../Layout/Header';
+import Footer from '../Layout/Footer';
 
 const AddStock = () => {
   const videoRef = useRef(null);
