@@ -21,7 +21,7 @@ const Header = () => {
                         <a className="nav-link" href="/add_stock">Add Stock</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Remove Stock</a>
+                        <a className="nav-link" href="/dg">Remove Stock</a>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="/expiring_soon">Expiring Soon</a>

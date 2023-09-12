@@ -5,7 +5,7 @@ import { Modal, Button } from 'react-bootstrap';
 const ExpireToday = () => {
   const { stockData, loading } = useStockSearch();
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [ setSelectedProduct] = useState(null);
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
