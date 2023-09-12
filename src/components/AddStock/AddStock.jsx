@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import Header from '../Layout/Header';
+import Footer from '../Layout/Footer';
 
 const AddStock = () => {
   const videoRef = useRef(null);
@@ -32,10 +34,12 @@ const AddStock = () => {
 
   return (
     <div>
+        <Header />
       <h1>Camera Access Example</h1>
       <div>
         <video ref={videoRef} autoPlay playsInline muted />
       </div>
+      <Footer />
     </div>
   );
 };
