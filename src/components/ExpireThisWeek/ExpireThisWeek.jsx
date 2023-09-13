@@ -61,9 +61,6 @@ const ExpireThisWeek = () => {
               <Button variant="success" className="mx-1">
                 Red Sticker Updated
               </Button>
-              <Button variant="danger" className="mx-1">
-                Product Written Off
-              </Button>
             </>
           )}
         </Modal.Body>

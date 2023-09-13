@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import useStockSearch from '../../hooks/ExpireToday';
 import { Modal, Button } from 'react-bootstrap';
+import useRemoveItemByName from '../../hooks/RemoveStock'; // Import the custom hook
 
 const ExpireToday = () => {
   const { stockData, loading } = useStockSearch();
   const [showPopup, setShowPopup] = useState(false);
-  const [ setSelectedProduct] = useState(null);
+  const [ selectedProduct, setSelectedProduct] = useState(null);
+  const { removeItemByName, error } = useRemoveItemByName();
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
@@ -15,6 +17,14 @@ const ExpireToday = () => {
   const handlePopupClose = () => {
     setSelectedProduct(null);
     setShowPopup(false);
+  };
+  const handleWrittenOffClick = () => {
+    if (selectedProduct) {
+      // Call the custom hook to remove the item by name
+      console.log(selectedProduct.name);
+      removeItemByName(selectedProduct.name);
+      setShowPopup(false); // Close the modal after removal
+    }
   };
 
   return (
@@ -61,7 +71,7 @@ const ExpireToday = () => {
               <Button variant="success" className="mx-1">
                 Red Sticker Updated
               </Button>
-              <Button variant="danger" className="mx-1">
+              <Button variant="danger" className="mx-1" onClick={handleWrittenOffClick}>
                 Product Written Off
               </Button>
             </>
