@@ -7,7 +7,7 @@ import Header from '../Layout/Header';
 const ExpiringSoon = () => {
   const { stockData, loading } = useStockSearchWithin90Days();
   const [showPopup, setShowPopup] = useState(false);
-  const [setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
