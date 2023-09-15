@@ -31,7 +31,7 @@ const StockTable = () => {
             <table className="table-striped stock-table">
                 <thead>
                 <tr className="stock-head">
-                    <th>ID</th>
+                    {/* <th>ID</th> */}
                     <th>Name</th>
                     <th>Description</th>
                     <th>Expiry Date</th>
@@ -58,7 +58,7 @@ const StockTable = () => {
 
                     return (
                         <tr key={product.id} className={className}>
-                            <td>{product.id}</td>
+                            {/* <td>{product.id}</td> */}
                             {/* Need to get accurate callback for Product # */}
                             <td>{product.name}</td>
                             <td>{product.description}</td>
