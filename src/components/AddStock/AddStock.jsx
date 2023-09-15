@@ -1,39 +1,62 @@
 import React, { useEffect, useRef } from 'react';
 import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
+import Quagga from 'quagga';
 
 const AddStock = () => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Function to start the rear camera stream
-    const startRearCamera = async () => {
+    const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' }, // Request rear camera
         });
+        
+
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          videoRef.current.play();
         }
       } catch (error) {
         console.error('Error accessing rear camera:', error);
       }
     };
 
-    startRearCamera(); // Start the rear camera when the component mounts
+    startCamera();
+  }, []);
 
-    // Create a variable to hold the ref value
-    const currentVideoRef = videoRef.current;
-
-    // Function to stop the camera stream when the component unmounts
-    return () => {
-      if (currentVideoRef) {
-        const stream = currentVideoRef.srcObject;
-        if (stream) {
-          const tracks = stream.getTracks();
-          tracks.forEach((track) => track.stop());
+  useEffect(() => {
+    Quagga.init(
+      {
+        inputStream: {
+          type: 'LiveStream',
+          constraints: {
+            width: { min: 640 },
+            height: { min: 480 },
+          },
+          target: videoRef.current,
+        },
+        decoder: {
+          readers: ['code_128_reader', 'ean_reader', 'upc_reader', 'code_39_reader'],
+        },
+      },
+      (err) => {
+        if (err) {
+          console.error('QuaggaJS initialization error:', err);
+          return;
         }
+        Quagga.start();
       }
+    );
+
+    Quagga.onDetected((result) => {
+      // Handle detected barcodes here
+      console.log('Detected barcodes:', result);
+    });
+
+    return () => {
+      Quagga.stop();
     };
   }, []);
 
@@ -41,15 +64,15 @@ const AddStock = () => {
     <div>
       <Header />
       <div className="container bg-info">
-        <h1 className='text-dark fw-bold text-center'>Rear Camera Access Example</h1>
+        <h1 className='text-dark fw-bold text-center'>Rear Camera Barcode Scanner</h1>
         <div>
-          <h5 className="fw-bold text-center text-white">Scan Bar Code</h5>
+          <h5 className="fw-bold text-center text-white">Scan Barcodes</h5>
           <video
             ref={videoRef}
             autoPlay
             playsInline
             muted
-            style={{ maxWidth: '100%' }} // Set the maximum width to 80%
+            style={{ maxWidth: '100%' }}
           />
         </div>
       </div>
