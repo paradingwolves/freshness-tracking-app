@@ -1,0 +1,28 @@
+.stock-table {
+    margin: 5%;
+    width: 90%;
+}
+
+.stock-head th {
+    padding: 5px 0;
+    align-items: center;
+    color: #a2a2a2;
+    text-transform: uppercase;
+}
+
+tbody tr td {
+    padding: 20px 0;
+}
+
+.exp-soon {
+    background-color: #e3cf9c !important;
+}
+.exp-week {
+    background-color: #e7bda0 !important;
+}
+.exp-today {
+    background-color: #e3a1a1 !important;
+}
+.exp-past {
+    background-color: #e56565 !important;
+}

@@ -24,9 +24,14 @@ npm packages installed:
   4. Created env file, routes file and firebase config file
   5. created header and footer
 
-
-
-
+------------------------------------------------------------------
+    Date Modified: September 14, 2023
+------------------------------------------------------------------
+    1. Designed Stock Table to be nicer looking with better spacing.
+        - added StockTable.css to StockTable component folder
+    2. Added useEffect to StockTable: so it would load based on expiry date
+    3. added logic to add classes based on expiry date to change background colour of row
+    4. Pushing to check effectiveness /cm
 
 
 This Application was created by Justin Brierley and Chantal Monette.
