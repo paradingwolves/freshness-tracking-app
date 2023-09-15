@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import useAllStockData from "../../hooks/ViewStock";
 import { addDays, isBefore, isAfter, isToday } from 'date-fns';
 import './StockTable.css';
@@ -12,6 +12,9 @@ const StockTable = () => {
             const sortedData = [...stockData].sort((a, b) =>
                 new Date(a.expiry_date) - new Date(b.expiry_date)
             );
+
+            // Update the sortedStockData state with the sorted data
+            setSortedStockData(sortedData);
         }
     }, [stockData, loading]);
 
@@ -19,7 +22,7 @@ const StockTable = () => {
         return <p>Loading...</p>;
     }
 
-    if (stockData.length === 0) {
+    if (sortedStockData.length === 0) { // Check sortedStockData for empty data
         return <p>No stock data available.</p>;
     }
 
