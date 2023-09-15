@@ -52,8 +52,10 @@ const AddStock = () => {
 
     Quagga.onDetected((result) => {
       // Handle detected barcodes here
-      console.log('Detected barcode:', result.codeResult.code);
-      setDetectedBarcode(result.codeResult.code);
+      const barcodeValue = result.codeResult.code;
+      const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
+      console.log('Detected barcode:', sanitizedBarcode);
+      setDetectedBarcode(sanitizedBarcode);
     });
 
     return () => {
