@@ -40,10 +40,13 @@ const AddStock = () => {
   return (
     <div>
       <Header />
+      <div className="container">
       <h1>Rear Camera Access Example</h1>
       <div>
         <video ref={videoRef} autoPlay playsInline muted />
       </div>
+      </div>
+      
       <Footer />
     </div>
   );
