@@ -40,13 +40,19 @@ const AddStock = () => {
   return (
     <div>
       <Header />
-      <div className="container">
-      <h1>Rear Camera Access Example</h1>
-      <div>
-        <video ref={videoRef} autoPlay playsInline muted />
+      <div className="container bg-info">
+        <h1 className='text-dark fw-bold text-center'>Rear Camera Access Example</h1>
+        <div>
+          <h5 className="fw-bold text-center text-white">Scan Bar Code</h5>
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{ maxWidth: '100%' }} // Set the maximum width to 80%
+          />
+        </div>
       </div>
-      </div>
-      
       <Footer />
     </div>
   );
