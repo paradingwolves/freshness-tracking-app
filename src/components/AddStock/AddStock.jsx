@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 
 const AddStock = () => {
   const videoRef = useRef(null);
+  const [detectedBarcode, setDetectedBarcode] = useState('');
 
   useEffect(() => {
     const startCamera = async () => {
@@ -12,7 +13,6 @@ const AddStock = () => {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' }, // Request rear camera
         });
-        
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -52,7 +52,8 @@ const AddStock = () => {
 
     Quagga.onDetected((result) => {
       // Handle detected barcodes here
-      console.log('Detected barcodes:', result);
+      console.log('Detected barcode:', result.codeResult.code);
+      setDetectedBarcode(result.codeResult.code);
     });
 
     return () => {
@@ -74,6 +75,11 @@ const AddStock = () => {
             muted
             style={{ maxWidth: '100%' }}
           />
+          {detectedBarcode && (
+            <div className="text-center mt-3">
+              <p>Detected Barcode: {detectedBarcode}</p>
+            </div>
+          )}
         </div>
       </div>
       <Footer />
