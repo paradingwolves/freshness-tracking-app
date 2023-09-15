@@ -6,19 +6,21 @@ const AddStock = () => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Function to start the camera stream
-    const startCamera = async () => {
+    // Function to start the rear camera stream
+    const startRearCamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }, // Request rear camera
+        });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
       } catch (error) {
-        console.error('Error accessing camera:', error);
+        console.error('Error accessing rear camera:', error);
       }
     };
 
-    startCamera(); // Start the camera when the component mounts
+    startRearCamera(); // Start the rear camera when the component mounts
 
     // Create a variable to hold the ref value
     const currentVideoRef = videoRef.current;
@@ -38,7 +40,7 @@ const AddStock = () => {
   return (
     <div>
       <Header />
-      <h1>Camera Access Example</h1>
+      <h1>Rear Camera Access Example</h1>
       <div>
         <video ref={videoRef} autoPlay playsInline muted />
       </div>
