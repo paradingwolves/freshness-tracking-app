@@ -5,6 +5,7 @@ import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import ExpiringSoon from "../components/ExpiringSoon/ExpringSoon";
 import AddStock from "../components/AddStock/AddStock";
+import SeedData from "../components/SeedDB/SeedData";
 
 /* import Login from '../components/Administrator/Login';
 import Layout from "../components/Layout/Home";
@@ -17,6 +18,7 @@ import Form from "../components/Contact/Form"; */
 export const ROOT = "/";
 export const EXPIRE_SOON = "/expiring_soon";
 export const ADD_STOCK = "/add_stock";
+export const SEED_DATA = "/seed_data";
 
 
 
@@ -25,6 +27,7 @@ export const router = createBrowserRouter([
   { path: ROOT, element: <Home /> },
   { path: EXPIRE_SOON, element: <ExpiringSoon /> },
   { path: ADD_STOCK, element: <AddStock /> },
+  { path: SEED_DATA, element: <SeedData /> },
   { path: "*", element: <NotFound /> }
  /*  { path: LOGIN, element: <Login /> },
   { path: PORTFOLIO, element: <TattooList /> },
