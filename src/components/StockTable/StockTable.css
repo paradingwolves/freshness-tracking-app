@@ -1,5 +1,5 @@
 .stock-table {
-    margin: 5%;
+    margin: 0 5%;
     width: 90%;
 }
 .stock-head th {
@@ -43,6 +43,7 @@ tbody tr.exp-past:nth-child(even) {
     justify-content: space-between;
     margin: 0 5%;
     width: 90%;
+    height: 50px;
 }
 .pagination-container button {
     background-color: white;
