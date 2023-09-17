@@ -17,12 +17,24 @@ tbody tr td {
 .exp-soon {
     background-color: #e3cf9c !important;
 }
+tbody tr.exp-soon:nth-child(even) {
+    background-color: #c1ae74 !important;
+}
 .exp-week {
     background-color: #e7bda0 !important;
+}
+tbody tr.exp-week:nth-child(even) {
+    background-color: #d9996c !important;
 }
 .exp-today {
     background-color: #e3a1a1 !important;
 }
+tbody tr.exp-today:nth-child(even) {
+    background-color: #d77878 !important;
+}
 .exp-past {
     background-color: #e56565 !important;
+}
+tbody tr.exp-past:nth-child(even) {
+    background-color: #cd5454 !important;
 }
