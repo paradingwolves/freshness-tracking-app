@@ -6,6 +6,8 @@ import './StockTable.css';
 const StockTable = () => {
     const { stockData, loading } = useAllStockData();
     const [sortedStockData, setSortedStockData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(30);
 
     useEffect(() => {
         if(!loading && stockData.length > 0) {
@@ -17,6 +19,19 @@ const StockTable = () => {
             setSortedStockData(sortedData);
         }
     }, [stockData, loading]);
+
+    // Pagination variables
+    const lastIndex = currentPage * rowsPerPage;
+    const firstIndex = lastIndex - rowsPerPage;
+    const currentData = sortedStockData.slice(firstIndex, lastIndex);
+    const totalPages = Math.ceil(sortedStockData.length / rowsPerPage);
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+    const handleRowsPerPageChange = (newRowsPerPage) => {
+        setRowsPerPage(newRowsPerPage);
+        setCurrentPage(1);
+    };
 
     if (loading) {
         return <p>Loading...</p>;
@@ -38,7 +53,7 @@ const StockTable = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {sortedStockData.map((product) => {
+                {currentData.map((product) => {
                     // Determine the class name based on the expiry date
                     let className = '';
                     const expiryDate = new Date(product.expiry_date);
@@ -46,6 +61,7 @@ const StockTable = () => {
                     const ninetyDaysFromNow = addDays(today, 90);
                     const oneWeekFromNow = addDays(today, 7);
 
+                    console.log("pre-load comment");
                     if (isBefore(expiryDate, today)) {
                         className = 'exp-past';
                     } else if (isToday(expiryDate)) {
@@ -65,9 +81,39 @@ const StockTable = () => {
                             <td>{product.expiry_date}</td>
                         </tr>
                     );
+
                 })}
                 </tbody>
             </table>
+
+            <div className="pagination">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}>Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={currentPage === index + 1 ? 'active' : ''}>
+                        {index + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}>Next
+                </button>
+            </div>
+
+            {/* rowsPerPage selector */}
+            <div className="rows-per-page">
+                <label>Show rows per page:</label>
+                <select onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}>
+                    <option value={30}>30</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                </select>
+            </div>
         </div>
     );
 };

@@ -33,6 +33,11 @@ npm packages installed:
     3. added logic to add classes based on expiry date to change background colour of row
     4. Pushing to check effectiveness /cm
 
+------------------------------------------------------------------
+    Date Modified: September 17, 2023
+------------------------------------------------------------------
+    1. Pagination on table.
+        Pushing to check effectiveness /cm
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
