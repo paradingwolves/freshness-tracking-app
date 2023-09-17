@@ -2,14 +2,12 @@
     margin: 5%;
     width: 90%;
 }
-
 .stock-head th {
     padding: 5px 0;
     align-items: center;
     color: #a2a2a2;
     text-transform: uppercase;
 }
-
 tbody tr td {
     padding: 20px 0;
 }
@@ -37,4 +35,24 @@ tbody tr.exp-today:nth-child(even) {
 }
 tbody tr.exp-past:nth-child(even) {
     background-color: #cd5454 !important;
+}
+
+.pagination-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 5%;
+    width: 90%;
+}
+.pagination-container button {
+    background-color: white;
+    border: none;
+    color: #252728;
+    text-align: center;
+}
+.pagination-container button:hover {
+    color: #6c7b80;
+}
+.rows-per-page {
+    align-self: center;
 }

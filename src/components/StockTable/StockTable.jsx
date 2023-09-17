@@ -85,34 +85,33 @@ const StockTable = () => {
                 })}
                 </tbody>
             </table>
-
-            <div className="pagination">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}>Previous
-                </button>
-                {Array.from({ length: totalPages }, (_, index) => (
+            <div className="pagination-container">
+                <div className="rows-per-page">
+                    <label>Results per page:</label>
+                    <select onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}>
+                        <option value={30}>30</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                    </select>
+                </div>
+                <div className="pagination">
                     <button
-                        key={index + 1}
-                        onClick={() => handlePageChange(index + 1)}
-                        className={currentPage === index + 1 ? 'active' : ''}>
-                        {index + 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}>&laquo;
                     </button>
-                ))}
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}>Next
-                </button>
-            </div>
-
-            {/* rowsPerPage selector */}
-            <div className="rows-per-page">
-                <label>Show rows per page:</label>
-                <select onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}>
-                    <option value={30}>30</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                </select>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            className={currentPage === index + 1 ? 'active' : ''}>
+                            {index + 1}
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}>&raquo;
+                    </button>
+                </div>
             </div>
         </div>
     );
