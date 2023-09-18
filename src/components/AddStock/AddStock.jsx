@@ -134,7 +134,7 @@ const AddStock = () => {
         <h3>Matching Items:</h3>
         <ul>
           {matchingItems.map((item, index) => (
-            <li key={index}>{item.barcode_number}</li>
+            <li key={index}>{item.name}<br />{item.brand}<br />{item.quantity}</li>
           ))}
         </ul>
 
