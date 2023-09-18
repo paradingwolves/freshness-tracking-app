@@ -9,6 +9,7 @@ const AddStock = () => {
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false); // Initialize modal state
 
+  // Define openModal and closeModal functions at the top level
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -16,6 +17,7 @@ const AddStock = () => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
+
   useEffect(() => {
     const startCamera = async () => {
       try {
@@ -31,7 +33,6 @@ const AddStock = () => {
         console.error('Error accessing rear camera:', error);
       }
     };
-    
 
     startCamera();
   }, []);
@@ -65,9 +66,9 @@ const AddStock = () => {
       const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
       console.log('Detected barcode:', sanitizedBarcode);
       setDetectedBarcode(sanitizedBarcode);
-  
+
       // Open the modal when a barcode is detected
-      openModal();
+      openModal(); // Call openModal here
     });
 
     return () => {
@@ -97,6 +98,17 @@ const AddStock = () => {
         </div>
       </div>
       <Footer />
+
+      {/* Define the modal */}
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Detected Barcode Modal"
+      >
+        <h2>Detected Barcode</h2>
+        <p>Item Number: {detectedBarcode}</p>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
     </div>
   );
 };
