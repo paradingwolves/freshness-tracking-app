@@ -73,16 +73,16 @@ const AddStock = () => {
 
       Quagga.onDetected(async (result) => {
         const barcodeValue = result.codeResult.code;
-        /* const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue; */
-        console.log('Detected barcode:', barcodeValue);
-        setDetectedBarcode(barcodeValue);
+        const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
+        console.log('Detected barcode:', sanitizedBarcode);
+        setDetectedBarcode(sanitizedBarcode);
 
         // Open the modal when a barcode is detected
         openModal();
 
         // Fetch matching items from Firestore based on barcode_number
         const stockRef = collection(db, 'Stock');
-        const q = query(stockRef, where('barcode_number', '==', barcodeValue));
+        const q = query(stockRef, where('barcode_number', '==', sanitizedBarcode));
         const querySnapshot = await getDocs(q);
 
         const matchingItemsData = querySnapshot.docs.map((doc) => doc.data());
