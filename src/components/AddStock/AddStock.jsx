@@ -3,28 +3,26 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 import Modal from 'react-modal';
+import  useMatchingStockData  from '../../hooks/ScanStock'; // Import the hook
 import { db } from '../../lib/firebase'; // Import Firebase configuration
-import { collection, query, where, getDocs} from 'firebase/firestore';
 
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [matchingItems, setMatchingItems] = useState([]); // State to hold matching items
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
+  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(); // Use the hook
 
   const openModal = () => {
     setModalIsOpen(true);
     // Disable scanning when the modal is open
-    setScanningEnabled(false);
+    stopScanning();
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
     // Re-enable scanning when the modal is closed
-    setScanningEnabled(true);
-    // Clear matching items when modal is closed
-    setMatchingItems([]);
+    startScanning();
   };
 
   useEffect(() => {
@@ -79,14 +77,6 @@ const AddStock = () => {
 
         // Open the modal when a barcode is detected
         openModal();
-
-        // Fetch matching items from Firestore based on barcode_number
-        const stockRef = collection(db, 'Stock');
-        const q = query(stockRef, where('barcode_number', '==', sanitizedBarcode));
-        const querySnapshot = await getDocs(q);
-
-        const matchingItemsData = querySnapshot.docs.map((doc) => doc.data());
-        setMatchingItems(matchingItemsData);
       });
 
       return () => {
@@ -119,27 +109,27 @@ const AddStock = () => {
       <Footer />
 
       <Modal
-  isOpen={modalIsOpen}
-  onRequestClose={closeModal}
-  contentLabel="Detected Barcode Modal"
->
-  <h2>Detected Barcode</h2>
-  <p>Item Number: {detectedBarcode}</p>
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Detected Barcode Modal"
+      >
+        <h2>Detected Barcode</h2>
+        <p>Item Number: {detectedBarcode}</p>
 
-  {/* Display matching items */}
-  <h3>Matching Items:</h3>
-  <ul>
-    {matchingItems.map((item, index) => (
-      <li key={index}>{item.barcode_number}</li>
-    ))}
-  </ul>
+        {/* Display matching items */}
+        <h3>Matching Items:</h3>
+        <ul>
+          {matchingItems.map((item, index) => (
+            <li key={index}>{item.barcode_number}</li>
+          ))}
+        </ul>
 
-  {matchingItems.length === 0 && (
-    <p>No matching items found in Firestore.</p>
-  )}
+        {matchingItems.length === 0 && (
+          <p>No matching items found in Firestore.</p>
+        )}
 
-  <button onClick={closeModal}>Close</button>
-</Modal>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
     </div>
   );
 };
