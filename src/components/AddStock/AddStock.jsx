@@ -130,7 +130,7 @@ const AddStock = () => {
         <h3>Matching Items:</h3>
         <ul>
           {matchingItems.map((item) => (
-            <li key={item.id}>{item.item_name}</li>
+            <li key={item.id}>{item.name}</li>
           ))}
         </ul>
 
