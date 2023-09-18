@@ -3,26 +3,30 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 import Modal from 'react-modal';
+import { db } from '../../lib/firebase'; // Import Firebase configuration
+import { collection, query, where, getDocs} from 'firebase/firestore';
 
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
-  const [modalIsOpen, setModalIsOpen] = useState(false); // Initialize modal state
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [matchingItems, setMatchingItems] = useState([]); // State to hold matching items
 
-  // Define openModal and closeModal functions at the top level
   const openModal = () => {
     setModalIsOpen(true);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
+    // Clear matching items when modal is closed
+    setMatchingItems([]);
   };
 
   useEffect(() => {
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' }, // Request rear camera
+          video: { facingMode: 'environment' },
         });
 
         if (videoRef.current) {
@@ -61,14 +65,22 @@ const AddStock = () => {
       }
     );
 
-    Quagga.onDetected((result) => {
+    Quagga.onDetected(async (result) => {
       const barcodeValue = result.codeResult.code;
       const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
       console.log('Detected barcode:', sanitizedBarcode);
       setDetectedBarcode(sanitizedBarcode);
 
       // Open the modal when a barcode is detected
-      openModal(); // Call openModal here
+      openModal();
+
+      // Fetch matching items from Firestore based on barcode_number
+      const stockRef = collection(db, 'Stock');
+      const q = query(stockRef, where('barcode_number', '==', sanitizedBarcode));
+      const querySnapshot = await getDocs(q);
+
+      const matchingItemsData = querySnapshot.docs.map((doc) => doc.data());
+      setMatchingItems(matchingItemsData);
     });
 
     return () => {
@@ -99,7 +111,6 @@ const AddStock = () => {
       </div>
       <Footer />
 
-      {/* Define the modal */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -107,6 +118,15 @@ const AddStock = () => {
       >
         <h2>Detected Barcode</h2>
         <p>Item Number: {detectedBarcode}</p>
+        
+        {/* Display matching items */}
+        <h3>Matching Items:</h3>
+        <ul>
+          {matchingItems.map((item) => (
+            <li key={item.id}>{item.name}</li>
+          ))}
+        </ul>
+        
         <button onClick={closeModal}>Close</button>
       </Modal>
     </div>
