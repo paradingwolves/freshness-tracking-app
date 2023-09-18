@@ -3,14 +3,16 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 import Modal from 'react-modal';
-import  useMatchingStockData  from '../../hooks/ScanStock'; // Import the hook
+import useMatchingStockData from '../../hooks/ScanStock'; // Import the hook
 import { db } from '../../lib/firebase'; // Import Firebase configuration
+import { collection, getDocs } from 'firebase/firestore';
 
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
+  const [stockData, setStockData] = useState([]); // State to hold Stock data
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(); // Use the hook
 
   const openModal = () => {
@@ -85,6 +87,18 @@ const AddStock = () => {
     }
   }, [scanningEnabled]);
 
+  useEffect(() => {
+    // Fetch Stock data from Firestore
+    const fetchStockData = async () => {
+      const stockRef = collection(db, 'Stock');
+      const querySnapshot = await getDocs(stockRef);
+      const stockDataArray = querySnapshot.docs.map((doc) => doc.data());
+      setStockData(stockDataArray);
+    };
+
+    fetchStockData();
+  }, []);
+
   return (
     <div>
       <Header />
@@ -116,7 +130,7 @@ const AddStock = () => {
         <h2>Detected Barcode</h2>
         <p>Item Number: {detectedBarcode}</p>
 
-        {/* Display matching items */}
+        {/* Display matching items or Stock data */}
         <h3>Matching Items:</h3>
         <ul>
           {matchingItems.map((item, index) => (
@@ -125,7 +139,15 @@ const AddStock = () => {
         </ul>
 
         {matchingItems.length === 0 && (
-          <p>No matching items found in Firestore.</p>
+          <div>
+            <p>No matching items found in Firestore.</p>
+            <p>Stock Data:</p>
+            <ul>
+              {stockData.map((item, index) => (
+                <li key={index}>{item.barcode_number}</li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <button onClick={closeModal}>Close</button>
