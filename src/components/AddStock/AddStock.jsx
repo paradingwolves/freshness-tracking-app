@@ -13,7 +13,7 @@ const AddStock = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
   const [stockData, setStockData] = useState([]); // State to hold Stock data
-  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(); // Use the hook
+  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -138,7 +138,7 @@ const AddStock = () => {
           ))}
         </ul>
 
-        {matchingItems.length === 0 && (
+       {/*  {matchingItems.length === 0 && (
           <div>
             <p>No matching items found in Firestore.</p>
             <p>Stock Data:</p>
@@ -148,7 +148,7 @@ const AddStock = () => {
               ))}
             </ul>
           </div>
-        )}
+        )} */}
 
         <button onClick={closeModal}>Close</button>
       </Modal>
