@@ -37,7 +37,7 @@ tbody tr.exp-past:nth-child(even) {
     background-color: #cd5454 !important;
 }
 
-.pagination-container {
+.pagination-container, .table-controls {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

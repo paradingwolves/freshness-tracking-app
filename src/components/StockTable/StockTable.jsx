@@ -8,6 +8,8 @@ const StockTable = () => {
     const [sortedStockData, setSortedStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(30);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedFilter, setSelectedFilter] = useState('all');
 
     useEffect(() => {
         if(!loading && stockData.length > 0) {
@@ -33,16 +35,73 @@ const StockTable = () => {
         setCurrentPage(1);
     };
 
+    // search filter
+    let filteredData = sortedStockData;
+    if(searchQuery) {
+        const query = searchQuery.toLowerCase();
+        filteredData = filteredData.filter((product) =>
+            product.id.includes(query) ||
+            product.name.toLowerCase().includes(query) ||
+            product.brand.toLowerCase().includes(query)
+        );
+    }
+
+    // expiry date filter
+    if(selectedFilter === '90days') {
+        const expSoon = addDays(new Date(), 90);
+        filteredData = filteredData.filter((product) =>
+            new Date(product.expiry_date) <= expSoon
+        );
+    } else if(selectedFilter === '7days') {
+        const expWeek = addDays(new Date(), 7);
+        filteredData = filteredData.filter((product) =>
+            new Date(product.expiry_date) <= expWeek
+        );
+    } else if(selectedFilter === '1day') {
+        const expToday = addDays(new Date(), 1);
+        filteredData = filteredData.filter((product) =>
+            new Date(product.expiry_date) <= expToday
+        );
+    } else if(selectedFilter === 'past') {
+        const expPast = new Date();
+        filteredData = filteredData.filter((product) =>
+            new Date(product.expiry_date) <= expPast
+        );
+    }
+
     if (loading) {
         return <p>Loading...</p>;
     }
-
     if (sortedStockData.length === 0) { // Check sortedStockData for empty data
         return <p>No stock data available.</p>;
     }
 
+
     return (
-        <div className="table-responsive">
+        <div className="table-container">
+            <div className="table-controls">
+                <div className="search-control">
+                    <input
+                        type="text"
+                        placeholder="Search by IS, name, or brand"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                <div className="filter-control">
+                    <select
+                        value={selectedFilter}
+                        onChange={(e) => setSelectedFilter(e.target.value)}
+                    >
+                        <option value="all">All</option>
+                        <option value="90days">Expires in 90 Days</option>
+                        <option value="7days">Expires in 7 Days</option>
+                        <option value="1day">Expires in 1 Day</option>
+                        <option value="past">Expired</option>
+                    </select>
+                </div>
+            </div>
+            <div className="table-responsive">
             <table className="table-striped stock-table">
                 <thead>
                 <tr className="stock-head">
@@ -53,7 +112,7 @@ const StockTable = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {currentData.map((product) => {
+                {filteredData.map((product) => {
                     // Determine the class name based on the expiry date
                     let className = '';
                     const expiryDate = new Date(product.expiry_date);
@@ -61,7 +120,6 @@ const StockTable = () => {
                     const ninetyDaysFromNow = addDays(today, 90);
                     const oneWeekFromNow = addDays(today, 7);
 
-                    console.log("pre-load comment");
                     if (isBefore(expiryDate, today)) {
                         className = 'exp-past';
                     } else if (isToday(expiryDate)) {
@@ -85,6 +143,7 @@ const StockTable = () => {
                 })}
                 </tbody>
             </table>
+
             <div className="pagination-container">
                 <div className="rows-per-page">
                     <label>Results per page:</label>
@@ -113,6 +172,7 @@ const StockTable = () => {
                     </button>
                 </div>
             </div>
+        </div>
         </div>
     );
 };
