@@ -19,10 +19,9 @@ const SeedData = () => {
         // Create a reference to the document in the "Stock" collection
         const stockDocRef = doc(db, 'Stock', id);
 
-        // Set the document data with the JSON item and additional properties
+        // Set the document data with the JSON item and additional properties (if needed)
         await setDoc(stockDocRef, {
           ...item,
-          
         });
 
         console.log('Document added to "Stock" collection:', item);

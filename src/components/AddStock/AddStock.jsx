@@ -2,11 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
+import Modal from 'react-modal';
 
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false); // Initialize modal state
 
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
   useEffect(() => {
     const startCamera = async () => {
       try {
@@ -22,6 +31,7 @@ const AddStock = () => {
         console.error('Error accessing rear camera:', error);
       }
     };
+    
 
     startCamera();
   }, []);
@@ -51,11 +61,13 @@ const AddStock = () => {
     );
 
     Quagga.onDetected((result) => {
-      // Handle detected barcodes here
       const barcodeValue = result.codeResult.code;
       const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
       console.log('Detected barcode:', sanitizedBarcode);
       setDetectedBarcode(sanitizedBarcode);
+  
+      // Open the modal when a barcode is detected
+      openModal();
     });
 
     return () => {
