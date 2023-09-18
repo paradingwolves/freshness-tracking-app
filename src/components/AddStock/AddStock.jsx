@@ -119,23 +119,27 @@ const AddStock = () => {
       <Footer />
 
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Detected Barcode Modal"
-      >
-        <h2>Detected Barcode</h2>
-        <p>Item Number: {detectedBarcode}</p>
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  contentLabel="Detected Barcode Modal"
+>
+  <h2>Detected Barcode</h2>
+  <p>Item Number: {detectedBarcode}</p>
 
-        {/* Display matching items */}
-        <h3>Matching Items:</h3>
-        <ul>
-          {matchingItems.map((item) => (
-            <li key={item.id}>{item.barcode_number}</li>
-          ))}
-        </ul>
+  {/* Display matching items */}
+  <h3>Matching Items:</h3>
+  <ul>
+    {matchingItems.map((item, index) => (
+      <li key={index}>{item.barcode_number}</li>
+    ))}
+  </ul>
 
-        <button onClick={closeModal}>Close</button>
-      </Modal>
+  {matchingItems.length === 0 && (
+    <p>No matching items found in Firestore.</p>
+  )}
+
+  <button onClick={closeModal}>Close</button>
+</Modal>
     </div>
   );
 };
