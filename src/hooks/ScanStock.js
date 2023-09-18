@@ -10,7 +10,7 @@ const useMatchingStockData = (barcode) => {
     const fetchMatchingItems = async () => {
       try {
         const stockRef = collection(db, 'Stock');
-        const q = query(stockRef, where('barcode_number', '==', barcode));
+        const q = query(stockRef, where('barcode_number', '==', Number(barcode)));
         const querySnapshot = await getDocs(q);
 
         const matchingItemsData = querySnapshot.docs.map((doc) => ({
