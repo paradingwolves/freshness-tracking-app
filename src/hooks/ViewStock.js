@@ -9,11 +9,13 @@ const useAllStockData = () => {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'Stock'), (snapshot) => {
-            const formattedData = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-                expiry_date: format(new Date(doc.data().expiry_date), 'MM/dd/yyyy'),
-            }));
+            const formattedData = snapshot.docs
+                .map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    expiry_date: format(new Date(doc.data().expiry_date), 'MM/dd/yyyy'),
+                }))
+                .filter((item) => item.quantity > 0); // Filter items with quantity greater than 0
 
             setStockData(formattedData);
             setLoading(false);

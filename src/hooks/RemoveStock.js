@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { db } from '../lib/firebase'; // Import your Firebase database instance
-import { query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { doc } from 'firebase/firestore';
+import { query, collection, where, getDocs, updateDoc} from 'firebase/firestore';
 
-const useRemoveItemByName = () => {
+const useUpdateQuantityToZero = () => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
-  const removeItemByName = async (name) => {
+  const updateQuantityToZero = async (name) => {
     try {
       setLoading(true);
 
@@ -18,9 +19,12 @@ const useRemoveItemByName = () => {
         throw new Error(`Item with name '${name}' not found.`);
       }
 
-      // Delete all documents with matching name
-      querySnapshot.forEach(async (doc) => {
-        await deleteDoc(doc.ref);
+      // Update the 'quantity' property to 0 for each matching document
+      querySnapshot.forEach(async (item) => {
+        const itemRef = doc(db, 'Stock', item.id);
+        await updateDoc(itemRef, {
+          quantity: 0
+        });
       });
 
       setLoading(false);
@@ -30,7 +34,7 @@ const useRemoveItemByName = () => {
     }
   };
 
-  return { removeItemByName, error, isLoading };
+  return { updateQuantityToZero, error, isLoading };
 };
 
-export default useRemoveItemByName;
+export default useUpdateQuantityToZero;

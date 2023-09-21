@@ -108,6 +108,7 @@ const StockTable = () => {
                     {/* <th>ID</th> */}
                     <th>Name</th>
                     <th>Brand</th>
+                    <th>Quantity</th>
                     <th>Expiry Date</th>
                 </tr>
                 </thead>
@@ -136,6 +137,7 @@ const StockTable = () => {
                             {/* Need to get accurate callback for Product # */}
                             <td>{product.name}</td>
                             <td>{product.brand}</td>
+                            <td>{product.quantity}</td>
                             <td>{product.expiry_date}</td>
                         </tr>
                     );

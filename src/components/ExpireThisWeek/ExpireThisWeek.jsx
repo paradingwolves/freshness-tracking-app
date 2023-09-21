@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import useStockSearchByWeek from '../../hooks/ExpireThisWeek';
 import { Modal, Button } from 'react-bootstrap';
+import useUpdateQuantityToZero from '../../hooks/RemoveStock'; // Import the custom hook
 
 const ExpireThisWeek = () => {
   const { stockData, loading } = useStockSearchByWeek();
   const [showPopup, setShowPopup] = useState(false);
-  const [ selectedProduct, setSelectedProduct ] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { updateQuantityToZero } = useUpdateQuantityToZero(); // Use the custom hook
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
@@ -15,6 +17,21 @@ const ExpireThisWeek = () => {
   const handlePopupClose = () => {
     setSelectedProduct(null);
     setShowPopup(false);
+  };
+
+  const handleWrittenOffClick = () => {
+    // Add the code here to handle the "Product Written Off" functionality
+    if (selectedProduct) {
+      const { name } = selectedProduct; // Use the property that uniquely identifies the product
+      updateQuantityToZero(name)
+        .then(() => {
+          console.log(`Quantity updated to 0 for item: ${selectedProduct.name}`);
+          setShowPopup(false); // Close the modal after updating
+        })
+        .catch((error) => {
+          console.error('Error updating quantity:', error);
+        });
+    }
   };
 
   return (
@@ -60,6 +77,9 @@ const ExpireThisWeek = () => {
             <>
               <Button variant="success" className="mx-1">
                 Red Sticker Updated
+              </Button>
+              <Button variant="danger" className="mx-1" onClick={handleWrittenOffClick}>
+                Product Written Off
               </Button>
             </>
           )}
