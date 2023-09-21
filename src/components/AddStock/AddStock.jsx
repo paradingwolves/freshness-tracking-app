@@ -145,7 +145,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData.name}
+              value={formData ? formData.name : ''}
               disabled
             />
           </div>
@@ -154,7 +154,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData.brand}
+              value={formData ? formData.brand : ''}
               disabled
             />
           </div>
@@ -163,7 +163,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData.quantity }
+              value={formData ? formData.quantity : ''}
               disabled
             />
           </div>
