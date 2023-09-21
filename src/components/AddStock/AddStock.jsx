@@ -128,7 +128,7 @@ const AddStock = () => {
         contentLabel="Detected Barcode Modal"
       >
         <h2>Detected Barcode</h2>
-        <p>Item Number: {detectedBarcode}</p>
+        <p>Barcode Number: {detectedBarcode}</p>
 
         {/* Display matching items or Stock data */}
         <h3>Matching Items:</h3>
