@@ -12,7 +12,6 @@ const AddStock = () => {
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
-  const [stockData, setStockData] = useState([]); // State to hold Stock data
   const [formData, setFormData] = useState(null); // State for form data
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(
     detectedBarcode
@@ -102,7 +101,7 @@ const AddStock = () => {
       const stockRef = collection(db, 'Stock');
       const querySnapshot = await getDocs(stockRef);
       const stockDataArray = querySnapshot.docs.map((doc) => doc.data());
-      setStockData(stockDataArray);
+      setFormData(stockDataArray);
     };
 
     fetchStockData();
@@ -139,51 +138,36 @@ const AddStock = () => {
         <h2>Detected Barcode</h2>
         <p>Item Number: {detectedBarcode}</p>
 
-        {/* Display matching items or Stock data */}
-        <h3>Matching Items:</h3>
-        {formData ? (
-          <form>
-            <div className="mb-3">
-              <label className="form-label">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.name}
-                disabled
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Brand</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.brand}
-                disabled
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Quantity</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.quantity}
-                disabled
-              />
-            </div>
-          </form>
-        ) : (
-          <ul>
-            {matchingItems.map((item, index) => (
-              <li key={index}>
-                {item.name}
-                <br />
-                {item.brand}
-                <br />
-                {item.quantity}
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* Display the form */}
+        <form>
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData ? formData.name : ''}
+              disabled
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Brand</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData ? formData.brand : ''}
+              disabled
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Quantity</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData ? formData.quantity : ''}
+              disabled
+            />
+          </div>
+        </form>
 
         <button onClick={closeModal}>Close</button>
       </Modal>
