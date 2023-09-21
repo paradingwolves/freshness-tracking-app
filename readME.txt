@@ -48,7 +48,9 @@ npm packages installed:
             * this allows us to scan a barcode of an item that has been written off previously and still have the product info
         - update the ExpireThisWeek.jsx component so that it now works with our new Hook
     2. Added the quantity field to the stock table
-    3. updated ViewStock so that it does not display a product if the quantity = 0
+    3. updated ViewStock, ExpireThisWeek, ExpireToday, ExpiringSoon hooks so that they do not display a product if the quantity = 0
+    4. Update the AddStock.jsx component so that there is a form that is auto populated by the matching data from
+        the barcode scan
 
 
 

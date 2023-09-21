@@ -19,7 +19,10 @@ const useStockSearch = () => {
         }))
         .filter((item) => {
           const itemDate = new Date(item.expiry_date);
-          return itemDate.toDateString() === currentDate.toDateString();
+          return (
+            itemDate.toDateString() === currentDate.toDateString() &&
+            item.quantity > 0
+          );
         });
 
       setStockData(formattedData);

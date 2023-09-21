@@ -3,27 +3,29 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 import Modal from 'react-modal';
-import useMatchingStockData from '../../hooks/ScanStock'; // Import the hook
-import { db } from '../../lib/firebase'; // Import Firebase configuration
+import useMatchingStockData from '../../hooks/ScanStock';
+import { db } from '../../lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
-  const [stockData, setStockData] = useState([]); // State to hold Stock data
-  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
+  const [scanningEnabled, setScanningEnabled] = useState(true);
+  const [stockData, setStockData] = useState([]);
+  const [formData, setFormData] = useState(null); // State for form data
+
+  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(
+    detectedBarcode
+  );
 
   const openModal = () => {
     setModalIsOpen(true);
-    // Disable scanning when the modal is open
     stopScanning();
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
-    // Re-enable scanning when the modal is closed
     startScanning();
   };
 
@@ -73,12 +75,20 @@ const AddStock = () => {
 
       Quagga.onDetected(async (result) => {
         const barcodeValue = result.codeResult.code;
-        const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
+        const sanitizedBarcode = barcodeValue.startsWith('0')
+          ? barcodeValue.substring(1)
+          : barcodeValue;
         console.log('Detected barcode:', sanitizedBarcode);
         setDetectedBarcode(sanitizedBarcode);
 
         // Open the modal when a barcode is detected
         openModal();
+
+        // Fetch matching data and set formData
+        const matchingItem = matchingItems[0]; // Assuming only one match
+        if (matchingItem) {
+          setFormData(matchingItem);
+        }
       });
 
       return () => {
@@ -88,7 +98,6 @@ const AddStock = () => {
   }, [scanningEnabled]);
 
   useEffect(() => {
-    // Fetch Stock data from Firestore
     const fetchStockData = async () => {
       const stockRef = collection(db, 'Stock');
       const querySnapshot = await getDocs(stockRef);
@@ -103,7 +112,9 @@ const AddStock = () => {
     <div>
       <Header />
       <div className="container bg-info">
-        <h1 className='text-dark fw-bold text-center'>Rear Camera Barcode Scanner</h1>
+        <h1 className="text-dark fw-bold text-center">
+          Rear Camera Barcode Scanner
+        </h1>
         <div>
           <h5 className="fw-bold text-center text-white">Scan Barcodes</h5>
           <video
@@ -130,25 +141,40 @@ const AddStock = () => {
         <h2>Detected Barcode</h2>
         <p>Item Number: {detectedBarcode}</p>
 
-        {/* Display matching items or Stock data */}
-        <h3>Matching Items:</h3>
-        <ul>
-          {matchingItems.map((item, index) => (
-            <li key={index}>{item.name}<br />{item.brand}<br />{item.quantity}</li>
-          ))}
-        </ul>
-
-       {/*  {matchingItems.length === 0 && (
-          <div>
-            <p>No matching items found in Firestore.</p>
-            <p>Stock Data:</p>
-            <ul>
-              {stockData.map((item, index) => (
-                <li key={index}>{item.barcode_number}</li>
-              ))}
-            </ul>
-          </div>
-        )} */}
+        {formData && (
+          <>
+            <h3>Matching Item:</h3>
+            <form>
+              <div className="mb-3">
+                <label className="form-label">Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.name}
+                  disabled
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Brand</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.brand}
+                  disabled
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Quantity</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.quantity}
+                  disabled
+                />
+              </div>
+            </form>
+          </>
+        )}
 
         <button onClick={closeModal}>Close</button>
       </Modal>

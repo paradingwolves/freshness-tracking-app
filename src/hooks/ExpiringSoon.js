@@ -20,7 +20,11 @@ const useStockSearchWithin90Days = () => {
         }))
         .filter((item) => {
           const itemDate = new Date(item.expiry_date);
-          return itemDate <= ninetyDaysFromNow && itemDate >= currentDate;
+          return (
+            itemDate <= ninetyDaysFromNow &&
+            itemDate >= currentDate &&
+            item.quantity > 0
+          );
         });
 
       setStockData(formattedData);

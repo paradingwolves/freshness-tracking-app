@@ -21,7 +21,7 @@ const useStockSearchByWeek = () => {
         }))
         .filter((item) => {
           const itemDate = new Date(item.expiry_date);
-          return isWithinInterval(itemDate, { start: startOfWeekDate, end: endOfWeekDate });
+          return isWithinInterval(itemDate, { start: startOfWeekDate, end: endOfWeekDate }) && item.quantity > 0;
         });
 
       setStockData(formattedData);
