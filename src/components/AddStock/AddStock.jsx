@@ -12,7 +12,11 @@ const AddStock = () => {
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
-  const [formData, setFormData] = useState(null); // State for form data
+  const [formData, setFormData] = useState({
+    name: '',
+    brand: '',
+    quantity: '',
+  }); // Initialize with default values
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(
     detectedBarcode
   ); // Use the hook
@@ -145,7 +149,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData ? formData.name : ''}
+              value={formData.name}
               disabled
             />
           </div>
@@ -154,7 +158,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData ? formData.brand : ''}
+              value={formData.brand}
               disabled
             />
           </div>
@@ -163,7 +167,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData ? formData.quantity : ''}
+              value={formData.quantity}
               disabled
             />
           </div>
