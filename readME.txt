@@ -39,5 +39,22 @@ npm packages installed:
     1. Pagination on table.
         Pushing to check effectiveness /cm
 
+------------------------------------------------------------------
+    Date Modified: September 21, 2023
+------------------------------------------------------------------
+    1. Updated the Hook in RemoveStock.js 
+        - renamed removeItemByName to updateQuantityToZero
+        - instead of removing the document from the firebase collection, we update the document's quantity to 0
+            * this allows us to scan a barcode of an item that has been written off previously and still have the product info
+        - update the ExpireThisWeek.jsx component so that it now works with our new Hook
+    2. Added the quantity field to the stock table
+    3. updated ViewStock so that it does not display a product if the quantity = 0
+
+
+
+
+
+
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

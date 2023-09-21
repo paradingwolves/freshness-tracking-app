@@ -22,10 +22,10 @@ const ExpireThisWeek = () => {
   const handleWrittenOffClick = () => {
     // Add the code here to handle the "Product Written Off" functionality
     if (selectedProduct) {
-      const { name } = selectedProduct; // Use the property that uniquely identifies the product
-      updateQuantityToZero(name)
+      const { name, expiry_date } = selectedProduct; // Use both name and expiry_date
+      updateQuantityToZero(name, expiry_date)
         .then(() => {
-          console.log(`Quantity updated to 0 for item: ${selectedProduct.name}`);
+          console.log(`Quantity updated to 0 for item: ${selectedProduct.expiry_date}`);
           setShowPopup(false); // Close the modal after updating
         })
         .catch((error) => {
