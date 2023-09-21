@@ -140,6 +140,7 @@ const AddStock = () => {
           type="text"
           className="form-control"
           value={item.name}
+          required
           disabled
         />
         <label className="form-label">Brand</label>
@@ -147,13 +148,53 @@ const AddStock = () => {
           type="text"
           className="form-control"
           value={item.brand}
+          required
           disabled
         />
         <label className="form-label">Quantity</label>
         <input
           type="text"
           className="form-control"
+          required
           value={item.quantity}
+        />
+        <label className="form-label">Expiry Date</label>
+        <input
+          type="date"
+          className="form-control"
+          required
+          value={item.expiry_date}
+        />
+        <label className="form-label">Item Number</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.item_number}
+          required
+          disabled
+        />
+        <label className="form-label">Barcode Number</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.barcode_number}
+          required
+          disabled
+        />
+        <label className="form-label">Animal</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.animal}
+          required
+          disabled
+        />
+        <label className="form-label">Updated</label>
+        <input
+          type="text"
+          className="form-control"
+          value="0"
+          required
           disabled
         />
       </div>
