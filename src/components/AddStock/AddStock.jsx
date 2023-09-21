@@ -138,14 +138,14 @@ const AddStock = () => {
         <h2>Detected Barcode</h2>
         <p>Item Number: {detectedBarcode}</p>
 
-        {/* Display the form */}
+        {/* Display the form with fields populated by matching data */}
         <form>
           <div className="mb-3">
             <label className="form-label">Name</label>
             <input
               type="text"
               className="form-control"
-              value={formData ? formData.name : ''}
+              value={formData.name}
               disabled
             />
           </div>
@@ -154,7 +154,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData ? formData.brand : ''}
+              value={formData.brand}
               disabled
             />
           </div>
@@ -163,7 +163,7 @@ const AddStock = () => {
             <input
               type="text"
               className="form-control"
-              value={formData ? formData.quantity : ''}
+              value={formData.quantity }
               disabled
             />
           </div>
