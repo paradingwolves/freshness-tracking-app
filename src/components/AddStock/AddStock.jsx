@@ -12,14 +12,8 @@ const AddStock = () => {
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
-  const [formData, setFormData] = useState({
-    name: '',
-    brand: '',
-    quantity: '',
-  }); // Initialize with default values
-  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(
-    detectedBarcode
-  ); // Use the hook
+  const [stockData, setStockData] = useState([]); // State to hold Stock data
+  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -85,12 +79,6 @@ const AddStock = () => {
 
         // Open the modal when a barcode is detected
         openModal();
-
-        // Fetch matching data and set formData
-        const matchingItem = matchingItems[0]; // Assuming only one match
-        if (matchingItem) {
-          setFormData(matchingItem);
-        }
       });
 
       return () => {
@@ -105,7 +93,7 @@ const AddStock = () => {
       const stockRef = collection(db, 'Stock');
       const querySnapshot = await getDocs(stockRef);
       const stockDataArray = querySnapshot.docs.map((doc) => doc.data());
-      setFormData(stockDataArray);
+      setStockData(stockDataArray);
     };
 
     fetchStockData();
@@ -142,36 +130,36 @@ const AddStock = () => {
         <h2>Detected Barcode</h2>
         <p>Item Number: {detectedBarcode}</p>
 
-        {/* Display the form with fields populated by matching data */}
+        {/* Display matching items or Stock data */}
+        <h3>Matching Items:</h3>
         <form>
-          <div className="mb-3">
-            <label className="form-label">Name</label>
-            <input
-              type="text"
-              className="form-control"
-              value={formData.name}
-              disabled
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Brand</label>
-            <input
-              type="text"
-              className="form-control"
-              value={formData.brand}
-              disabled
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Quantity</label>
-            <input
-              type="text"
-              className="form-control"
-              value={formData.quantity}
-              disabled
-            />
-          </div>
-        </form>
+    {matchingItems.map((item, index) => (
+      <div key={index} className="mb-3">
+        <label className="form-label">Name</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.name}
+          disabled
+        />
+        <label className="form-label">Brand</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.brand}
+          disabled
+        />
+        <label className="form-label">Quantity</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.quantity}
+          disabled
+        />
+      </div>
+    ))}
+  </form>
+
 
         <button onClick={closeModal}>Close</button>
       </Modal>
