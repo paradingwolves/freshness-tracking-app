@@ -13,7 +13,10 @@ const AddStock = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
   const [stockData, setStockData] = useState([]); // State to hold Stock data
-  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
+  const [formData, setFormData] = useState(null); // State for form data
+  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(
+    detectedBarcode
+  ); // Use the hook
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -79,6 +82,12 @@ const AddStock = () => {
 
         // Open the modal when a barcode is detected
         openModal();
+
+        // Fetch matching data and set formData
+        const matchingItem = matchingItems[0]; // Assuming only one match
+        if (matchingItem) {
+          setFormData(matchingItem);
+        }
       });
 
       return () => {
@@ -132,23 +141,49 @@ const AddStock = () => {
 
         {/* Display matching items or Stock data */}
         <h3>Matching Items:</h3>
-        <ul>
-          {matchingItems.map((item, index) => (
-            <li key={index}>{item.name}<br />{item.brand}<br />{item.quantity}</li>
-          ))}
-        </ul>
-
-       {/*  {matchingItems.length === 0 && (
-          <div>
-            <p>No matching items found in Firestore.</p>
-            <p>Stock Data:</p>
-            <ul>
-              {stockData.map((item, index) => (
-                <li key={index}>{item.barcode_number}</li>
-              ))}
-            </ul>
-          </div>
-        )} */}
+        {formData ? (
+          <form>
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                value={formData.name}
+                disabled
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Brand</label>
+              <input
+                type="text"
+                className="form-control"
+                value={formData.brand}
+                disabled
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Quantity</label>
+              <input
+                type="text"
+                className="form-control"
+                value={formData.quantity}
+                disabled
+              />
+            </div>
+          </form>
+        ) : (
+          <ul>
+            {matchingItems.map((item, index) => (
+              <li key={index}>
+                {item.name}
+                <br />
+                {item.brand}
+                <br />
+                {item.quantity}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <button onClick={closeModal}>Close</button>
       </Modal>
