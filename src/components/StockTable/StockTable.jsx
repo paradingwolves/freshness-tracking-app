@@ -23,6 +23,7 @@ const StockTable = () => {
         }
     }, [stockData, loading]);
 
+    // Shortened name for mobile view handler
     useEffect(() => {
         const handleResize = () => {
             setShortenName(window.innerWidth < 768);
@@ -148,18 +149,10 @@ const StockTable = () => {
             <table className="table-striped stock-table">
                 <thead>
                 <tr className="stock-head">
-                    {/* <th>ID</th> */}
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
                     <th>Red Sticker</th>
-                    <th>Quantity</th>
-                    <th>Expiry Date</th>
-                </tr>
-                <tr className="stock-head-mobile">
-                    {/* <th>ID</th> */}
-                    <th>Name</th>
-                    <th>Brand</th>
-                    <th>Red Stkr</th>
                     <th>Qty.</th>
                     <th>Exp.</th>
                 </tr>
@@ -185,7 +178,7 @@ const StockTable = () => {
 
                     return (
                         <tr key={product.id} className={className}>
-                            {/* <td>{product.id}</td> */}
+                            <td className={shortenName ? 'shortened-name': ''}>{product.id}</td>
                             {/* Need to get accurate callback for Product # */}
                             <td className={shortenName ? 'shortened-name' : ''}>{getShortenedName(product)}</td>
                             <td>{product.brand}</td>
