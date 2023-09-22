@@ -61,7 +61,15 @@ npm packages installed:
         when the 'updated' property is at the highest level(3)
     3. updated the StockTable component to display what discount the product currently is at
 
-
+------------------------------------------------------------------
+    Date Modified: September 22, 2023
+------------------------------------------------------------------
+    1. updated the filter display to exclude other filters in each section.
+    2. updated mobile table view:
+           - thead features shortforms of certain words(Quantity: QTY.)
+           - product.name is shortened to exclude brand name
+           - product.name is shortened to one line with ellipses.
+       /cm
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

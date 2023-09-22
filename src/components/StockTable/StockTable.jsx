@@ -10,6 +10,7 @@ const StockTable = () => {
     const [rowsPerPage, setRowsPerPage] = useState(30);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('all');
+    const [shortenName, setShortenName] = useState(false);
 
     useEffect(() => {
         if(!loading && stockData.length > 0) {
@@ -21,6 +22,26 @@ const StockTable = () => {
             setSortedStockData(sortedData);
         }
     }, [stockData, loading]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setShortenName(window.innerWidth < 768);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    const getShortenedName = (product) => {
+        if(shortenName) {
+            const words = product.name.split(' ');
+            const brandWords = product.brand.split(' ');
+            const filteredWords = words.filter(word => !brandWords.includes(word));
+            return filteredWords.join(' ');
+        }
+        return product.name;
+    };
 
     // Pagination variables
     const lastIndex = currentPage * rowsPerPage;
@@ -134,6 +155,14 @@ const StockTable = () => {
                     <th>Quantity</th>
                     <th>Expiry Date</th>
                 </tr>
+                <tr className="stock-head-mobile">
+                    {/* <th>ID</th> */}
+                    <th>Name</th>
+                    <th>Brand</th>
+                    <th>Red Stkr</th>
+                    <th>Qty.</th>
+                    <th>Exp.</th>
+                </tr>
                 </thead>
                 <tbody>
                 {filteredData.map((product) => {
@@ -158,7 +187,7 @@ const StockTable = () => {
                         <tr key={product.id} className={className}>
                             {/* <td>{product.id}</td> */}
                             {/* Need to get accurate callback for Product # */}
-                            <td>{product.name}</td>
+                            <td className={shortenName ? 'shortened-name' : ''}>{getShortenedName(product)}</td>
                             <td>{product.brand}</td>
                             <td>{calculateRedStickerValue(product.updated)}</td>
                             <td>{product.quantity}</td>

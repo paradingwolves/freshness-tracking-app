@@ -1,4 +1,3 @@
-
 .stock-table {
     margin: 0 5%;
     width: 90%;
@@ -11,6 +10,9 @@
 }
 tbody tr td {
     padding: 20px 0;
+}
+.stock-head-mobile {
+    display: none;
 }
 
 .exp-soon {
@@ -59,3 +61,23 @@ tbody tr.exp-past:nth-child(even) {
     align-self: center;
 }
 
+.shortened-name {
+    max-width: 127px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media only screen and (max-width: 767px) {
+    .stock-table {
+        margin: 0;
+        width: 100%;
+    }
+    .stock-head {
+        display: none;
+    }
+    .stock-head-mobile {
+        display: revert;
+    }
+
+
+}
