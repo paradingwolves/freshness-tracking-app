@@ -190,7 +190,7 @@ const StockTable = () => {
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     );
 };
 

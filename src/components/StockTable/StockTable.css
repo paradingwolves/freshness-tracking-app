@@ -1,3 +1,4 @@
+
 .stock-table {
     margin: 0 5%;
     width: 90%;
@@ -57,3 +58,4 @@ tbody tr.exp-past:nth-child(even) {
 .rows-per-page {
     align-self: center;
 }
+
