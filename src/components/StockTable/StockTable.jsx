@@ -165,6 +165,7 @@ const StockTable = () => {
                     const today = new Date();
                     const ninetyDaysFromNow = addDays(today, 90);
                     const oneWeekFromNow = addDays(today, 7);
+                    {console.log(product)}
 
                     if (isBefore(expiryDate, today)) {
                         className = 'exp-past';
@@ -178,7 +179,7 @@ const StockTable = () => {
 
                     return (
                         <tr key={product.id} className={className}>
-                            <td className={shortenName ? 'shortened-name': ''}>{product.id}</td>
+                            <td className={shortenName ? 'shortened-name': ''}>{product.item_number}</td>
                             {/* Need to get accurate callback for Product # */}
                             <td className={shortenName ? 'shortened-name' : ''}>{getShortenedName(product)}</td>
                             <td>{product.brand}</td>
