@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import useStockSearch from '../../hooks/ExpireToday';
 import { Modal, Button } from 'react-bootstrap';
-import useRemoveItemByName from '../../hooks/RemoveStock'; // Import the custom hook
+import useRemoveItemByName from '../../hooks/RemoveStock'; 
+import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 
 const ExpireToday = () => {
   const { stockData, loading } = useStockSearch();
   const [showPopup, setShowPopup] = useState(false);
-  const [ selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const { removeItemByName, error } = useRemoveItemByName();
+  const { incrementUpdatedValue } = useIncrementUpdatedValue(); // Use the custom hook
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
@@ -18,6 +20,22 @@ const ExpireToday = () => {
     setSelectedProduct(null);
     setShowPopup(false);
   };
+
+  const handleRedStickerUpdatedClick = () => {
+    // Add the code here to handle the "Red Sticker Updated" functionality
+    if (selectedProduct) {
+      const { name, expiry_date } = selectedProduct; // Use both name and expiry_date
+      incrementUpdatedValue(name, expiry_date)
+        .then(() => {
+          console.log(`'Updated' value incremented for item: ${selectedProduct.expiry_date}`);
+          setShowPopup(false); // Close the modal after updating
+        })
+        .catch((error) => {
+          console.error('Error incrementing updated value:', error);
+        });
+    }
+  };
+
   const handleWrittenOffClick = () => {
     if (selectedProduct) {
       // Call the custom hook to remove the item by name
@@ -68,10 +86,20 @@ const ExpireToday = () => {
         <Modal.Body>
           {stockData.length > 0 && (
             <>
-              <Button variant="success" className="mx-1">
-                Red Sticker Updated
-              </Button>
-              <Button variant="danger" className="mx-1" onClick={handleWrittenOffClick}>
+              {selectedProduct && selectedProduct.updated < 3 && (
+                <Button
+                  variant="success"
+                  className="mx-1"
+                  onClick={handleRedStickerUpdatedClick} // Call the new function here
+                >
+                  Red Sticker Updated
+                </Button>
+              )}
+              <Button
+                variant="danger"
+                className="mx-1"
+                onClick={handleWrittenOffClick}
+              >
                 Product Written Off
               </Button>
             </>

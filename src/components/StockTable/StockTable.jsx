@@ -35,6 +35,20 @@ const StockTable = () => {
         setCurrentPage(1);
     };
 
+    // Function to calculate the "Red Sticker" value based on the 'updated' property
+    const calculateRedStickerValue = (updatedValue) => {
+        switch (updatedValue) {
+            case 1:
+                return '20%';
+            case 2:
+                return '35%';
+            case 3:
+                return '50%';
+            default:
+                return ''; // Handle other cases as needed
+        }
+    };
+
     // search filter
     let filteredData = sortedStockData;
     if(searchQuery) {
@@ -76,7 +90,6 @@ const StockTable = () => {
         return <p>No stock data available.</p>;
     }
 
-
     return (
         <div className="table-container">
             <div className="table-controls">
@@ -108,6 +121,7 @@ const StockTable = () => {
                     {/* <th>ID</th> */}
                     <th>Name</th>
                     <th>Brand</th>
+                    <th>Red Sticker</th>
                     <th>Quantity</th>
                     <th>Expiry Date</th>
                 </tr>
@@ -137,6 +151,7 @@ const StockTable = () => {
                             {/* Need to get accurate callback for Product # */}
                             <td>{product.name}</td>
                             <td>{product.brand}</td>
+                            <td>{calculateRedStickerValue(product.updated)}</td>
                             <td>{product.quantity}</td>
                             <td>{product.expiry_date}</td>
                         </tr>

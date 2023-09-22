@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import useStockSearchByWeek from '../../hooks/ExpireThisWeek';
 import { Modal, Button } from 'react-bootstrap';
-import useUpdateQuantityToZero from '../../hooks/RemoveStock'; // Import the custom hook
+import useUpdateQuantityToZero from '../../hooks/RemoveStock'; 
+import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 
 const ExpireThisWeek = () => {
   const { stockData, loading } = useStockSearchByWeek();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { updateQuantityToZero } = useUpdateQuantityToZero(); // Use the custom hook
+  const { incrementUpdatedValue } = useIncrementUpdatedValue(); // Use the custom hook
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
@@ -17,6 +19,21 @@ const ExpireThisWeek = () => {
   const handlePopupClose = () => {
     setSelectedProduct(null);
     setShowPopup(false);
+  };
+
+  const handleRedStickerUpdatedClick = () => {
+    // Add the code here to handle the "Red Sticker Updated" functionality
+    if (selectedProduct) {
+      const { name, expiry_date } = selectedProduct; // Use both name and expiry_date
+      incrementUpdatedValue(name, expiry_date)
+        .then(() => {
+          console.log(`'Updated' value incremented for item: ${selectedProduct.expiry_date}`);
+          setShowPopup(false); // Close the modal after updating
+        })
+        .catch((error) => {
+          console.error('Error incrementing updated value:', error);
+        });
+    }
   };
 
   const handleWrittenOffClick = () => {
@@ -55,12 +72,14 @@ const ExpireThisWeek = () => {
                     <strong>Size:</strong> {product.size}<br />
                     <strong>Quantity:</strong> {product.quantity}<br />
                   </p>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handlePopupOpen(product)}
-                  >
-                    Updated
-                  </button>
+                  {product.updated < 3 && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handlePopupOpen(product)}
+                    >
+                      Updated
+                    </button>
+                  )}
                 </div>
               </div>
             ))
@@ -75,10 +94,20 @@ const ExpireThisWeek = () => {
         <Modal.Body>
           {stockData.length > 0 && (
             <>
-              <Button variant="success" className="mx-1">
-                Red Sticker Updated
-              </Button>
-              <Button variant="danger" className="mx-1" onClick={handleWrittenOffClick}>
+              {selectedProduct && selectedProduct.updated < 3 && (
+                <Button
+                  variant="success"
+                  className="mx-1"
+                  onClick={handleRedStickerUpdatedClick} // Call the new function here
+                >
+                  Red Sticker Updated
+                </Button>
+              )}
+              <Button
+                variant="danger"
+                className="mx-1"
+                onClick={handleWrittenOffClick}
+              >
                 Product Written Off
               </Button>
             </>

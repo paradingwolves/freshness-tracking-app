@@ -52,9 +52,14 @@ npm packages installed:
     4. Update the AddStock.jsx component so that there is a form that is auto populated by the matching data from
         the barcode scan
 
-
-
-
+------------------------------------------------------------------
+    Date Modified: September 22, 2023
+------------------------------------------------------------------
+    1. created the UpdateSticker hook that updates the discount level of the product
+        - when the Red Sticker Updated button is clicked, the 'updated' property of that document is increased by 1
+    2. updated the ExpireToday, ExpireThisWeek components so that the Red Sticker Updated button is not visible
+        when the 'updated' property is at the highest level(3)
+    3. updated the StockTable component to display what discount the product currently is at
 
 
 
