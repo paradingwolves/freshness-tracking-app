@@ -62,24 +62,33 @@ const StockTable = () => {
 
     // expiry date filter
     if(selectedFilter === '90days') {
-        const expSoon = addDays(new Date(), 90);
-        filteredData = filteredData.filter((product) =>
-            new Date(product.expiry_date) <= expSoon
-        );
+        const exp90days = addDays(new Date(), 90);
+        const exp7days = addDays(new Date(), 7);
+        filteredData = filteredData.filter((product) => {
+            const expiryDate = new Date(product.expiry_date);
+            return (
+                expiryDate <= exp90days && expiryDate > exp7days
+            );
+        });
     } else if(selectedFilter === '7days') {
-        const expWeek = addDays(new Date(), 7);
-        filteredData = filteredData.filter((product) =>
-            new Date(product.expiry_date) <= expWeek
-        );
+        const exp7Days = addDays(new Date(), 7);
+        const today = new Date();
+        filteredData = filteredData.filter((product) => {
+            const expiryDate = new Date(product.expiry_date);
+            return (
+                expiryDate <= exp7Days &&
+                !isToday(expiryDate)
+            );
+        });
     } else if(selectedFilter === '1day') {
         const expToday = addDays(new Date(), 1);
         filteredData = filteredData.filter((product) =>
             new Date(product.expiry_date) <= expToday
         );
     } else if(selectedFilter === 'past') {
-        const expPast = new Date();
+        const today = new Date();
         filteredData = filteredData.filter((product) =>
-            new Date(product.expiry_date) <= expPast
+            isBefore(new Date(product.expiry_date), today)
         );
     }
 
