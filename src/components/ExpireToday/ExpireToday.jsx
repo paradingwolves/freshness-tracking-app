@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import useStockSearch from '../../hooks/ExpireToday';
 import { Modal, Button } from 'react-bootstrap';
-import useRemoveItemByName from '../../hooks/RemoveStock'; 
+import useUpdateQuantityToZero from '../../hooks/RemoveStock'; 
 import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 
 const ExpireToday = () => {
   const { stockData, loading } = useStockSearch();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { removeItemByName, error } = useRemoveItemByName();
+  const { updateQuantityToZero } = useUpdateQuantityToZero(); // Use the custom hook
   const { incrementUpdatedValue } = useIncrementUpdatedValue(); // Use the custom hook
 
   const handlePopupOpen = (product) => {
@@ -37,11 +37,17 @@ const ExpireToday = () => {
   };
 
   const handleWrittenOffClick = () => {
+    // Add the code here to handle the "Product Written Off" functionality
     if (selectedProduct) {
-      // Call the custom hook to remove the item by name
-      console.log(selectedProduct.name);
-      removeItemByName(selectedProduct.name);
-      setShowPopup(false); // Close the modal after removal
+      const { name, expiry_date } = selectedProduct; // Use both name and expiry_date
+      updateQuantityToZero(name, expiry_date)
+        .then(() => {
+          console.log(`Quantity updated to 0 for item: ${selectedProduct.expiry_date}`);
+          setShowPopup(false); // Close the modal after updating
+        })
+        .catch((error) => {
+          console.error('Error updating quantity:', error);
+        });
     }
   };
 

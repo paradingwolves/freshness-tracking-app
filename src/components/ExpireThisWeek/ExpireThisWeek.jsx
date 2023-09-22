@@ -72,14 +72,12 @@ const ExpireThisWeek = () => {
                     <strong>Size:</strong> {product.size}<br />
                     <strong>Quantity:</strong> {product.quantity}<br />
                   </p>
-                  {product.updated < 3 && (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handlePopupOpen(product)}
-                    >
-                      Updated
-                    </button>
-                  )}
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handlePopupOpen(product)}
+                  >
+                    Updated
+                  </button>
                 </div>
               </div>
             ))
