@@ -1,0 +1,130 @@
+/* mobileHidden class for hiding elements on smaller screens */
+@media (max-width: 991px) {
+    .mobileHidden {
+        display: none !important;
+    }
+}
+/* notMobileHidden class for hiding elements that only show up on mobile. */
+@media (min-width: 992px) {
+    .notMobileHidden {
+        display: none !important;
+    }
+}
+
+/* Mobile Navigation */
+.mobNav {
+    position: fixed;
+    top: 8px;
+    right: 78px;
+    z-index: 1;
+}
+.mobNav .mobNavToggler {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+}
+.mobNav .mobNavBurger{
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    z-index: 1000;
+    padding: 1rem;
+    width: 50px;
+    height: 50px;
+    border: solid 1px rgba(139, 187, 230, 0.67);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+/* Hamburger Lines */
+.mobNav .mobNavBurger > div {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: #8bbbe6;
+    transition: transform 0.4s ease;
+}
+.mobNav .mobNavBurger > div::before,
+.mobNav .mobNavBurger > div::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    width: 100%;
+    height: 2px;
+    background-color: inherit;
+}
+.mobNav .mobNavBurger > div::after {
+    top: 10px;
+}
+.mobNav .mobNavToggler:checked + .mobNavBurger>div {
+    transform: rotate(135deg);
+}
+.mobNav .mobNavToggler:checked + .mobNavBurger>div::before,
+.mobNav .mobNavToggler:checked + .mobNavBurger>div::after {
+    top: 0;
+    transform: rotate(90deg);
+}
+.mobNav .mobNavToggler:checked:hover + .mobNavBurger>div {
+    transform: rotate(225deg);
+}
+.mobNav .mobNavToggler:checked ~ .mobNavMenu{
+    visibility: visible;
+}
+.mobNav .mobNavToggler:checked ~ .mobNavMenu> div{
+    transform: scale(1);
+    transition-duration: 0.5s;
+}
+.mobNav .mobNavToggler:checked ~ .mobNavMenu> div > div{
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+.mobNav .mobNavMenu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    visibility: hidden;
+    justify-content: center;
+}
+.mobNav .mobNavMenu>div{
+    background-color: #292929f0;
+    width: 200vw;
+    height: 200vw;
+    overflow: hidden;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    transform: scale(0);
+    transition: all 0.4s ease;
+}
+.mobNav .mobNavMenu > div > div{
+    max-width: 90vw;
+    max-height: 100vh;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.mobNav .mobNavMenu > div > div > ul > li {
+    list-style: none;
+    font-size: 2rem;
+    padding: 1rem;
+}
+.mobNav .mobNavMenu > div > div > ul > li > a {
+    text-decoration: none;
+    color: #b8c4d3;
+    transition: color 0.4s ease;
+}
