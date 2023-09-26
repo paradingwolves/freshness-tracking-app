@@ -118,11 +118,11 @@ const AddStock = () => {
     setFormData({
       name: matchingItem.name,
       brand: matchingItem.brand,
-      expiry_date: '', // You can set an initial value here if needed
-      quantity: '',
-      updated: '',
+      quantity: matchingItem.quantity,
+      expiry_date: new Date(matchingItem.expiry_date * 1000).toISOString().split('T')[0], // Convert Unix timestamp to date string
       item_number: matchingItem.item_number,
       barcode_number: matchingItem.barcode_number,
+      updated: matchingItem.updated,
       animal: matchingItem.animal,
       // Add more fields as needed
     });
