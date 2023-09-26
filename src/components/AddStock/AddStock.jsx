@@ -114,8 +114,8 @@ const AddStock = () => {
             style={{ maxWidth: '100%' }}
           />
           {detectedBarcode && (
-            <div className="mt-3">
-              <p className="fw-bold">Detected Barcode: {detectedBarcode}</p>
+            <div className="text-center mt-3">
+              <p>Detected Barcode: {detectedBarcode}</p>
             </div>
           )}
         </div>
@@ -126,30 +126,83 @@ const AddStock = () => {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Detected Barcode Modal"
-        className="custom-modal" // Add a custom CSS class for the modal
-        overlayClassName="custom-overlay" // Add a custom CSS class for the modal overlay
       >
-        <h2 className="text-center">Detected Barcode</h2>
-        <p className="text-center">Barcode Number: {detectedBarcode}</p>
+        <h2>Detected Barcode</h2>
+        <p>Barcode Number: {detectedBarcode}</p>
 
         {/* Display matching items or Stock data */}
-        <h3 className="text-center">Matching Items:</h3>
+        <h3>Matching Items:</h3>
         <form>
-          {matchingItems.map((item, index) => (
-            <div key={index} className="mb-3">
-              <label className="form-label">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                value={item.name}
-                required
-                disabled
-              />
-            </div>
-          ))}
-        </form>
+    {matchingItems.map((item, index) => (
+      <div key={index} className="mb-3">
+        <label className="form-label">Name</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.name}
+          required
+          disabled
+        />
+        <label className="form-label">Brand</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.brand}
+          required
+          disabled
+        />
+        <label className="form-label">Quantity</label>
+        <input
+          type="text"
+          className="form-control"
+          required
+          value={item.quantity}
+        />
+        <label className="form-label">Expiry Date</label>
+        <input
+          type="date"
+          className="form-control"
+          required
+          value={item.expiry_date}
+        />
+        <label className="form-label">Item Number</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.item_number}
+          required
+          disabled
+        />
+        <label className="form-label">Barcode Number</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.barcode_number}
+          required
+          disabled
+        />
+        <label className="form-label">Animal</label>
+        <input
+          type="text"
+          className="form-control"
+          value={item.animal}
+          required
+          disabled
+        />
+        <label className="form-label">Updated</label>
+        <input
+          type="text"
+          className="form-control"
+          value="0"
+          required
+          disabled
+        />
+      </div>
+    ))}
+  </form>
 
-        <button onClick={closeModal} className="btn btn-primary mt-3">Close</button>
+
+        <button onClick={closeModal}>Close</button>
       </Modal>
     </div>
   );
