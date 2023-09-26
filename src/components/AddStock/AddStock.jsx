@@ -111,16 +111,19 @@ const AddStock = () => {
   const handleSubmit = async () => {
     try {
       // Parse the user-inputted date string to a JavaScript Date object
-      const expiryDate = new Date(formData.editedExpiryDate);
+      const dateParts = formData.editedExpiryDate.split('-');
+      const year = parseInt(dateParts[0]);
+      const month = parseInt(dateParts[1]) - 1; // Months are zero-based
+      const day = parseInt(dateParts[2]);
+      
+      // Create a new Date object with the user-selected date at midnight
+      const expiryDate = new Date(year, month, day, 0, 0, 0, 0);
   
-      if (isNaN(expiryDate)) {
+      if (isNaN(expiryDate.getTime())) {
         // Handle invalid date input
         console.error('Invalid expiry date');
         return;
       }
-  
-      // Set the time to midnight (00:00:00)
-      expiryDate.setHours(0, 0, 0, 0);
   
       // Calculate the Unix timestamp based on the user-inputted date at midnight
       const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
@@ -159,6 +162,7 @@ const AddStock = () => {
       console.error('Error adding document: ', error);
     }
   };
+  
 
   return (
     <div>
