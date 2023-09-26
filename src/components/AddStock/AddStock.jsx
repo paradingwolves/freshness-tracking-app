@@ -110,23 +110,24 @@ const AddStock = () => {
 
   const handleSubmit = async () => {
     try {
-      // Parse the user-inputted date string to a JavaScript Date object
+     // Parse the user-inputted date string to a JavaScript Date object
       const dateParts = formData.editedExpiryDate.split('-');
       const year = parseInt(dateParts[0]);
-      const month = parseInt(dateParts[1]) - 1; // Months are zero-based
+      const month = parseInt(dateParts[1]); // No need to subtract 1
       const day = parseInt(dateParts[2]);
-      
+
       // Create a new Date object with the user-selected date at midnight
-      const expiryDate = new Date(year, month, day, 0, 0, 0, 0);
-  
+      const expiryDate = new Date(year, month - 1, day, 0, 0, 0, 0); // Adjust month here
+
       if (isNaN(expiryDate.getTime())) {
         // Handle invalid date input
         console.error('Invalid expiry date');
         return;
       }
-  
+
       // Calculate the Unix timestamp based on the user-inputted date at midnight
       const expiryTimestamp = expiryDate.getTime() / 1000;
+
   
       // Parse the "editedUpdated" value to ensure it's a number
       const updatedValue = parseFloat(formData.editedUpdated);
