@@ -19,7 +19,7 @@ const AddStock = () => {
   const [formData, setFormData] = useState({
     name: '',
     brand: '',
-    quantity: 1,
+    quantity: '',
     expiry_date: '',
     item_number: '',
     barcode_number_number: '',
@@ -125,16 +125,19 @@ const AddStock = () => {
     formDataToUpdate.updated = matchingItem.updated;
   
     // Convert the expiry_date to a Unix timestamp for midnight of that day
-    if (formData.expiry_date) {
-      const expiryDate = new Date(formData.expiry_date);
-      if (!isNaN(expiryDate)) {
-        expiryDate.setHours(0, 0, 0, 0); // Set time to midnight
-        formDataToUpdate.expiry_date = expiryDate.getTime() / 1000;
-      } else {
-        console.error('Invalid expiry date format');
-        return; // Prevent further execution if the date is invalid
-      }
+    // Convert the expiry_date to a Unix timestamp for midnight of that day
+  if (formData.expiry_date) {
+    const [year, month, day] = formData.expiry_date.split('-').map(Number);
+    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+      const expiryDate = new Date(year, month - 1, day); // Months are 0-based
+      expiryDate.setHours(0, 0, 0, 0); // Set time to midnight
+      formDataToUpdate.expiry_date = expiryDate.getTime() / 1000;
+    } else {
+      console.error('Invalid expiry date format');
+      return; // Prevent further execution if the date is invalid
     }
+  }
+
   
     // Call the addStockItem function to add the item to Firebase
     const addedSuccessfully = await addStockItem(detectedBarcode, formDataToUpdate);
@@ -196,7 +199,9 @@ const AddStock = () => {
                 type="number"
                 className="form-control"
                 required
-                placeholder={item.quantity}
+                value={item.quantity}
+                onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+
               />
               <label className="form-label">Expiry Date</label>
               <input
@@ -210,7 +215,8 @@ const AddStock = () => {
               <input
                 type="number"
                 className="form-control"
-                placeholder={item.updated}
+                value={item.updated}
+                onChange={(e) => setFormData({ ...formData, updated: e.target.value })}
                 required
               />
               <label className="form-label">Item Number</label>
