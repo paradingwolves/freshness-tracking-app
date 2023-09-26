@@ -174,7 +174,7 @@ const AddStock = () => {
               type="text"
               className="form-control"
               required
-              value={item.quantity}
+              placeholder={item.quantity}
             />
             <label className="form-label">Expiry Date</label>
             <input
