@@ -9,7 +9,7 @@ const useAddStock = () => {
     setIsLoading(true);
 
     try {
-      const { name, brand, quantity, expiry_date, item_number } = formData;
+      const { name, brand, quantity, expiry_date, item_number, animal } = formData;
       const timestamp = new Date(expiry_date + 'T00:00:00').getTime() / 1000; // Convert to Unix timestamp
 
       // Check if an item with the same item_number and expiry_date exists
@@ -31,6 +31,7 @@ const useAddStock = () => {
           quantity: parseInt(quantity),
           expiry_date: timestamp,
           item_number,
+          animal,
           barcode_number: barcode,
           // Add other item properties as needed
         });

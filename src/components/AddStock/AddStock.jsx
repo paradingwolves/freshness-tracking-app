@@ -16,6 +16,14 @@ const AddStock = () => {
   const [stockData, setStockData] = useState([]); // State to hold Stock data
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
   const { addStockItem, isLoading } = useAddStock(); // Use the useAddStock hook
+  const [formData, setFormData] = useState({
+    name: '',
+    brand: '',
+    quantity: 1,
+    expiry_date: '',
+    item_number: '',
+    // Add more fields as needed
+  });
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -101,16 +109,22 @@ const AddStock = () => {
     fetchStockData();
   }, []);
 
-  const handleSubmit = async () => {
-    // Extract form data here (replace with actual form data extraction)
-    const formData = {
-      name: 'Item Name',
-      brand: 'Item Brand',
-      quantity: 1,
-      expiry_date: '2023-12-31',
-      item_number: '12345',
-    };
+  const handleInputChange = (e) => {
+    const { name, brand, expiry_date, quantity, updated, animal, item_number, barcode_number, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+      [brand]: value,
+      [expiry_date]: value,
+      [quantity]: value,
+      [updated]: value,
+      [animal]: value,
+      [item_number]: value,
+      [barcode_number]: value,
+    });
+  };
 
+  const handleSubmit = async () => {
     // Call the addStockItem function to add the item to Firebase
     const addedSuccessfully = await addStockItem(detectedBarcode, formData);
 
@@ -122,7 +136,6 @@ const AddStock = () => {
       console.error('Failed to add item');
     }
   };
-
 
   return (
     <div>
@@ -147,86 +160,99 @@ const AddStock = () => {
         onRequestClose={closeModal}
         contentLabel="Detected Barcode Modal"
       >
-
         {/* Display matching items or Stock data */}
         <h3>Matching Items:</h3>
         <form>
           {matchingItems.map((item, index) => (
-          <div key={index} className="mb-3">
-            <label className="form-label">Name</label>
-            <input
-              type="text"
-              className="form-control"
-              value={item.name}
-              required
-              disabled
-            />
-            <label className="form-label">Brand</label>
-            <input
-              type="text"
-              className="form-control"
-              value={item.brand}
-              required
-              disabled
-            />
-            <label className="form-label">Quantity</label>
-            <input
-              type="text"
-              className="form-control"
-              required
-              placeholder={item.quantity}
-            />
-            <label className="form-label">Expiry Date</label>
-            <input
-              type="date"
-              className="form-control"
-              required
-              
-            />
-            <label className="form-label">Item Number</label>
-            <input
-              type="text"
-              className="form-control"
-              value={item.item_number}
-              required
-              disabled
-            />
-            <label className="form-label">Barcode Number</label>
-            <input
-              type="text"
-              className="form-control"
-              value={item.barcode_number}
-              required
-              disabled
-            />
-            <label className="form-label">Animal</label>
-            <input
-              type="text"
-              className="form-control"
-              value={item.animal}
-              required
-              disabled
-            />
-            <label className="form-label">Updated</label>
-            <input
-              type="text"
-              className="form-control"
-              value="0"
-              required
-              disabled
-            />
-          </div>
-        ))}
-      </form>
-         {/* Add the submit button */}
-         <button
-          className="btn btn-primary"
+            <div key={index} className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                disabled
+              />
+              <label className="form-label">Brand</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={formData.brand}
+                onChange={handleInputChange}
+                required
+                disabled
+              />
+              <label className="form-label">Expiry Date</label>
+              <input
+                type="date"
+                className="form-control"
+                name="name"
+                value={formData.expiry_date}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Quantity</label>
+              <input
+                type="number"
+                className="form-control"
+                name="name"
+                value={formData.quantity}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Updated</label>
+              <input
+                type="number"
+                className="form-control"
+                name="name"
+                value={formData.updated}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Animal</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={formData.animal}
+                onChange={handleInputChange}
+                required
+                disabled
+              />
+              <label className="form-label">Item Number</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={formData.item_number}
+                onChange={handleInputChange}
+                required
+                disabled
+              />
+              <label className="form-label">Barcode Number</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={formData.barcode_number}
+                onChange={handleInputChange}
+                required
+                disabled
+              />
+            </div>
+          ))}
+        </form>
+        {/* Add the submit button */}
+        <button
+          className="btn btn-rounded btn-success"
           onClick={handleSubmit}
           disabled={isLoading}
         >
           {isLoading ? 'Adding...' : 'Submit'}
         </button>
-
         <button className="btn btn-rounded btn-danger" onClick={closeModal}>Close</button>
       </Modal>
     </div>
