@@ -5,8 +5,8 @@ import Quagga from 'quagga';
 import Modal from 'react-modal';
 import useMatchingStockData from '../../hooks/ScanStock';
 import { db } from '../../lib/firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
-import useAddStock from '../../hooks/AddStock';
+import { collection, getDocs, addDoc, query, where, updateDoc } from 'firebase/firestore';
+
 
 const AddStock = () => {
   const videoRef = useRef(null);
@@ -14,6 +14,7 @@ const AddStock = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [stockData, setStockData] = useState([]);
+  const [searchBarcode, setSearchBarcode] = useState('');
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
   
 
@@ -21,6 +22,7 @@ const AddStock = () => {
     editedQuantity: '',
     editedExpiryDate: '',
     editedUpdated: '',
+    editedSize: '',
   });
 
   const openModal = () => {
@@ -31,6 +33,14 @@ const AddStock = () => {
   const closeModal = () => {
     setModalIsOpen(false);
     startScanning();
+  };
+  const handleSearch = () => {
+    // Trigger a search by barcode_number action here
+    if (searchBarcode) {
+      const sanitizedBarcode = searchBarcode.startsWith('0') ? searchBarcode.substring(1) : searchBarcode;
+      setDetectedBarcode(sanitizedBarcode);
+      openModal();
+    }
   };
 
   useEffect(() => {
@@ -121,20 +131,17 @@ const AddStock = () => {
         return;
       }
   
+      // Add the EST timezone offset in minutes and convert it to milliseconds
+      const timezoneOffsetMs = (expiryDate.getTimezoneOffset() + 300) * 60 * 1000; // 300 minutes = 5 hours
+  
+      // Adjust the date by adding the timezone offset
+      expiryDate.setTime(expiryDate.getTime() + timezoneOffsetMs);
+  
       // Set the time to midnight (00:00:00)
       expiryDate.setHours(0, 0, 0, 0);
   
-      // Calculate the Unix timestamp based on the user-inputted date at midnight
-      const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
-  
-      // Parse the "editedUpdated" value to ensure it's a number
-      const updatedValue = parseFloat(formData.editedUpdated);
-  
-      if (isNaN(updatedValue)) {
-        // Handle invalid updated value
-        console.error('Invalid updated value');
-        return;
-      }
+      // Calculate the Unix timestamp based on the adjusted date at midnight
+      const expiryTimestamp = expiryDate.getTime(); // Convert to milliseconds
   
       // Find the item with the largest expiry date
       const largestExpiryItem = matchingItems.reduce((prev, current) => {
@@ -142,27 +149,52 @@ const AddStock = () => {
         return currentExpiry > prev.expiry_date ? current : prev;
       });
   
-      const newFormData = {
-        name: largestExpiryItem.name,
-        brand: largestExpiryItem.brand,
-        quantity: formData.editedQuantity,
-        updated: updatedValue, // Parse "updated" as a number
-        expiry_date: expiryTimestamp, // Use the calculated timestamp
-        item_number: largestExpiryItem.item_number,
-        barcode_number: largestExpiryItem.barcode_number,
-        animal: largestExpiryItem.animal,
-      };
+      // Check if a document with the same item_number and expiry_date exists
+      const stockRef = collection(db, 'Stock');
+      const querySnapshot = await getDocs(
+        query(
+          stockRef,
+          where('item_number', '==', largestExpiryItem.item_number),
+          where('expiry_date', '==', expiryTimestamp)
+        )
+      );
   
-      const docRef = await addDoc(collection(db, 'Stock'), newFormData);
+      if (querySnapshot.size > 0) {
+        // Document already exists, update its quantity by adding the new quantity
+        querySnapshot.forEach(async (doc) => {
+          const docRef = doc.data();
+          const newQuantity =
+            docRef.quantity + parseFloat(formData.editedQuantity);
   
-      console.log('Document written with ID: ', docRef.id);
-      closeModal();
+          // Update the quantity of the existing document
+          await updateDoc(doc.ref, { quantity: newQuantity });
+  
+          console.log('Document updated with ID: ', doc.id);
+          closeModal();
+        });
+      } else {
+        // Document doesn't exist, add a new one
+        const newFormData = {
+          name: largestExpiryItem.name,
+          brand: largestExpiryItem.brand,
+          size: largestExpiryItem.size,
+          quantity: parseFloat(formData.editedQuantity), // Parse quantity as a number
+          updated: parseFloat(formData.editedUpdated), // Parse "updated" as a number
+          expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
+          item_number: largestExpiryItem.item_number,
+          barcode_number: largestExpiryItem.barcode_number,
+          animal: largestExpiryItem.animal,
+        };
+  
+        const docRef = await addDoc(stockRef, newFormData);
+  
+        console.log('Document written with ID: ', docRef.id);
+        closeModal();
+      }
     } catch (error) {
-      console.error('Error adding document: ', error);
+      console.error('Error adding/updating document: ', error);
     }
   };
-  
-  
   
 
   return (
@@ -180,6 +212,17 @@ const AddStock = () => {
             style={{ maxWidth: '100%' }}
           />
         </div>
+        <div className="text-center my-3">
+          <input
+            type="text"
+            placeholder="Search by barcode_number"
+            value={searchBarcode}
+            onChange={(e) => setSearchBarcode(e.target.value)}
+          />
+          <button className="btn btn-primary" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
       </div>
       <Footer />
 
@@ -188,15 +231,16 @@ const AddStock = () => {
         onRequestClose={closeModal}
         contentLabel="Detected Barcode Modal"
       >
-        <h3>Matching Items:</h3>
+        <h3>Matching Item:</h3>
         <form>
-          {matchingItems.map((item, index) => (
-            <div key={index} className="mb-3">
+          {/* Display details for the first matching item */}
+          {matchingItems.length > 0 && (
+            <div className="mb-3">
               <label className="form-label">Name</label>
               <input
                 type="text"
                 className="form-control"
-                value={item.name}
+                value={matchingItems[0].name}
                 required
                 disabled
               />
@@ -204,7 +248,7 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                value={item.brand}
+                value={matchingItems[0].brand}
                 required
                 disabled
               />
@@ -235,11 +279,19 @@ const AddStock = () => {
                 onChange={handleInputChange}
                 required
               />
+              <label className="form-label">Size</label>
+              <input
+                type="text"
+                className="form-control"
+                name="size"
+                value={matchingItems[0].size}
+                required
+              />
               <label className="form-label">Item Number</label>
               <input
                 type="text"
                 className="form-control"
-                value={item.item_number}
+                value={matchingItems[0].item_number}
                 required
                 disabled
               />
@@ -247,7 +299,7 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                value={item.barcode_number}
+                value={matchingItems[0].barcode_number}
                 required
                 disabled
               />
@@ -255,12 +307,12 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                value={item.animal}
+                value={matchingItems[0].animal}
                 required
                 disabled
               />
             </div>
-          ))}
+          )}
         </form>
 
         <button className="btn mx-1 btn-rounded btn-success" onClick={handleSubmit}>

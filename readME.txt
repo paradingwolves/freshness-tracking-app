@@ -75,6 +75,8 @@ npm packages installed:
     Date Modified: September 26, 2023
 ------------------------------------------------------------------
     1. Updated the AddStock.jsx UI
-
+    2. AddStock.jsx now has a form in case the scanner isnt working
+    3. AddStock.jsx now works and adds new content to the db    
+        - if there is matching item_number and expiry_date, the quantities are combined rather than adding a new item
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
