@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import useMatchingStockData from '../../hooks/ScanStock'; // Import the hook
 import { db } from '../../lib/firebase'; // Import Firebase configuration
 import { collection, getDocs } from 'firebase/firestore';
+import useAddStock from '../../hooks/AddStock';
 
 const AddStock = () => {
   const videoRef = useRef(null);
@@ -14,6 +15,7 @@ const AddStock = () => {
   const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
   const [stockData, setStockData] = useState([]); // State to hold Stock data
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
+  const { addStockItem, isLoading } = useAddStock(); // Initialize the useAddStock custom hook
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -99,6 +101,31 @@ const AddStock = () => {
     fetchStockData();
   }, []);
 
+  // Create a function to handle form submission
+  const handleSubmit = async () => {
+    // Extract form data here (replace with actual form data extraction)
+    const formData = {
+      name: 'Item Name',
+      brand: 'Item Brand',
+      quantity: 1,
+      expiry_date: '2023-12-31',
+      item_number: '12345',
+      barcode_number: detectedBarcode,
+      animal: 'Animal Type',
+    };
+
+    // Call the addStockItem function to add the item to Firebase
+    const addedSuccessfully = await addStockItem(detectedBarcode, formData);
+
+    if (addedSuccessfully) {
+      // Optionally, you can show a success message or clear the form here
+      console.log('Item added successfully');
+    } else {
+      // Handle the error or display an error message
+      console.error('Failed to add item');
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -113,11 +140,6 @@ const AddStock = () => {
             muted
             style={{ maxWidth: '100%' }}
           />
-          {detectedBarcode && (
-            <div className="text-center mt-3">
-              <p>Detected Barcode: {detectedBarcode}</p>
-            </div>
-          )}
         </div>
       </div>
       <Footer />
@@ -127,82 +149,26 @@ const AddStock = () => {
         onRequestClose={closeModal}
         contentLabel="Detected Barcode Modal"
       >
-        <h2>Detected Barcode</h2>
-        <p>Barcode Number: {detectedBarcode}</p>
-
         {/* Display matching items or Stock data */}
         <h3>Matching Items:</h3>
         <form>
-    {matchingItems.map((item, index) => (
-      <div key={index} className="mb-3">
-        <label className="form-label">Name</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.name}
-          required
-          disabled
-        />
-        <label className="form-label">Brand</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.brand}
-          required
-          disabled
-        />
-        <label className="form-label">Quantity</label>
-        <input
-          type="text"
-          className="form-control"
-          required
-          value={item.quantity}
-        />
-        <label className="form-label">Expiry Date</label>
-        <input
-          type="date"
-          className="form-control"
-          required
-          value={item.expiry_date}
-        />
-        <label className="form-label">Item Number</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.item_number}
-          required
-          disabled
-        />
-        <label className="form-label">Barcode Number</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.barcode_number}
-          required
-          disabled
-        />
-        <label className="form-label">Animal</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.animal}
-          required
-          disabled
-        />
-        <label className="form-label">Updated</label>
-        <input
-          type="text"
-          className="form-control"
-          value="0"
-          required
-          disabled
-        />
-      </div>
-    ))}
-  </form>
+          {matchingItems.map((item, index) => (
+            <div key={index} className="mb-3">
+              {/* ... (previous code for displaying matching items) */}
+            </div>
+          ))}
+        </form>
 
+        {/* Add the submit button */}
+        <button
+          className="btn btn-primary mt-3"
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Adding...' : 'Submit'}
+        </button>
 
-        <button onClick={closeModal}>Close</button>
+        <button className="btn btn-rounded btn-danger" onClick={closeModal}>Close</button>
       </Modal>
     </div>
   );
