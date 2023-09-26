@@ -112,12 +112,34 @@ const AddStock = () => {
 
   const handleSubmit = async () => {
     try {
+      // Parse the user-inputted date string to a JavaScript Date object
+      const expiryDate = new Date(editedExpiryDate);
+  
+      if (isNaN(expiryDate)) {
+        // Handle invalid date input
+        console.error('Invalid expiry date');
+        return;
+      }
+  
+      // Set the time to midnight (00:00:00)
+      expiryDate.setHours(0, 0, 0, 0);
+  
+      // Parse the "updated" value to ensure it's a number
+      const updatedValue = parseFloat(editedUpdated);
+  
+      if (isNaN(updatedValue)) {
+        // Handle invalid updated value
+        console.error('Invalid updated value');
+        return;
+      }
+  
       const formData = {
         name: matchingItems[0].name,
         brand: matchingItems[0].brand,
         quantity: editedQuantity,
-        updated: editedUpdated,
-        expiry_date: new Date(editedExpiryDate).setUTCHours(0, 0, 0, 0) / 1000, // Convert to Unix timestamp at midnight
+        updated: updatedValue, // Parse "updated" as a number
+        // Calculate the Unix timestamp based on the user-inputted date at midnight
+        expiry_date: Math.floor(expiryDate.getTime() / 1000), // Convert to Unix timestamp
         item_number: matchingItems[0].item_number,
         barcode_number: matchingItems[0].barcode_number,
         animal: matchingItems[0].animal,
@@ -131,6 +153,7 @@ const AddStock = () => {
       console.error('Error adding document: ', error);
     }
   };
+  
 
   return (
     <div>
