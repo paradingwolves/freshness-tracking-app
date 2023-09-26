@@ -111,7 +111,8 @@ const AddStock = () => {
   const handleSubmit = async () => {
     try {
       // Parse the user-inputted date string to a JavaScript Date object
-      const expiryDate = new Date(formData.editedExpiryDate);
+      const [month, day, year] = formData.editedExpiryDate.split('/');
+      const expiryDate = new Date(`${year}-${month}-${day}`);
   
       if (isNaN(expiryDate.getTime())) {
         // Handle invalid date input
