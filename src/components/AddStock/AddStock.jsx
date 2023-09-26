@@ -115,21 +115,23 @@ const AddStock = () => {
   const handleSubmit = async () => {
     // Use matching stock data as the initial form data
     const matchingItem = matchingItems[0]; // Assuming there's only one matching item
-    setFormData({
-      name: matchingItem.name,
-      brand: matchingItem.brand,
-      quantity: matchingItem.quantity,
-      expiry_date: new Date(matchingItem.expiry_date * 1000).toISOString().split('T')[0], // Convert Unix timestamp to date string
-      item_number: matchingItem.item_number,
-      barcode_number: matchingItem.barcode_number,
-      updated: matchingItem.updated,
-      animal: matchingItem.animal,
-      // Add more fields as needed
-    });
-
+    const formDataToUpdate = { ...formData };
+    formDataToUpdate.name = matchingItem.name;
+    formDataToUpdate.brand = matchingItem.brand;
+    formDataToUpdate.quantity = matchingItem.quantity;
+    formDataToUpdate.item_number = matchingItem.item_number;
+    formDataToUpdate.barcode_number = matchingItem.barcode_number;
+    formDataToUpdate.animal = matchingItem.animal;
+  
+    // Convert the expiry_date to a Unix timestamp
+    if (matchingItem.expiry_date) {
+      const expiryDate = new Date(matchingItem.expiry_date);
+      formDataToUpdate.expiry_date = expiryDate.getTime() / 1000;
+    }
+  
     // Call the addStockItem function to add the item to Firebase
-    const addedSuccessfully = await addStockItem(detectedBarcode, formData);
-
+    const addedSuccessfully = await addStockItem(detectedBarcode, formDataToUpdate);
+  
     if (addedSuccessfully) {
       // Optionally, you can show a success message or clear the form here
       console.log('Item added successfully');
@@ -138,7 +140,6 @@ const AddStock = () => {
       console.error('Failed to add item');
     }
   };
-
   return (
     <div>
       <Header />
