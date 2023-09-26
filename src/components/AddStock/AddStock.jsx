@@ -22,6 +22,9 @@ const AddStock = () => {
     quantity: 1,
     expiry_date: '',
     item_number: '',
+    barcode_number_number: '',
+    updated: '',
+    animal: '',
     // Add more fields as needed
   });
 
@@ -109,22 +112,21 @@ const AddStock = () => {
     fetchStockData();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, brand, expiry_date, quantity, updated, animal, item_number, barcode_number, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-      [brand]: value,
-      [expiry_date]: value,
-      [quantity]: value,
-      [updated]: value,
-      [animal]: value,
-      [item_number]: value,
-      [barcode_number]: value,
-    });
-  };
-
   const handleSubmit = async () => {
+    // Use matching stock data as the initial form data
+    const matchingItem = matchingItems[0]; // Assuming there's only one matching item
+    setFormData({
+      name: matchingItem.name,
+      brand: matchingItem.brand,
+      expiry_date: '', // You can set an initial value here if needed
+      quantity: '',
+      updated: '',
+      item_number: matchingItem.item_number,
+      barcode_number: matchingItem.barcode_number,
+      animal: matchingItem.animal,
+      // Add more fields as needed
+    });
+
     // Call the addStockItem function to add the item to Firebase
     const addedSuccessfully = await addStockItem(detectedBarcode, formData);
 
@@ -169,9 +171,7 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
+                value={item.name}
                 required
                 disabled
               />
@@ -179,56 +179,37 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                name="name"
-                value={formData.brand}
-                onChange={handleInputChange}
+                value={item.brand}
                 required
                 disabled
-              />
-              <label className="form-label">Expiry Date</label>
-              <input
-                type="date"
-                className="form-control"
-                name="name"
-                value={formData.expiry_date}
-                onChange={handleInputChange}
-                required
               />
               <label className="form-label">Quantity</label>
               <input
                 type="number"
                 className="form-control"
-                name="name"
-                value={formData.quantity}
-                onChange={handleInputChange}
+                required
+                placeholder={item.quantity}
+              />
+              <label className="form-label">Expiry Date</label>
+              <input
+                type="date"
+                className="form-control"
+                value={formData.expiry_date}
+                onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
                 required
               />
               <label className="form-label">Updated</label>
               <input
                 type="number"
                 className="form-control"
-                name="name"
-                value={formData.updated}
-                onChange={handleInputChange}
+                placeholder={item.updated}
                 required
-              />
-              <label className="form-label">Animal</label>
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                value={formData.animal}
-                onChange={handleInputChange}
-                required
-                disabled
               />
               <label className="form-label">Item Number</label>
               <input
                 type="text"
                 className="form-control"
-                name="name"
-                value={formData.item_number}
-                onChange={handleInputChange}
+                value={item.item_number}
                 required
                 disabled
               />
@@ -236,12 +217,19 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                name="name"
-                value={formData.barcode_number}
-                onChange={handleInputChange}
+                value={item.barcode_number}
                 required
                 disabled
               />
+              <label className="form-label">Animal</label>
+              <input
+                type="text"
+                className="form-control"
+                value={item.animal}
+                required
+                disabled
+              />
+              {/* Add other fields as needed */}
             </div>
           ))}
         </form>
@@ -253,6 +241,7 @@ const AddStock = () => {
         >
           {isLoading ? 'Adding...' : 'Submit'}
         </button>
+
         <button className="btn btn-rounded btn-danger" onClick={closeModal}>Close</button>
       </Modal>
     </div>
