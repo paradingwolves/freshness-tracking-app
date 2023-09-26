@@ -62,7 +62,7 @@ npm packages installed:
     3. updated the StockTable component to display what discount the product currently is at
 
 ------------------------------------------------------------------
-    Date Modified: September 22, 2023
+    Date Modified: September 25, 2023
 ------------------------------------------------------------------
     1. updated the filter display to exclude other filters in each section.
     2. updated mobile table view:
@@ -70,6 +70,11 @@ npm packages installed:
            - product.name is shortened to exclude brand name
            - product.name is shortened to one line with ellipses.
        /cm
+
+------------------------------------------------------------------
+    Date Modified: September 26, 2023
+------------------------------------------------------------------
+    1. Updated the AddStock.jsx UI
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
