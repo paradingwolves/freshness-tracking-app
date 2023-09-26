@@ -15,21 +15,11 @@ const AddStock = () => {
   const [stockData, setStockData] = useState([]);
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
 
-  const [editedQuantity, setEditedQuantity] = useState('');
-  const [editedExpiryDate, setEditedExpiryDate] = useState('');
-  const [editedUpdated, setEditedUpdated] = useState('');
-
-  const handleQuantityChange = (event) => {
-    setEditedQuantity(event.target.value);
-  };
-
-  const handleExpiryDateChange = (event) => {
-    setEditedExpiryDate(event.target.value);
-  };
-
-  const handleUpdatedChange = (event) => {
-    setEditedUpdated(event.target.value);
-  };
+  const [formData, setFormData] = useState({
+    editedQuantity: '',
+    editedExpiryDate: '',
+    editedUpdated: '',
+  });
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -110,10 +100,18 @@ const AddStock = () => {
     fetchStockData();
   }, []);
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   const handleSubmit = async () => {
     try {
       // Parse the user-inputted date string to a JavaScript Date object
-      const expiryDate = new Date(editedExpiryDate);
+      const expiryDate = new Date(formData.editedExpiryDate);
   
       if (isNaN(expiryDate)) {
         // Handle invalid date input
@@ -124,8 +122,8 @@ const AddStock = () => {
       // Set the time to midnight (00:00:00)
       expiryDate.setHours(0, 0, 0, 0);
   
-      // Parse the "updated" value to ensure it's a number
-      const updatedValue = parseFloat(editedUpdated);
+      // Parse the "editedUpdated" value to ensure it's a number
+      const updatedValue = parseFloat(formData.editedUpdated);
   
       if (isNaN(updatedValue)) {
         // Handle invalid updated value
@@ -133,10 +131,10 @@ const AddStock = () => {
         return;
       }
   
-      const formData = {
+      const newFormData = {
         name: matchingItems[0].name,
         brand: matchingItems[0].brand,
-        quantity: editedQuantity,
+        quantity: formData.editedQuantity,
         updated: updatedValue, // Parse "updated" as a number
         // Calculate the Unix timestamp based on the user-inputted date at midnight
         expiry_date: Math.floor(expiryDate.getTime() / 1000), // Convert to Unix timestamp
@@ -145,7 +143,7 @@ const AddStock = () => {
         animal: matchingItems[0].animal,
       };
   
-      const docRef = await addDoc(collection(db, 'Stock'), formData);
+      const docRef = await addDoc(collection(db, 'Stock'), newFormData);
   
       console.log('Document written with ID: ', docRef.id);
       closeModal();
@@ -153,7 +151,6 @@ const AddStock = () => {
       console.error('Error adding document: ', error);
     }
   };
-  
 
   return (
     <div>
@@ -202,24 +199,27 @@ const AddStock = () => {
               <input
                 type="number"
                 className="form-control"
-                value={editedQuantity}
-                onChange={handleQuantityChange}
+                name="editedQuantity"
+                value={formData.editedQuantity}
+                onChange={handleInputChange}
                 required
               />
               <label className="form-label">Updated</label>
               <input
                 type="number"
                 className="form-control"
-                value={editedUpdated}
-                onChange={handleUpdatedChange}
+                name="editedUpdated"
+                value={formData.editedUpdated}
+                onChange={handleInputChange}
                 required
               />
               <label className="form-label">Expiry Date</label>
               <input
                 type="date"
                 className="form-control"
-                value={editedExpiryDate}
-                onChange={handleExpiryDateChange}
+                name="editedExpiryDate"
+                value={formData.editedExpiryDate}
+                onChange={handleInputChange}
                 required
               />
               <label className="form-label">Item Number</label>
