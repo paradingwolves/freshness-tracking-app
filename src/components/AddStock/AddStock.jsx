@@ -126,7 +126,7 @@ const AddStock = () => {
       }
   
       // Calculate the Unix timestamp based on the user-inputted date at midnight
-      const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
+      const expiryTimestamp = expiryDate.getTime() / 1000;
   
       // Parse the "editedUpdated" value to ensure it's a number
       const updatedValue = parseFloat(formData.editedUpdated);
