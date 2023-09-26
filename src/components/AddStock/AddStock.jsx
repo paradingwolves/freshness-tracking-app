@@ -131,16 +131,22 @@ const AddStock = () => {
         return;
       }
   
+      // Find the item with the largest expiry date
+      const largestExpiryItem = matchingItems.reduce((prev, current) => {
+        const currentExpiry = new Date(current.expiry_date * 1000);
+        return currentExpiry > prev.expiry_date ? current : prev;
+      });
+
       const newFormData = {
-        name: matchingItems[0].name,
-        brand: matchingItems[0].brand,
+        name: largestExpiryItem.name,
+        brand: largestExpiryItem.brand,
         quantity: formData.editedQuantity,
         updated: updatedValue, // Parse "updated" as a number
         // Calculate the Unix timestamp based on the user-inputted date at midnight
         expiry_date: Math.floor(expiryDate.getTime() / 1000), // Convert to Unix timestamp
-        item_number: matchingItems[0].item_number,
-        barcode_number: matchingItems[0].barcode_number,
-        animal: matchingItems[0].animal,
+        item_number: largestExpiryItem.item_number,
+        barcode_number: largestExpiryItem.barcode_number,
+        animal: largestExpiryItem.animal,
       };
   
       const docRef = await addDoc(collection(db, 'Stock'), newFormData);
@@ -177,77 +183,75 @@ const AddStock = () => {
       >
         <h3>Matching Items:</h3>
         <form>
-          {matchingItems.map((item, index) => (
-            <div key={index} className="mb-3">
-              <label className="form-label">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                value={item.name}
-                required
-                disabled
-              />
-              <label className="form-label">Brand</label>
-              <input
-                type="text"
-                className="form-control"
-                value={item.brand}
-                required
-                disabled
-              />
-              <label className="form-label">Quantity</label>
-              <input
-                type="number"
-                className="form-control"
-                name="editedQuantity"
-                value={formData.editedQuantity}
-                onChange={handleInputChange}
-                required
-              />
-              <label className="form-label">Updated</label>
-              <input
-                type="number"
-                className="form-control"
-                name="editedUpdated"
-                value={formData.editedUpdated}
-                onChange={handleInputChange}
-                required
-              />
-              <label className="form-label">Expiry Date</label>
-              <input
-                type="date"
-                className="form-control"
-                name="editedExpiryDate"
-                value={formData.editedExpiryDate}
-                onChange={handleInputChange}
-                required
-              />
-              <label className="form-label">Item Number</label>
-              <input
-                type="text"
-                className="form-control"
-                value={item.item_number}
-                required
-                disabled
-              />
-              <label className="form-label">Barcode Number</label>
-              <input
-                type="text"
-                className="form-control"
-                value={item.barcode_number}
-                required
-                disabled
-              />
-              <label className="form-label">Animal</label>
-              <input
-                type="text"
-                className="form-control"
-                value={item.animal}
-                required
-                disabled
-              />
-            </div>
-          ))}
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.name}
+              required
+              disabled
+            />
+            <label className="form-label">Brand</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.brand}
+              required
+              disabled
+            />
+            <label className="form-label">Quantity</label>
+            <input
+              type="number"
+              className="form-control"
+              name="editedQuantity"
+              value={formData.editedQuantity}
+              onChange={handleInputChange}
+              required
+            />
+            <label className="form-label">Updated</label>
+            <input
+              type="number"
+              className="form-control"
+              name="editedUpdated"
+              value={formData.editedUpdated}
+              onChange={handleInputChange}
+              required
+            />
+            <label className="form-label">Expiry Date</label>
+            <input
+              type="date"
+              className="form-control"
+              name="editedExpiryDate"
+              value={formData.editedExpiryDate}
+              onChange={handleInputChange}
+              required
+            />
+            <label className="form-label">Item Number</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.item_number}
+              required
+              disabled
+            />
+            <label className="form-label">Barcode Number</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.barcode_number}
+              required
+              disabled
+            />
+            <label className="form-label">Animal</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.animal}
+              required
+              disabled
+            />
+          </div>
         </form>
 
         <button className="btn mx-1 btn-rounded btn-success" onClick={handleSubmit}>
