@@ -122,6 +122,9 @@ const AddStock = () => {
       // Set the time to midnight (00:00:00)
       expiryDate.setHours(0, 0, 0, 0);
   
+      // Calculate the Unix timestamp based on the user-inputted date at midnight
+      const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
+  
       // Parse the "editedUpdated" value to ensure it's a number
       const updatedValue = parseFloat(formData.editedUpdated);
   
@@ -131,16 +134,21 @@ const AddStock = () => {
         return;
       }
   
+      // Find the item with the largest expiry date
+      const largestExpiryItem = matchingItems.reduce((prev, current) => {
+        const currentExpiry = new Date(current.expiry_date * 1000);
+        return currentExpiry > prev.expiry_date ? current : prev;
+      });
+  
       const newFormData = {
-        name: matchingItems[0].name,
-        brand: matchingItems[0].brand,
+        name: largestExpiryItem.name,
+        brand: largestExpiryItem.brand,
         quantity: formData.editedQuantity,
         updated: updatedValue, // Parse "updated" as a number
-        // Calculate the Unix timestamp based on the user-inputted date at midnight
-        expiry_date: Math.floor(expiryDate.getTime() / 1000), // Convert to Unix timestamp
-        item_number: matchingItems[0].item_number,
-        barcode_number: matchingItems[0].barcode_number,
-        animal: matchingItems[0].animal,
+        expiry_date: expiryTimestamp, // Use the calculated timestamp
+        item_number: largestExpiryItem.item_number,
+        barcode_number: largestExpiryItem.barcode_number,
+        animal: largestExpiryItem.animal,
       };
   
       const docRef = await addDoc(collection(db, 'Stock'), newFormData);
