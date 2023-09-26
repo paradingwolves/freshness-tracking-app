@@ -122,6 +122,7 @@ const AddStock = () => {
     formDataToUpdate.item_number = matchingItem.item_number;
     formDataToUpdate.barcode_number = matchingItem.barcode_number;
     formDataToUpdate.animal = matchingItem.animal;
+    formDataToUpdate.updated = matchingItem.updated;
   
     // Convert the expiry_date to a Unix timestamp for midnight of that day
     if (formData.expiry_date) {
