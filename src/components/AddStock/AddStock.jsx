@@ -117,14 +117,14 @@ const AddStock = () => {
         brand: matchingItems[0].brand,
         quantity: editedQuantity,
         updated: editedUpdated,
-        expiry_date: Date.parse(editedExpiryDate + 'T00:00:00Z') / 1000, // Convert to Unix timestamp
+        expiry_date: new Date(editedExpiryDate).setUTCHours(0, 0, 0, 0) / 1000, // Convert to Unix timestamp at midnight
         item_number: matchingItems[0].item_number,
         barcode_number: matchingItems[0].barcode_number,
         animal: matchingItems[0].animal,
       };
-
+  
       const docRef = await addDoc(collection(db, 'Stock'), formData);
-
+  
       console.log('Document written with ID: ', docRef.id);
       closeModal();
     } catch (error) {
@@ -177,7 +177,7 @@ const AddStock = () => {
               />
               <label className="form-label">Quantity</label>
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 value={editedQuantity}
                 onChange={handleQuantityChange}
