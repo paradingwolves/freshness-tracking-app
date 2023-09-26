@@ -15,7 +15,7 @@ const AddStock = () => {
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [stockData, setStockData] = useState([]);
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
-  const { addStockToDB, error } = useAddStock();
+  
 
   const [formData, setFormData] = useState({
     editedQuantity: '',
@@ -120,6 +120,9 @@ const AddStock = () => {
         console.error('Invalid expiry date');
         return;
       }
+  
+      // Set the time to midnight (00:00:00)
+      expiryDate.setHours(0, 0, 0, 0);
   
       // Calculate the Unix timestamp based on the user-inputted date at midnight
       const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
