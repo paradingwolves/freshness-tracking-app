@@ -112,34 +112,34 @@ const AddStock = () => {
     try {
       // Parse the user-inputted date string to a JavaScript Date object
       const expiryDate = new Date(formData.editedExpiryDate);
-    
+  
       if (isNaN(expiryDate.getTime())) {
         // Handle invalid date input
         console.error('Invalid expiry date');
         return;
       }
-    
+  
       // Set the time to midnight (00:00:00)
       expiryDate.setHours(0, 0, 0, 0);
-    
+  
       // Calculate the Unix timestamp based on the user-inputted date at midnight
       const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
-    
+  
       // Parse the "editedUpdated" value to ensure it's a number
       const updatedValue = parseFloat(formData.editedUpdated);
-    
+  
       if (isNaN(updatedValue)) {
         // Handle invalid updated value
         console.error('Invalid updated value');
         return;
       }
-    
+  
       // Find the item with the largest expiry date
       const largestExpiryItem = matchingItems.reduce((prev, current) => {
         const currentExpiry = new Date(current.expiry_date * 1000);
         return currentExpiry > prev.expiry_date ? current : prev;
       });
-    
+  
       const newFormData = {
         name: largestExpiryItem.name,
         brand: largestExpiryItem.brand,
@@ -150,15 +150,16 @@ const AddStock = () => {
         barcode_number: largestExpiryItem.barcode_number,
         animal: largestExpiryItem.animal,
       };
-    
+  
       const docRef = await addDoc(collection(db, 'Stock'), newFormData);
-    
+  
       console.log('Document written with ID: ', docRef.id);
       closeModal();
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
+  
   
   
 
