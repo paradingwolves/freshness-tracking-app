@@ -123,10 +123,16 @@ const AddStock = () => {
     formDataToUpdate.barcode_number = matchingItem.barcode_number;
     formDataToUpdate.animal = matchingItem.animal;
   
-    // Convert the expiry_date to a Unix timestamp
-    if (matchingItem.expiry_date) {
-      const expiryDate = new Date(matchingItem.expiry_date);
-      formDataToUpdate.expiry_date = expiryDate.getTime() / 1000;
+    // Convert the expiry_date to a Unix timestamp for midnight of that day
+    if (formData.expiry_date) {
+      const expiryDate = new Date(formData.expiry_date);
+      if (!isNaN(expiryDate)) {
+        expiryDate.setHours(0, 0, 0, 0); // Set time to midnight
+        formDataToUpdate.expiry_date = expiryDate.getTime() / 1000;
+      } else {
+        console.error('Invalid expiry date format');
+        return; // Prevent further execution if the date is invalid
+      }
     }
   
     // Call the addStockItem function to add the item to Firebase
