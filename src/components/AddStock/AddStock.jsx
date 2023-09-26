@@ -3,28 +3,41 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 import Modal from 'react-modal';
-import useMatchingStockData from '../../hooks/ScanStock'; // Import the hook
-import { db } from '../../lib/firebase'; // Import Firebase configuration
-import { collection, getDocs } from 'firebase/firestore';
-
+import useMatchingStockData from '../../hooks/ScanStock';
+import { db } from '../../lib/firebase';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [scanningEnabled, setScanningEnabled] = useState(true); // Control scanner state
-  const [stockData, setStockData] = useState([]); // State to hold Stock data
-  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode); // Use the hook
+  const [scanningEnabled, setScanningEnabled] = useState(true);
+  const [stockData, setStockData] = useState([]);
+  const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
+
+  const [editedQuantity, setEditedQuantity] = useState('');
+  const [editedExpiryDate, setEditedExpiryDate] = useState('');
+  const [editedUpdated, setEditedUpdated] = useState('');
+
+  const handleQuantityChange = (event) => {
+    setEditedQuantity(event.target.value);
+  };
+
+  const handleExpiryDateChange = (event) => {
+    setEditedExpiryDate(event.target.value);
+  };
+
+  const handleUpdatedChange = (event) => {
+    setEditedUpdated(event.target.value);
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
-    // Disable scanning when the modal is open
     stopScanning();
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
-    // Re-enable scanning when the modal is closed
     startScanning();
   };
 
@@ -77,8 +90,6 @@ const AddStock = () => {
         const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
         console.log('Detected barcode:', sanitizedBarcode);
         setDetectedBarcode(sanitizedBarcode);
-
-        // Open the modal when a barcode is detected
         openModal();
       });
 
@@ -89,7 +100,6 @@ const AddStock = () => {
   }, [scanningEnabled]);
 
   useEffect(() => {
-    // Fetch Stock data from Firestore
     const fetchStockData = async () => {
       const stockRef = collection(db, 'Stock');
       const querySnapshot = await getDocs(stockRef);
@@ -99,6 +109,28 @@ const AddStock = () => {
 
     fetchStockData();
   }, []);
+
+  const handleSubmit = async () => {
+    try {
+      const formData = {
+        name: matchingItems[0].name,
+        brand: matchingItems[0].brand,
+        quantity: editedQuantity,
+        updated: editedUpdated,
+        expiry_date: Date.parse(editedExpiryDate + 'T00:00:00Z') / 1000, // Convert to Unix timestamp
+        item_number: matchingItems[0].item_number,
+        barcode_number: matchingItems[0].barcode_number,
+        animal: matchingItems[0].animal,
+      };
+
+      const docRef = await addDoc(collection(db, 'Stock'), formData);
+
+      console.log('Document written with ID: ', docRef.id);
+      closeModal();
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  };
 
   return (
     <div>
@@ -123,81 +155,84 @@ const AddStock = () => {
         onRequestClose={closeModal}
         contentLabel="Detected Barcode Modal"
       >
-
-        {/* Display matching items or Stock data */}
         <h3>Matching Items:</h3>
         <form>
-    {matchingItems.map((item, index) => (
-      <div key={index} className="mb-3">
-        <label className="form-label">Name</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.name}
-          required
-          disabled
-        />
-        <label className="form-label">Brand</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.brand}
-          required
-          disabled
-        />
-        <label className="form-label">Quantity</label>
-        <input
-          type="text"
-          className="form-control"
-          required
-          value={item.quantity}
-        />
-        <label className="form-label">Expiry Date</label>
-        <input
-          type="date"
-          className="form-control"
-          required
-          value={item.expiry_date}
-        />
-        <label className="form-label">Item Number</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.item_number}
-          required
-          disabled
-        />
-        <label className="form-label">Barcode Number</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.barcode_number}
-          required
-          disabled
-        />
-        <label className="form-label">Animal</label>
-        <input
-          type="text"
-          className="form-control"
-          value={item.animal}
-          required
-          disabled
-        />
-        <label className="form-label">Updated</label>
-        <input
-          type="text"
-          className="form-control"
-          value="0"
-          required
-          disabled
-        />
-      </div>
-    ))}
-  </form>
+          {matchingItems.map((item, index) => (
+            <div key={index} className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                value={item.name}
+                required
+                disabled
+              />
+              <label className="form-label">Brand</label>
+              <input
+                type="text"
+                className="form-control"
+                value={item.brand}
+                required
+                disabled
+              />
+              <label className="form-label">Quantity</label>
+              <input
+                type="text"
+                className="form-control"
+                value={editedQuantity}
+                onChange={handleQuantityChange}
+                required
+              />
+              <label className="form-label">Updated</label>
+              <input
+                type="number"
+                className="form-control"
+                value={editedUpdated}
+                onChange={handleUpdatedChange}
+                required
+              />
+              <label className="form-label">Expiry Date</label>
+              <input
+                type="date"
+                className="form-control"
+                value={editedExpiryDate}
+                onChange={handleExpiryDateChange}
+                required
+              />
+              <label className="form-label">Item Number</label>
+              <input
+                type="text"
+                className="form-control"
+                value={item.item_number}
+                required
+                disabled
+              />
+              <label className="form-label">Barcode Number</label>
+              <input
+                type="text"
+                className="form-control"
+                value={item.barcode_number}
+                required
+                disabled
+              />
+              <label className="form-label">Animal</label>
+              <input
+                type="text"
+                className="form-control"
+                value={item.animal}
+                required
+                disabled
+              />
+            </div>
+          ))}
+        </form>
 
-
-        <button className="btn mx-1 btn-rounded btn-success" onClick={closeModal}>Submit</button>
-        <button className="btn mx-1 btn-rounded btn-danger" onClick={closeModal}>Close</button>
+        <button className="btn mx-1 btn-rounded btn-success" onClick={handleSubmit}>
+          Submit
+        </button>
+        <button className="btn mx-1 btn-rounded btn-danger" onClick={closeModal}>
+          Close
+        </button>
       </Modal>
     </div>
   );
