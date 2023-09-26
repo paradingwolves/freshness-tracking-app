@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import useMatchingStockData from '../../hooks/ScanStock';
 import { db } from '../../lib/firebase';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
+import useAddStock from '../../hooks/AddStock';
 
 const AddStock = () => {
   const videoRef = useRef(null);
@@ -14,6 +15,7 @@ const AddStock = () => {
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [stockData, setStockData] = useState([]);
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
+  const { addStockToDB, error } = useAddStock();
 
   const [formData, setFormData] = useState({
     editedQuantity: '',
@@ -111,17 +113,13 @@ const AddStock = () => {
   const handleSubmit = async () => {
     try {
       // Parse the user-inputted date string to a JavaScript Date object
-      const [month, day, year] = formData.editedExpiryDate.split('/');
-      const expiryDate = new Date(`${year}-${month}-${day}`);
+      const expiryDate = new Date(formData.editedExpiryDate);
   
       if (isNaN(expiryDate.getTime())) {
         // Handle invalid date input
         console.error('Invalid expiry date');
         return;
       }
-  
-      // Set the time to midnight (00:00:00)
-      expiryDate.setHours(0, 0, 0, 0);
   
       // Calculate the Unix timestamp based on the user-inputted date at midnight
       const expiryTimestamp = Math.floor(expiryDate.getTime() / 1000);
