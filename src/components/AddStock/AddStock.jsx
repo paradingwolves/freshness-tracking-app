@@ -4,9 +4,12 @@ import Footer from '../Layout/Footer';
 import Quagga from 'quagga';
 import Modal from 'react-modal';
 import useMatchingStockData from '../../hooks/ScanStock';
-import { db } from '../../lib/firebase';
+import { db, auth } from '../../lib/firebase';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/Admin';
 import { collection, getDocs, addDoc, query, where, updateDoc } from 'firebase/firestore';
 import './AddStock.css';
+
 
 
 const AddStock = () => {
@@ -17,6 +20,28 @@ const AddStock = () => {
   const [stockData, setStockData] = useState([]);
   const [searchBarcode, setSearchBarcode] = useState('');
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+
+
+  // Use useEffect to log user information after the initial render
+  useEffect(() => {
+    const checkUserAuth = async () => {
+      const unsubscribe = auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          console.log("signed in admin", user.uid);
+        } else {
+          navigate('/login');
+        }
+      });
+
+      return () => unsubscribe();
+    };
+
+    checkUserAuth();
+  }, []);
   
 
   const [formData, setFormData] = useState({

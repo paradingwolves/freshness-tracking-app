@@ -14,10 +14,6 @@ const Home = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const redirectToLogin = () => {
-    // Redirect to "/" upon successful login
-    window.location.href = '/';
-  };
 
   // Use useEffect to log user information after the initial render
   useEffect(() => {
