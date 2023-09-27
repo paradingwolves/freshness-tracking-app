@@ -208,7 +208,10 @@ const StockTable = () => {
             <div className="pagination-container">
                 <div className="rows-per-page">
                     <label>Results per page:</label>
-                    <select onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}>
+                    <select 
+                        onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+                        className='select'
+                        >
                         <option value={30}>30</option>
                         <option value={50}>50</option>
                         <option value={100}>100</option>

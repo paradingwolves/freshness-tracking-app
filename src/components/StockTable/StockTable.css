@@ -62,7 +62,6 @@ tbody tr.exp-past:nth-child(even) {
 .select, .search {
     position: relative;
     font-size: 16px;
-    width: 220px;
     height: 40px;
     border: none;
     border-radius: 5px;
@@ -74,6 +73,7 @@ tbody tr.exp-past:nth-child(even) {
     cursor: pointer;
     display: inline-block;
     padding: 8px 15px;
+    width: 220px;
     background-color: #e7e7e7;
     color: #425159;
     border: none;
