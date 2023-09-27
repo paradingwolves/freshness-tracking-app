@@ -89,5 +89,12 @@ npm packages installed:
     5. hamburger menu turns into a cat
             -- https://www.flaticon.com/free-icons/head" created by Ains
 
+------------------------------------------------------------------
+    Date Modified: September 26, 2023
+------------------------------------------------------------------
+    1. improved the search bar in the AddStock.jsx component so the user has two viable options
+    2. 
+
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

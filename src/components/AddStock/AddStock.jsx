@@ -215,7 +215,7 @@ const AddStock = () => {
         </div>
         <div className="my-input-group">
           <input
-            type="text"
+            type="number"
             className="my-input"
             placeholder="Search by barcode number"
             value={searchBarcode}
