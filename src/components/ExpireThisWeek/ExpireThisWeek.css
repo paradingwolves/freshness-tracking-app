@@ -1,0 +1,26 @@
+/* Close button for hiding the card */
+.close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red; /* Make the button red */
+    color: white; /* Text color on the button */
+    border: none;
+    border-radius: 50%; /* Make it a circle */
+    width: 24px; /* Adjust width and height as needed */
+    height: 24px;
+    font-size: 14px;
+    line-height: 24px; /* Center the text vertically */
+    cursor: pointer;
+  }
+  
+  /* Card container */
+  .card {
+    position: relative; /* Ensure relative positioning for absolute child elements */
+  }
+  
+  /* Hide cards with the d-none class */
+  .d-none {
+    display: none !important;
+  }
+  

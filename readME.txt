@@ -95,6 +95,10 @@ npm packages installed:
     1. improved the search bar in the AddStock.jsx component so the user has two viable options
     2. added a employee login and blocked all access behind the login 
     3. made the ExpireThisWeek cards closable in case the user just wants the table
+    4. created a table for Expired Products (ExpiredProducts.jsx) 
+        - created new hook called ExpiredProducts.js
+        - users can remove stock from here 
+    5. Added a cute loading gif instead of plain "Loading..." text
 
 
 This Application was created by Justin Brierley and Chantal Monette.

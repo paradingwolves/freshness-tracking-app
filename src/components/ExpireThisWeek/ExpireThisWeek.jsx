@@ -6,11 +6,12 @@ import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 import './ExpireThisWeek.css';
 
 const ExpireThisWeek = () => {
-  const { stockData, loading, setStockData } = useStockSearchByWeek();
+  const { stockData, loading } = useStockSearchByWeek();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { updateQuantityToZero } = useUpdateQuantityToZero(); // Use the custom hook
-  const { incrementUpdatedValue } = useIncrementUpdatedValue(); // Use the custom hook
+  const [hiddenCards, setHiddenCards] = useState([]);
+  const { updateQuantityToZero } = useUpdateQuantityToZero();
+  const { incrementUpdatedValue } = useIncrementUpdatedValue();
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
@@ -22,13 +23,21 @@ const ExpireThisWeek = () => {
     setShowPopup(false);
   };
 
+  const hideCard = (productId) => {
+    setHiddenCards([...hiddenCards, productId]);
+  };
+
+  const isCardHidden = (productId) => {
+    return hiddenCards.includes(productId);
+  };
+
   const handleRedStickerUpdatedClick = () => {
     if (selectedProduct) {
       const { name, expiry_date } = selectedProduct;
       incrementUpdatedValue(name, expiry_date)
         .then(() => {
           console.log(`'Updated' value incremented for item: ${selectedProduct.expiry_date}`);
-          removeProductFromStock(selectedProduct.id); // Remove the selected product
+          hideCard(selectedProduct.id);
           setShowPopup(false);
         })
         .catch((error) => {
@@ -43,7 +52,7 @@ const ExpireThisWeek = () => {
       updateQuantityToZero(name, expiry_date)
         .then(() => {
           console.log(`Quantity updated to 0 for item: ${selectedProduct.expiry_date}`);
-          removeProductFromStock(selectedProduct.id); // Remove the selected product
+          hideCard(selectedProduct.id);
           setShowPopup(false);
         })
         .catch((error) => {
@@ -52,26 +61,23 @@ const ExpireThisWeek = () => {
     }
   };
 
-  const removeProductFromStock = (productId) => {
-    // Create a new array without the selected product
-    const updatedStockData = stockData.filter((product) => product.id !== productId);
-    setStockData(updatedStockData); // Update your stockData state or API data
-  };
-
   return (
     <div className="container my-4">
       {loading ? (
-        <p>Loading...</p>
+        <img src="https://i.pinimg.com/originals/d0/e3/ca/d0e3ca45bb78d6cf92bb88aaefdc020e.gif" alt="Loading..." />
       ) : (
         <>
           {stockData.length === 0 ? (
             <p>No products are expiring this week.</p>
           ) : (
             stockData.map((product) => (
-              <div key={product.id} className="card text-center mb-3">
+              <div
+                key={product.id}
+                className={`card text-center mb-3 ${isCardHidden(product.id) ? 'd-none' : ''}`}
+              >
                 <button
                   className="close-button"
-                  onClick={() => removeProductFromStock(product.id)}
+                  onClick={() => hideCard(product.id)}
                 >
                   X
                 </button>
@@ -110,7 +116,6 @@ const ExpireThisWeek = () => {
           )}
         </>
       )}
-
       <Modal show={showPopup} onHide={handlePopupClose}>
         <Modal.Header closeButton>
           <Modal.Title>Update Options</Modal.Title>

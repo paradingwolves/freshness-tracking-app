@@ -6,11 +6,12 @@ import Footer from "../components/Layout/Footer";
 import AddStock from "../components/AddStock/AddStock";
 import SeedData from "../components/SeedDB/SeedData";
 import Login from "../components/Administrator/Login";
-
+import ExpiredProducts from "../components/ExpiredProducts/ExpiredProducts";
 
 export const ROOT = "/";
 export const ADD_STOCK = "/add_stock";
 export const SEED_DATA = "/seed_data";
+export const EXPIRED_PRODUCTS = "/expired_products";
 export const LOGIN = "/login";
 
 
@@ -20,6 +21,8 @@ export const router = createBrowserRouter([
   { path: ROOT, element: <Home /> },
   { path: ADD_STOCK, element: <AddStock /> },
   { path: SEED_DATA, element: <SeedData /> },
+  { path: SEED_DATA, element: <SeedData /> },
+  { path: EXPIRED_PRODUCTS, element: <ExpiredProducts /> },
   { path: LOGIN, element: <Login /> },
   { path: "*", element: <NotFound /> }
 ]);
