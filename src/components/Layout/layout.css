@@ -37,7 +37,7 @@
     padding: 1rem;
     width: 50px;
     height: 50px;
-    border: solid 1px rgba(139, 187, 230, 0.67);
+    border: solid 1px #8bbbe6ab;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -64,25 +64,30 @@
 .mobNav .mobNavBurger > div::after {
     top: 10px;
 }
-.mobNav .mobNavToggler:checked + .mobNavBurger>div {
+.mobNav .mobNavToggler:checked + .mobNavBurger > div {
     transform: rotate(135deg);
+    background-color: transparent;
 }
-.mobNav .mobNavToggler:checked + .mobNavBurger>div::before,
-.mobNav .mobNavToggler:checked + .mobNavBurger>div::after {
-    top: 0;
-    transform: rotate(90deg);
+.mobNav .mobNavToggler:checked + .mobNavBurger > div::before,
+.mobNav .mobNavToggler:checked + .mobNavBurger > div::after {
+    display: none;
 }
-.mobNav .mobNavToggler:checked:hover + .mobNavBurger>div {
-    transform: rotate(225deg);
+.mobNav .mobNavToggler:checked + .mobNavBurger {
+    background-image: url('../../../public/media/lightcat.png');
+    background-size: cover;
+    width: 50px; height: 50px;
+    opacity: 1;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .mobNav .mobNavToggler:checked ~ .mobNavMenu{
     visibility: visible;
 }
-.mobNav .mobNavToggler:checked ~ .mobNavMenu> div{
+.mobNav .mobNavToggler:checked ~ .mobNavMenu > div{
     transform: scale(1);
     transition-duration: 0.5s;
 }
-.mobNav .mobNavToggler:checked ~ .mobNavMenu> div > div{
+.mobNav .mobNavToggler:checked ~ .mobNavMenu > div > div{
     opacity: 1;
     transition: opacity 0.4s ease;
 }
@@ -98,7 +103,7 @@
     visibility: hidden;
     justify-content: center;
 }
-.mobNav .mobNavMenu>div{
+.mobNav .mobNavMenu > div{
     background-color: #292929f0;
     width: 200vw;
     height: 200vw;

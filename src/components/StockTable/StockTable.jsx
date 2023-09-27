@@ -88,7 +88,7 @@ const StockTable = () => {
         { label: 'All', value: 'all' },
         { label: 'Expires in 90 Days', value: '90days' },
         { label: 'Expires in 7 Days', value: '7days' },
-        { label: 'Expires in 1 Day', value: '1day' },
+        { label: 'Expires Today', value: '1day' },
         { label: 'Expired', value: 'past' },
     ];
     const handleFilterChange = (value) => {
@@ -114,7 +114,7 @@ const StockTable = () => {
             break;
         case '1day':
             filteredData = filteredData.filter((product) =>
-                new Date(product.expiry_date) <= expToday
+                new Date(product.expiry_date) === expToday
             );
             break;
         case 'past':
@@ -147,11 +147,11 @@ const StockTable = () => {
                     />
                 </div>
                 <div className="filter-control">
-                    <FilterSelect
-                        options={filterOptions}
-                        selectedFilter={selectedFilter}
-                        onFilterChange={handleFilterChange}
-                    />
+                <FilterSelect
+                    options={filterOptions}
+                    value={selectedFilter}
+                    onChange={handleFilterChange} 
+                />
                 </div>
             </div>
             <div className="table-responsive">

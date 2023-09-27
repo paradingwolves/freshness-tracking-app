@@ -1,54 +1,56 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import './StockTable.css';
 
-const FilterSelect = ({ options, selectedFilter, onFilterChange }) => {
+const FilterSelect = ({ options, value, onChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const handleOptionClick = (optionValue) => {
-        onFilterChange(optionValue);
-        setIsOpen(false);
-    };
-
+    const selectRef = useRef(null);
+  
     useEffect(() => {
-        const handleDocumentClick = (e) => {
-            if (!e.target.classList.contains("select-value")) {
-                setIsOpen(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener("click", handleDocumentClick);
-        } else {
-            document.removeEventListener("click", handleDocumentClick);
+      const handleDocumentClick = (e) => {
+        if (selectRef.current && !selectRef.current.contains(e.target)) {
+          setIsOpen(false);
         }
-
-        return () => {
-            document.removeEventListener("click", handleDocumentClick);
-        };
+      };
+  
+      if (isOpen) {
+        document.addEventListener('click', handleDocumentClick);
+      } else {
+        document.removeEventListener('click', handleDocumentClick);
+      }
+  
+      return () => {
+        document.removeEventListener('click', handleDocumentClick);
+      };
     }, [isOpen]);
+  
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
+  
+    const handleOptionClick = (optionValue) => {
+      onChange(optionValue);
+      setIsOpen(false);
+    };
 
+    const selectedLabel = options.find((option) => option.value === value)?.label;
+
+  
     return (
-        <div className={`filter-select select ${isOpen ? "open" : ""}`}>
-            <div className="select-value" onClick={toggleDropdown}>
-                {options.find((option) => option.value === selectedFilter)?.label}
-            </div>
-            <ul className="select-options">
-                {options.map((option) => (
-                    <li
-                        key={option.value}
-                        onClick={() => handleOptionClick(option.value)}
-                        className={selectedFilter === option.value ? "is-selected" : ""}
-                    >
-                        {option.label}
-                    </li>
-                ))}
-            </ul>
-        </div>
+      <div className={`filter-select select ${isOpen ? 'open' : ''}`} onClick={toggleDropdown} ref={selectRef}>
+        <div className="select-value">{selectedLabel}</div>
+        <ul className="select-options">
+          {options.map((option) => (
+            <li
+              key={option.value}
+              onClick={() => handleOptionClick(option.value)}
+              className={value === option.value ? 'is-selected' : ''}
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      </div>
     );
-};
-
-export default FilterSelect;
+  };
+  
+  export default FilterSelect;

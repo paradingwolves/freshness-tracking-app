@@ -66,41 +66,32 @@ tbody tr.exp-past:nth-child(even) {
     height: 40px;
     border: none;
     border-radius: 5px;
-    background: #d7d7d7;
+    background: #e7e7e7;
     color: #52656f;
-}
-
-.filter-select {
-    position: relative;
-    display: inline-block;
 }
 
 .filter-select .select-value {
     cursor: pointer;
     display: inline-block;
     padding: 8px 15px;
-    background-color: #d7d7d7;
+    background-color: #e7e7e7;
     color: #425159;
     border: none;
     border-radius: 4px;
     transition: background-color 0.2s ease-in;
 }
 
-.custom-select .select-value:after {
+.filter-select .select-value:after {
     content: "";
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     border: 5px solid transparent;
-    border-top-color: #fff;
+    border-top-color: #425159;
 }
 
-.custom-select.open .select-value {
-    background-color: #b83729;
-}
-
-.custom-select .select-options {
+.filter-select .select-options {
     display: none;
     position: absolute;
     top: 100%;
@@ -108,31 +99,26 @@ tbody tr.exp-past:nth-child(even) {
     right: 0;
     z-index: 1;
     list-style: none;
-    background-color: #ab3326;
+    background-color: inherit;
     padding: 0;
     margin: 0;
     border-radius: 0 0 4px 4px;
 }
 
-.custom-select.open .select-options {
+.filter-select.open .select-options {
     display: block;
 }
 
-.custom-select .select-options li {
+.filter-select .select-options li {
     padding: 8px 15px;
-    color: #fff;
+    color: #425159;
     cursor: pointer;
     transition: background-color 0.15s ease-in;
 }
 
-.custom-select .select-options li:hover {
-    background-color: #fff;
-    color: #c0392b;
-}
-
-.custom-select .select-options li.is-selected {
-    background-color: #fff;
-    color: #c0392b;
+.filter-select .select-options li:hover {
+    background-color: #c7c7c7;
+    color: #425159;
 }
 
 .shortened-name {
