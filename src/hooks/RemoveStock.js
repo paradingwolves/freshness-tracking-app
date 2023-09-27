@@ -7,7 +7,6 @@ const useUpdateQuantityToZero = () => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
-  // Function to convert MM/DD/YYYY date format to Unix timestamp
  // Function to convert MM/DD/YYYY date format to Unix timestamp in milliseconds
   const dateToUnixTimestamp = (dateString) => {
     const [month, day, year] = dateString.split('/');

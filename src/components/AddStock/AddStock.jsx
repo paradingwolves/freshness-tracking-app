@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import useMatchingStockData from '../../hooks/ScanStock';
 import { db } from '../../lib/firebase';
 import { collection, getDocs, addDoc, query, where, updateDoc } from 'firebase/firestore';
+import './AddStock.css';
 
 
 const AddStock = () => {
@@ -200,29 +201,31 @@ const AddStock = () => {
   return (
     <div>
       <Header />
-      <div className="container bg-light p-4 rounded">
-        <h1 className='text-dark fw-bold text-center'>Add Inventory</h1>
-        <div className="text-center my-3">
-          <h5 className="fw-bold text-dark">Scan Barcodes</h5>
+      <div className="container bg-dark my-3 p-4 rounded">
+        <div className="my-container">
+          <h1 className="my-title">Add Inventory</h1>
+          <h5 className="my-subtitle">Scan Barcodes</h5>
           <video
             ref={videoRef}
+            className="my-video rounded"
             autoPlay
             playsInline
             muted
-            style={{ maxWidth: '100%' }}
           />
         </div>
-        <div className="text-center my-3">
+        <div className="my-input-group">
           <input
             type="text"
-            placeholder="Search by barcode_number"
+            className="my-input"
+            placeholder="Search by barcode number"
             value={searchBarcode}
             onChange={(e) => setSearchBarcode(e.target.value)}
           />
-          <button className="btn btn-primary" onClick={handleSearch}>
+          <button className="btn btn-primary my-button" onClick={handleSearch}>
             Search
           </button>
         </div>
+
       </div>
       <Footer />
 
