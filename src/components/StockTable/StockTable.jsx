@@ -74,13 +74,17 @@ const StockTable = () => {
 
     // search filter
     let filteredData = sortedStockData;
-    if(searchQuery) {
+    if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        filteredData = filteredData.filter((product) =>
-            product.item_number.includes(query) ||
-            product.name.toLowerCase().includes(query) ||
-            product.brand.toLowerCase().includes(query)
-        );
+        const numberPattern = /\d+/; // Regular expression to match numbers
+        filteredData = filteredData.filter((product) => {
+            const itemNumber = product.item_number.toString(); // Ensure item_number is a string
+            return (
+                (numberPattern.test(itemNumber) && itemNumber.includes(query)) ||
+                product.name.toLowerCase().includes(query) ||
+                product.brand.toLowerCase().includes(query)
+            );
+        });
     }
 
     // expiry date filter
@@ -141,7 +145,7 @@ const StockTable = () => {
                     <input
                         className="search"
                         type="text"
-                        placeholder="Search by IS, name, or brand"
+                        placeholder="Search by ID, name, or brand"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
