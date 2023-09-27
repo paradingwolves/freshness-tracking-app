@@ -38,6 +38,7 @@ const Home = () => {
     <div>
       <Header />
       <ExpireToday />
+      <ExpireThisWeek />
       <StockTable />
       <Footer />
     </div>
