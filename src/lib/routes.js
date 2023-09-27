@@ -3,45 +3,32 @@ import React from "react";
 import Home from "../components/Layout";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
-import ExpiringSoon from "../components/ExpiringSoon/ExpringSoon";
 import AddStock from "../components/AddStock/AddStock";
 import SeedData from "../components/SeedDB/SeedData";
+import Login from "../components/Administrator/Login";
 
-/* import Login from '../components/Administrator/Login';
-import Layout from "../components/Layout/Home";
-import TattooList from "../components/Portfolio/TattooList";
-import About from "../components/About/About";
-import Admin from "../components/Admin/Admin";
-import Form from "../components/Contact/Form"; */
 
-// home route 
 export const ROOT = "/";
-export const EXPIRE_SOON = "/expiring_soon";
 export const ADD_STOCK = "/add_stock";
 export const SEED_DATA = "/seed_data";
+export const LOGIN = "/login";
 
 
 
 // create routes
 export const router = createBrowserRouter([
   { path: ROOT, element: <Home /> },
-  { path: EXPIRE_SOON, element: <ExpiringSoon /> },
   { path: ADD_STOCK, element: <AddStock /> },
   { path: SEED_DATA, element: <SeedData /> },
+  { path: LOGIN, element: <Login /> },
   { path: "*", element: <NotFound /> }
- /*  { path: LOGIN, element: <Login /> },
-  { path: PORTFOLIO, element: <TattooList /> },
-  { path: ABOUT, element: <About /> },
-  { path: ADMIN, element: <Admin /> },
-  { path: CONTACT, element: <Form /> },
-  { path: "*", element: <NotFound /> }, */ // Catch-all route for 404
 ]);
 
 function NotFound() {
   const backgroundStyle = {
     width: "100%",
     height: "100vh",
-    backgroundImage: "url(../../media/cat.jpg)", // Replace with your cat image URL
+    backgroundImage: "url(../../media/cat.jpg)", 
     backgroundSize: "cover",
     display: "flex",
     flexDirection: "column",

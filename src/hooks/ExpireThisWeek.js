@@ -32,7 +32,7 @@ const useStockSearchByWeek = () => {
     return () => unsubscribe();
   }, []);
 
-  return { stockData, loading };
+  return { stockData, loading, setStockData  };
 };
 
 export default useStockSearchByWeek;

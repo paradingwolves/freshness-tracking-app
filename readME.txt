@@ -93,7 +93,8 @@ npm packages installed:
     Date Modified: September 26, 2023
 ------------------------------------------------------------------
     1. improved the search bar in the AddStock.jsx component so the user has two viable options
-    2. 
+    2. added a employee login and blocked all access behind the login 
+    3. made the ExpireThisWeek cards closable in case the user just wants the table
 
 
 This Application was created by Justin Brierley and Chantal Monette.
