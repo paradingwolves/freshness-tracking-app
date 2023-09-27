@@ -7,6 +7,7 @@ import useUpdateQuantityToZero from '../../hooks/RemoveStock';
 import { auth } from '../../lib/firebase';
 import useAuth from '../../hooks/Admin';
 import './ExpiredProduct.css';
+import MiniGame from './MiniGame';
 
 const ExpiredProducts = () => {
   const { expiredStockData, loading } = useExpiredStockData();
@@ -46,7 +47,9 @@ const ExpiredProducts = () => {
           <img src="https://i.pinimg.com/originals/d0/e3/ca/d0e3ca45bb78d6cf92bb88aaefdc020e.gif" alt="Loading..." />
         ) : (
           expiredStockData.length === 0 ? (
-            <p className='text-center'>No products to display. We aim to keep our inventory fresh. Please remember to sell any items marked with red stickers promptly.</p>
+            <p className='text-center'>No products to display. We aim to keep our inventory fresh. Please remember to sell any items marked with red stickers promptly.
+            <img src="https://gifdb.com/images/high/mike-myers-thumbs-up-meme-wayne-s-world-k6mc60kkfiux96uc.gif" className='good-work-gif' alt="Great Work!" />
+            <MiniGame /></p>
           ) : (
             <div className="table-responsive">
               <table className="table table-bordered">
