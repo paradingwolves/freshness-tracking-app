@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAllStockData from "../../hooks/ViewStock";
-import { addDays, isBefore, isAfter, isToday } from 'date-fns';
+import FilterSelect from "./FilterSelect";
+import { addDays, isBefore, isToday } from 'date-fns';
 import './StockTable.css';
 
 const StockTable = () => {
@@ -26,7 +27,7 @@ const StockTable = () => {
     // Shortened name for mobile view handler
     useEffect(() => {
         const handleResize = () => {
-            setShortenName(window.innerWidth < 768);
+            setShortenName(window.innerWidth > 1);
         };
         handleResize();
         window.addEventListener('resize', handleResize);
@@ -76,44 +77,56 @@ const StockTable = () => {
     if(searchQuery) {
         const query = searchQuery.toLowerCase();
         filteredData = filteredData.filter((product) =>
-            product.id.includes(query) ||
+            product.item_number.includes(query) ||
             product.name.toLowerCase().includes(query) ||
             product.brand.toLowerCase().includes(query)
         );
     }
 
     // expiry date filter
-    if(selectedFilter === '90days') {
-        const exp90days = addDays(new Date(), 90);
-        const exp7days = addDays(new Date(), 7);
-        filteredData = filteredData.filter((product) => {
-            const expiryDate = new Date(product.expiry_date);
-            return (
-                expiryDate <= exp90days && expiryDate > exp7days
+    const filterOptions = [
+        { label: 'All', value: 'all' },
+        { label: 'Expires in 90 Days', value: '90days' },
+        { label: 'Expires in 7 Days', value: '7days' },
+        { label: 'Expires in 1 Day', value: '1day' },
+        { label: 'Expired', value: 'past' },
+    ];
+    const handleFilterChange = (value) => {
+        setSelectedFilter(value);
+    };
+
+    const exp90days = addDays(new Date(), 90);
+    const exp7days = addDays(new Date(), 7);
+    const expToday = addDays(new Date(), 1);
+    const today = new Date();
+    switch(selectedFilter) {
+        case '90days':
+            filteredData = filteredData.filter((product) => {
+                const expiryDate = new Date(product.expiry_date);
+                return expiryDate <= exp90days && expiryDate > exp7days;
+            });
+        break;
+        case '7days':
+            filteredData = filteredData.filter((product) => {
+                const expiryDate = new Date(product.expiry_date);
+                return expiryDate <= exp7days && !isToday(expiryDate);
+            });
+            break;
+        case '1day':
+            filteredData = filteredData.filter((product) =>
+                new Date(product.expiry_date) <= expToday
             );
-        });
-    } else if(selectedFilter === '7days') {
-        const exp7Days = addDays(new Date(), 7);
-        const today = new Date();
-        filteredData = filteredData.filter((product) => {
-            const expiryDate = new Date(product.expiry_date);
-            return (
-                expiryDate <= exp7Days &&
-                !isToday(expiryDate)
+            break;
+        case 'past':
+            filteredData = filteredData.filter((product) =>
+                isBefore(new Date(product.expiry_date), today)
             );
-        });
-    } else if(selectedFilter === '1day') {
-        const expToday = addDays(new Date(), 1);
-        filteredData = filteredData.filter((product) =>
-            new Date(product.expiry_date) <= expToday
-        );
-    } else if(selectedFilter === 'past') {
-        const today = new Date();
-        filteredData = filteredData.filter((product) =>
-            isBefore(new Date(product.expiry_date), today)
-        );
+            break;
+        default:
+            break;
     }
 
+    // loading
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -126,6 +139,7 @@ const StockTable = () => {
             <div className="table-controls">
                 <div className="search-control">
                     <input
+                        className="search"
                         type="text"
                         placeholder="Search by IS, name, or brand"
                         value={searchQuery}
@@ -133,16 +147,11 @@ const StockTable = () => {
                     />
                 </div>
                 <div className="filter-control">
-                    <select
-                        value={selectedFilter}
-                        onChange={(e) => setSelectedFilter(e.target.value)}
-                    >
-                        <option value="all">All</option>
-                        <option value="90days">Expires in 90 Days</option>
-                        <option value="7days">Expires in 7 Days</option>
-                        <option value="1day">Expires in 1 Day</option>
-                        <option value="past">Expired</option>
-                    </select>
+                    <FilterSelect
+                        options={filterOptions}
+                        selectedFilter={selectedFilter}
+                        onFilterChange={handleFilterChange}
+                    />
                 </div>
             </div>
             <div className="table-responsive">
@@ -165,7 +174,6 @@ const StockTable = () => {
                     const today = new Date();
                     const ninetyDaysFromNow = addDays(today, 90);
                     const oneWeekFromNow = addDays(today, 7);
-                    {console.log(product)}
 
                     if (isBefore(expiryDate, today)) {
                         className = 'exp-past';

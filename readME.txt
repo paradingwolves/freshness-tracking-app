@@ -78,5 +78,16 @@ npm packages installed:
     2. AddStock.jsx now has a form in case the scanner isnt working
     3. AddStock.jsx now works and adds new content to the db    
         - if there is matching item_number and expiry_date, the quantities are combined rather than adding a new item
+
+------------------------------------------------------------------
+    Date Modified: September 25, 2023
+------------------------------------------------------------------
+    1. updated filter logic to switch case
+    2. added FilterSelect.jsx component to properly control the filter logic for the aesthetic
+    3. changed search to item_number so user can search by name, brand or item number
+    4. got rid of the brand name within the name column in the name for all sizes of screen.
+
+
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
