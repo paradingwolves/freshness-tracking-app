@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import useStockSearchByWeek from '../../hooks/ExpireThisWeek';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Carousel } from 'react-bootstrap';
 import useUpdateQuantityToZero from '../../hooks/RemoveStock'; 
 import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 import './ExpireThisWeek.css';
 
 const ExpireThisWeek = () => {
   const { stockData, loading } = useStockSearchByWeek();
+  const { updateQuantityToZero } = useUpdateQuantityToZero();
+  const { incrementUpdatedValue } = useIncrementUpdatedValue();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [hiddenCards, setHiddenCards] = useState([]);
-  const { updateQuantityToZero } = useUpdateQuantityToZero();
-  const { incrementUpdatedValue } = useIncrementUpdatedValue();
+
 
   const handlePopupOpen = (product) => {
     setSelectedProduct(product);
@@ -66,44 +67,31 @@ const ExpireThisWeek = () => {
       {loading ? (
         <img src="https://i.pinimg.com/originals/d0/e3/ca/d0e3ca45bb78d6cf92bb88aaefdc020e.gif" alt="Loading..." />
       ) : (
-        <>
-          {stockData.length === 0 ? (
-            <p>No products are expiring this week.</p>
-          ) : (
-            stockData.map((product) => (
-              <div
-                key={product.id}
-                className={`card text-center mb-3 ${isCardHidden(product.id) ? 'd-none' : ''}`}
-              >
-                <button
-                  className="close-button"
-                  onClick={() => hideCard(product.id)}
-                >
-                  X
-                </button>
-                <div className="card-header">
-                  <h4 className="card-title fw-bold">Expiring This Week!</h4>
+        <Carousel data-bs-theme="dark" fade>
+            {stockData.length === 0 ? (
+              <Carousel.Item>
+                <p>No products are expiring this week.</p>
+              </Carousel.Item>
+            ) : (     
+              stockData.map((product) => (
+                <Carousel.Item 
+                  key={product.id} 
+                  className={`${isCardHidden(product.id) ? 'd-none' : ''}`}>
+                <div className="card-info">
+                  <div className="card-header">
+                    <h4 className="card-title fw-bold">Expiring This Week!</h4>
+                  </div>
+                  <div className="card-body">
+                    <ul className="list-unstyled">
+                      <li><strong>Name:</strong> {product.name} </li>
+                      <li><strong>Item Number:</strong> {product.item_number} </li>
+                      <li><strong>Expiry Date:</strong> {product.expiry_date} </li>
+                      <li><strong>Size:</strong> {product.size} </li>
+                      <li><strong>Quantity:</strong> {product.quantity} </li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="card-body">
-                  <ul className="list-unstyled">
-                    <li>
-                      <strong>Name:</strong> {product.name}
-                    </li>
-                    <li>
-                      <strong>Item Number:</strong> {product.item_number}
-                    </li>
-                    <li>
-                      <strong>Expiry Date:</strong> {product.expiry_date}
-                    </li>
-                    <li>
-                      <strong>Size:</strong> {product.size}
-                    </li>
-                    <li>
-                      <strong>Quantity:</strong> {product.quantity}
-                    </li>
-                  </ul>
-                </div>
-                <div className="card-footer text-center">
+                <div className="modal-button text-center">
                   <button
                     className="btn btn-primary"
                     onClick={() => handlePopupOpen(product)}
@@ -111,10 +99,10 @@ const ExpireThisWeek = () => {
                     Updated
                   </button>
                 </div>
-              </div>
-            ))
-          )}
-        </>
+                </Carousel.Item>
+              ))
+            )}
+        </Carousel>
       )}
       <Modal show={showPopup} onHide={handlePopupClose}>
         <Modal.Header closeButton>

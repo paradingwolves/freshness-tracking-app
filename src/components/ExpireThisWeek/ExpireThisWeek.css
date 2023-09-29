@@ -24,3 +24,17 @@
     display: none !important;
   }
   
+.carousel-item {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carousel-inner {
+  padding: 0 10%;
+}
+
+.carousel-control-next, .carousel-control-prev {
+  width: 10% !important;
+}
