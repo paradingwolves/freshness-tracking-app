@@ -5,6 +5,27 @@ import useUpdateQuantityToZero from '../../hooks/RemoveStock';
 import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 import './ExpireThisWeek.css';
 
+function isExpiringToday(expiryDate) {
+  const today = new Date();
+  const expirationDate = new Date(expiryDate);
+
+  console.log(today)
+  console.log(expirationDate)
+
+  return (
+    expirationDate.getDate() === today.getDate() &&
+    expirationDate.getMonth() === today.getMonth() &&
+    expirationDate.getFullYear() === today.getFullYear()
+  );
+}
+function isExpired(expiryDate) {
+  const today = new Date();
+  const expirationDate = new Date(expiryDate);
+
+  // Compare the expiration date with today's date
+  return expirationDate < today;
+}
+
 const ExpireThisWeek = () => {
   const { stockData, loading } = useStockSearchByWeek();
   const { updateQuantityToZero } = useUpdateQuantityToZero();
@@ -70,7 +91,7 @@ const ExpireThisWeek = () => {
         <Carousel data-bs-theme="dark" fade>
             {stockData.length === 0 ? (
               <Carousel.Item>
-                <p>No products are expiring this week.</p>
+                <p>No products are expiring this soon.</p>
               </Carousel.Item>
             ) : (     
               stockData.map((product) => (
@@ -79,7 +100,13 @@ const ExpireThisWeek = () => {
                   className={`${isCardHidden(product.id) ? 'd-none' : ''}`}>
                 <div className="card-info">
                   <div className="card-header">
-                    <h4 className="card-title fw-bold">Expiring This Week!</h4>
+                    <h4 className="card-title fw-bold">
+                      {isExpiringToday(product.expiry_date)
+                        ? 'Expiring Today!'
+                        : isExpired(product.expiry_date)
+                        ? 'Expired!'
+                        : 'Expiring This Week!'}
+                    </h4>
                   </div>
                   <div className="card-body">
                     <ul className="list-unstyled">

@@ -34,7 +34,6 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <ExpireToday />
       <ExpireThisWeek />
       <StockTable />
       <Footer />
