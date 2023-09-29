@@ -83,6 +83,12 @@ const ExpireThisWeek = () => {
     }
   };
 
+  const sortedStockData = [...stockData].sort((a, b) => {
+    const dateA = new Date(a.expiry_date);
+    const dateB = new Date(b.expiry_date);
+    return dateA - dateB;
+  });
+
   return (
     <div className="container my-4">
       {loading ? (
@@ -94,7 +100,7 @@ const ExpireThisWeek = () => {
                 <p>No products are expiring this soon.</p>
               </Carousel.Item>
             ) : (     
-              stockData.map((product) => (
+              sortedStockData.map((product) => (
                 <Carousel.Item 
                   key={product.id} 
                   className={`${isCardHidden(product.id) ? 'd-none' : ''}`}>
