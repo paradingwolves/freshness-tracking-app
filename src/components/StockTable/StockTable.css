@@ -1,9 +1,44 @@
+.list-table-container {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+.listtable {
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+    width: 100%;
+}
+ul { padding: 0 !important; list-style: none; }
+
+.list-row  {
+    display: flex;
+}
+.item-inner { display: flex; }
+
+.list-header .item-inner {
+    display: flex;
+    font-weight: bold;
+    background-color: #f2f2f2;
+}
+.list-cell {
+    padding: 8px;
+    text-align: left;
+}
+
+
+.list-cell-id { width: 9.64%; }
+.list-cell-name { width: 60.63%; }
+.list-cell-brand { width: 16.62%; }
+.list-cell-qty .list-cell-red { width: 3.58%; }
+.list-cell-date { width: 8.97%; }  
+
 .stock-table {
     margin: 0 5%;
     width: 90%;
 }
-.stock-head th {
-    padding: 5px 0;
+.list-header div {
+    list-style: none;
     align-items: center;
     color: #a2a2a2;
     text-transform: uppercase;
@@ -12,30 +47,15 @@ tbody tr td {
     padding: 20px 0;
 }
 
-.exp-soon {
-    background-color: #e3cf9c !important;
-}
-tbody tr.exp-soon:nth-child(even) {
-    background-color: #c1ae74 !important;
-}
-.exp-week {
-    background-color: #e7bda0 !important;
-}
-tbody tr.exp-week:nth-child(even) {
-    background-color: #d9996c !important;
-}
-.exp-today {
-    background-color: #e3a1a1 !important;
-}
-tbody tr.exp-today:nth-child(even) {
-    background-color: #d77878 !important;
-}
-.exp-past {
-    background-color: #e56565 !important;
-}
-tbody tr.exp-past:nth-child(even) {
-    background-color: #cd5454 !important;
-}
+.exp-soon { background-color: #e3cf9c !important; }
+.list-row.exp-soon:nth-child(even) { background-color: #c1ae74 !important; }
+.exp-week { background-color: #e7bda0 !important; }
+.list-row.exp-week:nth-child(even) { background-color: #d9996c !important; }
+.exp-today { background-color: #e3a1a1 !important; }
+.list-row.exp-today:nth-child(even) { background-color: #d77878 !important; }
+.exp-past { background-color: #e56565 !important; }
+.list-row.exp-past:nth-child(even) { background-color: #cd5454 !important; }
+
 
 .pagination-container, .table-controls {
     display: flex;
@@ -124,9 +144,17 @@ tbody tr.exp-past:nth-child(even) {
 .shortened-name {
     white-space: nowrap;
 }
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 834px) {
     .stock-table {
-        margin: 0;
-        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 170%;
+        overflow-x: scroll;
     }
+
+    .list-cell-id { width: 9.64%; }
+    .list-cell-name { width: 60.63%; }
+    .list-cell-brand { width: 16.62%; }
+    .list-cell-qty .list-cell-red { width: 3.58%; }
+    .list-cell-date { width: 8.97%; }  
 }

@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { addDays, isBefore, isToday } from 'date-fns';
+import { Framework7React,
+         f7, 
+         Page, 
+         Navbar, 
+         BlockTitle, 
+         List, 
+         ListItem, 
+         SwipeoutActions, 
+         SwipeoutButton 
+        } from 'framework7-react';
 import useAllStockData from "../../hooks/ViewStock";
 import FilterSelect from "./FilterSelect";
-import { addDays, isBefore, isToday } from 'date-fns';
 import './StockTable.css';
 
 const StockTable = () => {
@@ -130,6 +140,12 @@ const StockTable = () => {
             break;
     }
 
+    // swipe to delete functions. currently just a console.log
+    const handleDelete = (id) => {
+        const updatedData = filteredData.filter((item) => item.id)
+        console.log(`Deleted item: ${updatedData}`);
+    };
+
     // loading
     if (loading) {
         return <p>Loading...</p>;
@@ -158,7 +174,63 @@ const StockTable = () => {
                 />
                 </div>
             </div>
-            <div className="table-responsive">
+            <div className="listTable-container">
+                <List strong insetMd outlineIos dividersIos className="listTable stock-table">
+                    <ul>
+                    <ListItem className="list-header">
+                        <div className="list-cell list-cell-id">ID</div>
+                        <div className="list-cell list-cell-name">Name</div>
+                        <div className="list-cell list-cell-brand">Brand</div>
+                        <div className="list-cell list-cell-red">Red Sticker</div>
+                        <div className="list-cell list-cell-qty">Qty.</div>
+                        <div className="list-cell list-cell-date">Exp.</div>
+                    </ListItem>
+                    {filteredData.map((product) => {
+                        // Determine the class name based on the expiry date
+                        let className = '';
+                        const expiryDate = new Date(product.expiry_date);
+                        const today = new Date();
+                        const ninetyDaysFromNow = addDays(today, 90);
+                        const oneWeekFromNow = addDays(today, 7);
+
+                        if (isBefore(expiryDate, today)) {
+                        className = 'exp-past';
+                        } else if (isToday(expiryDate)) {
+                        className = 'exp-today';
+                        } else if (isBefore(expiryDate, oneWeekFromNow)) {
+                        className = 'exp-week';
+                        } else if (isBefore(expiryDate, ninetyDaysFromNow)) {
+                        className = 'exp-soon';
+                        }
+
+                        return (
+                        <li key={product.id} className={`swipeout ${className}`}>
+                            <SwipeoutActions right>
+                                <SwipeoutButton delete confirmText="Are you sure you want to delete this item?">
+                                    Delete
+                                </SwipeoutButton>
+                            </SwipeoutActions>
+                            <div className="swipeout-content item-content list-row">
+                            <div className={`list-cell list-cell-id ${shortenName ? 'shortened-name' : ''}`}>
+                            {product.item_number}
+                            </div>
+                            <div className={`list-cell list-cell-name ${shortenName ? 'shortened-name' : ''}`}>
+                            {getShortenedName(product)}
+                            </div>
+                            <div className="list-cell list-cell-brand">{product.brand}</div>
+                            <div className="list-cell list-cell-red">{calculateRedStickerValue(product.updated)}</div>
+                            <div className="list-cell list-cell-qty">{product.quantity}</div>
+                            <div className="list-cell list-cell-date">{product.expiry_date}</div>
+                            </div>
+                        </li>
+                        );
+                    })}
+                    </ul>
+                </List>
+                </div>
+
+
+
             <table className="table-striped stock-table">
                 <thead>
                 <tr className="stock-head">
@@ -191,8 +263,14 @@ const StockTable = () => {
 
                     return (
                         <tr key={product.id} className={className}>
+                            <td>
+                            <SwipeoutActions left>
+                                <SwipeoutButton delete confirmText="Are you sure you want to delete this item?">
+                                Delete
+                                </SwipeoutButton>
+                            </SwipeoutActions>
+                            </td>
                             <td className={shortenName ? 'shortened-name': ''}>{product.item_number}</td>
-                            {/* Need to get accurate callback for Product # */}
                             <td className={shortenName ? 'shortened-name' : ''}>{getShortenedName(product)}</td>
                             <td>{product.brand}</td>
                             <td>{calculateRedStickerValue(product.updated)}</td>
@@ -237,7 +315,6 @@ const StockTable = () => {
                 </div>
             </div>
         </div>
-    </div>
     );
 };
 
