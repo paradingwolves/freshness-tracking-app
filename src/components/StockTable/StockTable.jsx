@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAllStockData from "../../hooks/ViewStock";
 import FilterSelect from "./FilterSelect";
+import SearchBar from './SearchBar';
 import { addDays, isBefore, isToday } from 'date-fns';
 import './StockTable.css';
 
@@ -12,6 +13,7 @@ const StockTable = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [shortenName, setShortenName] = useState(false);
+    const [hoveredRow, setHoveredRow] = useState(null);
 
     useEffect(() => {
         if(!loading && stockData.length > 0) {
@@ -98,7 +100,6 @@ const StockTable = () => {
     const handleFilterChange = (value) => {
         setSelectedFilter(value);
     };
-
     const exp90days = addDays(new Date(), 90);
     const exp7days = addDays(new Date(), 7);
     const expToday = addDays(new Date(), 1);
@@ -130,6 +131,11 @@ const StockTable = () => {
             break;
     }
 
+    // Delete Button
+    const handleDelete = (product) => { console.log(`You just clicked the Delete button for ${product.name}`); };
+    const handleRowHover = (index) => { setHoveredRow(index); };
+    const handleRowLeave = () => {setHoveredRow(null); };
+
     // loading
     if (loading) {
         return <p>Loading...</p>;
@@ -139,39 +145,28 @@ const StockTable = () => {
     }
 
     return (
-        <div className="table-container">
+        <div className="list-table-container">
             <div className="table-controls">
-                <div className="search-control">
-                    <input
-                        className="search"
-                        type="text"
-                        placeholder="Search by ID, name, or brand"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                </div>
-                <div className="filter-control">
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
                 <FilterSelect
                     options={filterOptions}
                     value={selectedFilter}
                     onChange={handleFilterChange} 
                 />
-                </div>
             </div>
-            <div className="table-responsive">
-            <table className="table-striped stock-table">
-                <thead>
-                <tr className="stock-head">
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Brand</th>
-                    <th>Red Sticker</th>
-                    <th>Qty.</th>
-                    <th>Exp.</th>
-                </tr>
-                </thead>
-                <tbody>
-                {filteredData.map((product) => {
+            <div className="table-responsive listTable-container">
+            <div>
+                <ul className="table-striped stock-table listTable">
+                <li className="stock-head list-header list-row">
+                    <div className="list-cell list-cell-id">ID</div>
+                    <div className="list-cell list-cell-name">Name</div>
+                    <div className="list-cell list-cell-brand">Brand</div>
+                    <div className="list-cell list-cell-red">Red Sticker</div>
+                    <div className="list-cell list-cell-qty">Qty.</div>
+                    <div className="list-cell list-cell-date">Exp.</div>
+                </li>
+                {filteredData.map((product, index) => {
                     // Determine the class name based on the expiry date
                     let className = '';
                     const expiryDate = new Date(product.expiry_date);
@@ -190,20 +185,30 @@ const StockTable = () => {
                     }
 
                     return (
-                        <tr key={product.id} className={className}>
-                            <td className={shortenName ? 'shortened-name': ''}>{product.item_number}</td>
-                            {/* Need to get accurate callback for Product # */}
-                            <td className={shortenName ? 'shortened-name' : ''}>{getShortenedName(product)}</td>
-                            <td>{product.brand}</td>
-                            <td>{calculateRedStickerValue(product.updated)}</td>
-                            <td>{product.quantity}</td>
-                            <td>{product.expiry_date}</td>
-                        </tr>
+                        <li
+                            key={product.id} className={`list-row ${className}`}
+                            onClick={() => { handleRowHover(index); }} 
+                            // onMouseEnter={() => handleRowHover(index)}
+                            // onMouseLeave={handleRowLeave}
+                        >
+                            <div className={`stock-delete ${hoveredRow === index ? 'visible' : ''}`}>
+                                <button onClick={() => handleDelete(product)}>Your Button</button>
+                            </div>
+                            <div className={`list-cell list-cell-id ${shortenName ? 'shortened-name' : ''}`}>
+                            {product.item_number}
+                            </div>
+                            <div className={`list-cell list-cell-name ${shortenName ? 'shortened-name' : ''}`}>
+                            {getShortenedName(product)}
+                            </div>
+                            <div className="list-cell list-cell-brand">{product.brand}</div>
+                            <div className="list-cell list-cell-red">{calculateRedStickerValue(product.updated)}</div>
+                            <div className="list-cell list-cell-qty">{product.quantity}</div>
+                            <div className="list-cell list-cell-date">{product.expiry_date}</div>
+                        </li>
                     );
-
                 })}
-                </tbody>
-            </table>
+                </ul>
+            </div>
 
             <div className="pagination-container">
                 <div className="rows-per-page">

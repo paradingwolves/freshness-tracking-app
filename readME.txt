@@ -100,6 +100,15 @@ npm packages installed:
         - users can remove stock from here 
     5. Added a cute loading gif instead of plain "Loading..." text
 
+------------------------------------------------------------------
+    Date Modified: October 2, 2023                             /cm
+------------------------------------------------------------------
+    1. Converted table into ul for functionality of delete button  
+        1a. Look is the same. 
+        1b. CSS for table converted to ul/li/div
+    2. Delete button now appears onClick. 
+        2a. Still need to work on transition;
+    3. Delete button logs the name of the product for that row currently.
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
