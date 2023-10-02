@@ -3,7 +3,6 @@ import { addDays, isBefore, isToday } from 'date-fns';
 import useAllStockData from "../../hooks/ViewStock";
 import FilterSelect from "./FilterSelect";
 import SearchBar from './SearchBar';
-import { addDays, isBefore, isToday } from 'date-fns';
 import './StockTable.css';
 
 const StockTable = () => {
