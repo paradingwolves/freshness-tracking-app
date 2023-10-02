@@ -9,8 +9,8 @@ function isExpiringToday(expiryDate) {
   const today = new Date();
   const expirationDate = new Date(expiryDate);
 
-  console.log(today)
-  console.log(expirationDate)
+  // console.log(today)
+  // console.log(expirationDate)
 
   return (
     expirationDate.getDate() === today.getDate() &&

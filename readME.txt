@@ -110,5 +110,23 @@ npm packages installed:
         2a. Still need to work on transition;
     3. Delete button logs the name of the product for that row currently.
 
+------------------------------------------------------------------
+    Date Modified: September 27, 2023
+------------------------------------------------------------------
+    1. Moved ExpiringThisWeek cards on index to a carousel using React-Bootstrap carousel
+        1a. Rendered ExpireToday redundant for now.
+        1b. Carousel loads ExpiringThisWeek Carousel.Item by expiry_date using sortedStockData
+
+------------------------------------------------------------------
+    Date Modified: September 29, 2023
+------------------------------------------------------------------
+    1. Creating swipe-element for easy delete on tablet/mobile
+    2. Installed framework7 for swipe to delete functionality. 
+        2a. make sure to run npm install to update your ish
+    3. 
+
+
+
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

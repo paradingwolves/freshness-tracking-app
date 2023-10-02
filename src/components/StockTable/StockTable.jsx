@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { addDays, isBefore, isToday } from 'date-fns';
 import useAllStockData from "../../hooks/ViewStock";
 import FilterSelect from "./FilterSelect";
 import SearchBar from './SearchBar';
@@ -242,7 +243,7 @@ const StockTable = () => {
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     );
 };
 

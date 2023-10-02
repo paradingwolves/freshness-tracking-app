@@ -1,4 +1,3 @@
-
 .list-table-container {
     width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling if needed */
@@ -166,10 +165,12 @@ ul { padding: 0 !important; list-style: none; }
 .shortened-name {
     white-space: nowrap;
 }
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 834px) {
     .stock-table {
-        margin: 0;
-        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 170%;
+        overflow-x: scroll;
     }
 }
 
