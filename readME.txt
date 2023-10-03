@@ -126,6 +126,11 @@ npm packages installed:
     3. 
 
 
+------------------------------------------------------------------
+    Date Modified: October 03, 2023
+------------------------------------------------------------------
+    1. Used the useUpdateQuantityToZero hook to make the Remove Product button in the stock table work
+    2. made the Remove Product button toggleable
 
 
 This Application was created by Justin Brierley and Chantal Monette.

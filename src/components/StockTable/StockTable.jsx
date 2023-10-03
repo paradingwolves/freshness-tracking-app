@@ -3,6 +3,7 @@ import { addDays, isBefore, isToday } from 'date-fns';
 import useAllStockData from "../../hooks/ViewStock";
 import FilterSelect from "./FilterSelect";
 import SearchBar from './SearchBar';
+import useUpdateQuantityToZero from '../../hooks/RemoveStock';
 import './StockTable.css';
 
 const StockTable = () => {
@@ -14,6 +15,8 @@ const StockTable = () => {
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [shortenName, setShortenName] = useState(false);
     const [hoveredRow, setHoveredRow] = useState(null);
+    const { updateQuantityToZero, isLoading } = useUpdateQuantityToZero();
+    const [selectedProductIndex, setSelectedProductIndex] = useState(null);
 
     useEffect(() => {
         if(!loading && stockData.length > 0) {
@@ -132,7 +135,10 @@ const StockTable = () => {
     }
 
     // Delete Button
-    const handleDelete = (product) => { console.log(`You just clicked the Delete button for ${product.name}`); };
+    const handleDelete = (product) => {
+        // Call the updateQuantityToZero function from the hook
+        updateQuantityToZero(product.name, product.expiry_date);
+    };
     const handleRowHover = (index) => { setHoveredRow(index); };
     const handleRowLeave = () => {setHoveredRow(null); };
 
@@ -187,13 +193,21 @@ const StockTable = () => {
                     return (
                         <li
                             key={product.id} className={`list-row ${className}`}
-                            onClick={() => { handleRowHover(index); }} 
+                            onClick={() => {
+                                if (selectedProductIndex === index) {
+                                    // If the button is already visible, hide it
+                                    setSelectedProductIndex(null);
+                                } else {
+                                    // Otherwise, show the button for the clicked product
+                                    setSelectedProductIndex(index);
+                                }
+                            }} 
                             // onMouseEnter={() => handleRowHover(index)}
                             // onMouseLeave={handleRowLeave}
                         >
-                            <div className={`stock-delete ${hoveredRow === index ? 'visible' : ''}`}>
-                                <button onClick={() => handleDelete(product)}>Your Button</button>
-                            </div>
+                            <div className={`stock-delete ${selectedProductIndex === index ? 'visible' : ''}`}>
+                <button onClick={() => handleDelete(product)}>Remove Product</button>
+            </div>
                             <div className={`list-cell list-cell-id ${shortenName ? 'shortened-name' : ''}`}>
                             {product.item_number}
                             </div>
