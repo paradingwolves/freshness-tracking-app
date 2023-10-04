@@ -10,8 +10,6 @@ import useAuth from '../../hooks/Admin';
 import { collection, getDocs, addDoc, query, where, updateDoc } from 'firebase/firestore';
 import './AddStock.css';
 
-
-
 const AddStock = () => {
   const videoRef = useRef(null);
   const [detectedBarcode, setDetectedBarcode] = useState('');
@@ -24,31 +22,16 @@ const AddStock = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-
-
-  // Use useEffect to log user information after the initial render
-  useEffect(() => {
-    const checkUserAuth = async () => {
-      const unsubscribe = auth.onAuthStateChanged(async (user) => {
-        if (user) {
-          console.log("signed in admin", user.uid);
-        } else {
-          navigate('/login');
-        }
-      });
-
-      return () => unsubscribe();
-    };
-
-    checkUserAuth();
-  }, []);
-  
-
   const [formData, setFormData] = useState({
     editedQuantity: '',
     editedExpiryDate: '',
     editedUpdated: '',
     editedSize: '',
+    editedAnimal: '',
+    editedBarcodeNumber: '',
+    editedItemNumber: '',
+    editedName: '',
+    editedBrand: '',
   });
 
   const openModal = () => {
@@ -60,6 +43,7 @@ const AddStock = () => {
     setModalIsOpen(false);
     startScanning();
   };
+
   const handleSearch = () => {
     // Trigger a search by barcode_number action here
     if (searchBarcode) {
@@ -169,52 +153,88 @@ const AddStock = () => {
       // Calculate the Unix timestamp based on the adjusted date at midnight
       const expiryTimestamp = expiryDate.getTime(); // Convert to milliseconds
   
-      // Find the item with the largest expiry date
-      const largestExpiryItem = matchingItems.reduce((prev, current) => {
-        const currentExpiry = new Date(current.expiry_date * 1000);
-        return currentExpiry > prev.expiry_date ? current : prev;
-      });
-  
-      // Check if a document with the same item_number and expiry_date exists
-      const stockRef = collection(db, 'Stock');
-      const querySnapshot = await getDocs(
-        query(
-          stockRef,
-          where('item_number', '==', largestExpiryItem.item_number),
-          where('expiry_date', '==', expiryTimestamp)
-        )
-      );
-  
-      if (querySnapshot.size > 0) {
-        // Document already exists, update its quantity by adding the new quantity
-        querySnapshot.forEach(async (doc) => {
-          const docRef = doc.data();
-          const newQuantity =
-            docRef.quantity + parseFloat(formData.editedQuantity);
-  
-          // Update the quantity of the existing document
-          await updateDoc(doc.ref, { quantity: newQuantity });
-  
-          console.log('Document updated with ID: ', doc.id);
-          closeModal();
+      if (matchingItems.length > 0) {
+        // Find the item with the largest expiry date
+        const largestExpiryItem = matchingItems.reduce((prev, current) => {
+          const currentExpiry = new Date(current.expiry_date * 1000);
+          return currentExpiry > prev.expiry_date ? current : prev;
         });
+  
+        // Check if a document with the same item_number and expiry_date exists
+        const stockRef = collection(db, 'Stock');
+        const querySnapshot = await getDocs(
+          query(
+            stockRef,
+            where('item_number', '==', largestExpiryItem.item_number),
+            where('expiry_date', '==', expiryTimestamp)
+          )
+        );
+  
+        if (querySnapshot.size > 0) {
+          // Document already exists, update its quantity by adding the new quantity
+          querySnapshot.forEach(async (doc) => {
+            const docRef = doc.data();
+            const newQuantity =
+              docRef.quantity + parseFloat(formData.editedQuantity);
+  
+            // Update the quantity of the existing document
+            await updateDoc(doc.ref, { quantity: newQuantity });
+  
+            console.log('Document updated with ID: ', doc.id);
+            closeModal();
+          });
+        } else {
+          // Document doesn't exist, add a new one
+          const newFormData = {
+            name: largestExpiryItem.name,
+            brand: largestExpiryItem.brand,
+            size: largestExpiryItem.size,
+            quantity: parseFloat(formData.editedQuantity), // Parse quantity as a number
+            updated: parseFloat(formData.editedUpdated), // Parse "updated" as a number
+            expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
+            item_number: largestExpiryItem.item_number,
+            barcode_number: largestExpiryItem.barcode_number,
+            animal: largestExpiryItem.animal,
+          };
+  
+          const docRef = await addDoc(stockRef, newFormData);
+  
+          console.log('Document written with ID: ', docRef.id);
+          closeModal();
+        }
       } else {
-        // Document doesn't exist, add a new one
+        // Handle the submission of the empty form by adding data to your database
+        const stockRef = collection(db, 'Stock');
+  
         const newFormData = {
-          name: largestExpiryItem.name,
-          brand: largestExpiryItem.brand,
-          size: largestExpiryItem.size,
+          name: formData.editedName,
+          brand: formData.editedBrand,
+          size: formData.editedSize,
           quantity: parseFloat(formData.editedQuantity), // Parse quantity as a number
           updated: parseFloat(formData.editedUpdated), // Parse "updated" as a number
           expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
-          item_number: largestExpiryItem.item_number,
-          barcode_number: largestExpiryItem.barcode_number,
-          animal: largestExpiryItem.animal,
+          item_number: Number(formData.editedItemNumber),
+          barcode_number: Number(formData.editedBarcodeNumber),
+          animal: formData.editedAnimal,
         };
   
         const docRef = await addDoc(stockRef, newFormData);
   
         console.log('Document written with ID: ', docRef.id);
+  
+        // Clear the form data (optional)
+        setFormData({
+          editedName: '',
+          editedBrand: '',
+          editedQuantity: '',
+          editedUpdated: '',
+          editedExpiryDate: '',
+          editedSize: '',
+          editedItemNumber: '',
+          editedBarcodeNumber: '',
+          editedAnimal: '',
+        });
+  
         closeModal();
       }
     } catch (error) {
@@ -261,8 +281,7 @@ const AddStock = () => {
       >
         <h3>Matching Item:</h3>
         <form>
-          {/* Display details for the first matching item */}
-          {matchingItems.length > 0 && (
+          {matchingItems.length > 0 ? ( // Check if there are matching items
             <div className="mb-3">
               <label className="form-label">Name</label>
               <input
@@ -339,6 +358,92 @@ const AddStock = () => {
                 required
                 disabled
               />
+            </div>
+          ) : (
+            <div className="mb-3">
+              {/* Render an empty form when no matching items */}
+              <label className="form-label">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                name="editedName"
+                value={formData.editedName}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Brand</label>
+              <input
+                type="text"
+                className="form-control"
+                name="editedBrand"
+                value={formData.editedBrand}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Quantity</label>
+              <input
+                type="number"
+                className="form-control"
+                name="editedQuantity"
+                value={formData.editedQuantity}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Updated</label>
+              <input
+                type="number"
+                className="form-control"
+                name="editedUpdated"
+                value={formData.editedUpdated}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Expiry Date</label>
+              <input
+                type="date"
+                className="form-control"
+                name="editedExpiryDate"
+                value={formData.editedExpiryDate}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Size</label>
+              <input
+                type="text"
+                className="form-control"
+                name="editedSize"
+                value={formData.editedSize}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Item Number</label>
+              <input
+                type="number"
+                className="form-control"
+                name="editedItemNumber"
+                value={formData.editedItemNumber}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Barcode Number</label>
+              <input
+                type="number"
+                className="form-control"
+                name="editedBarcodeNumber"
+                value={formData.editedBarcodeNumber}
+                onChange={handleInputChange}
+                required
+              />
+              <label className="form-label">Animal</label>
+              <input
+                type="text"
+                className="form-control"
+                name="editedAnimal"
+                value={formData.editedAnimal}
+                onChange={handleInputChange}
+                required
+              />
+              {/* Add other fields here */}
             </div>
           )}
         </form>

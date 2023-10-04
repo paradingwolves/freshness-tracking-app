@@ -132,6 +132,13 @@ npm packages installed:
     1. Used the useUpdateQuantityToZero hook to make the Remove Product button in the stock table work
     2. made the Remove Product button toggleable
 
+------------------------------------------------------------------
+    Date Modified: October 04, 2023
+------------------------------------------------------------------
+    1. when a scanned barcode doesn't have a match, a blank form now appears for the user to input the 
+    item into the firestore database (tedious at first, will result in auto matches once every barcode_number is 
+    entered at least once)
+
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
