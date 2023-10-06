@@ -438,8 +438,18 @@ const AddStock = () => {
                 onChange={handleInputChange}
                 required
               />
-              {/* Updated the barcode_number input */}
-              <div className="alert alert-danger alert-dismissible mt-2" role="alert">
+             
+              <label className="form-label">Barcode Number</label>
+              <input
+                type="number"
+                className="form-control"
+                name="editedBarcodeNumber"
+                defaultValue={searchBarcode} // Pre-fill with the searched barcode
+                onChange={handleInputChange} // Make it editable
+                required
+              />
+               {/* Updated the barcode_number input */}
+               <div className="alert alert-danger alert-dismissible mt-2" role="alert">
                 <button
                   type="button"
                   className="btn-close"
@@ -451,15 +461,6 @@ const AddStock = () => {
                 ></button>
                 Make Sure This Number Matches the Products Barcode Number
               </div>
-              <label className="form-label">Barcode Number</label>
-              <input
-                type="number"
-                className="form-control"
-                name="editedBarcodeNumber"
-                defaultValue={searchBarcode} // Pre-fill with the searched barcode
-                onChange={handleInputChange} // Make it editable
-                required
-              />
               <label className="form-label">Animal</label>
               <input
                 type="text"
