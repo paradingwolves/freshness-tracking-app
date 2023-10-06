@@ -17,6 +17,7 @@ const AddStock = () => {
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [stockData, setStockData] = useState([]);
   const [searchBarcode, setSearchBarcode] = useState('');
+  const [isAlertOpen, setIsAlertOpen] = useState(true); // Alert state
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
 
   const { user } = useAuth();
@@ -50,6 +51,9 @@ const AddStock = () => {
       const sanitizedBarcode = searchBarcode.startsWith('0') ? searchBarcode.substring(1) : searchBarcode;
       setDetectedBarcode(sanitizedBarcode);
       openModal();
+    } else {
+      // Show the barcode alert when the searchBarcode is empty
+      /* setIsAlertOpen(true); */
     }
   };
 
@@ -66,7 +70,9 @@ const AddStock = () => {
         }
       } catch (error) {
         console.error('Error accessing rear camera:', error);
-      }
+      } /* finally {
+        setIsAlertOpen(false); // Close the alert after submission
+      } */
     };
 
     startCamera();
@@ -241,7 +247,6 @@ const AddStock = () => {
       console.error('Error adding/updating document: ', error);
     }
   };
-  
 
   return (
     <div>
@@ -309,14 +314,17 @@ const AddStock = () => {
                 required
               />
               <label className="form-label">Updated</label>
-              <input
-                type="number"
-                className="form-control"
+              <select
+                className="form-select"
                 name="editedUpdated"
                 value={formData.editedUpdated}
                 onChange={handleInputChange}
                 required
-              />
+              >
+                <option value="1">20%</option>
+                <option value="2">35%</option>
+                <option value="3">50%</option>
+              </select>
               <label className="form-label">Expiry Date</label>
               <input
                 type="date"
@@ -362,6 +370,7 @@ const AddStock = () => {
           ) : (
             <div className="mb-3">
               {/* Render an empty form when no matching items */}
+      
               <label className="form-label">Name</label>
               <input
                 type="text"
@@ -371,6 +380,7 @@ const AddStock = () => {
                 onChange={handleInputChange}
                 required
               />
+              
               <label className="form-label">Brand</label>
               <input
                 type="text"
@@ -390,14 +400,17 @@ const AddStock = () => {
                 required
               />
               <label className="form-label">Updated</label>
-              <input
-                type="number"
-                className="form-control"
+              <select
+                className="form-select"
                 name="editedUpdated"
                 value={formData.editedUpdated}
                 onChange={handleInputChange}
                 required
-              />
+              >
+                <option value="1">20%</option>
+                <option value="2">35%</option>
+                <option value="3">50%</option>
+              </select>
               <label className="form-label">Expiry Date</label>
               <input
                 type="date"
@@ -425,13 +438,26 @@ const AddStock = () => {
                 onChange={handleInputChange}
                 required
               />
+              {/* Updated the barcode_number input */}
+              <div className="alert alert-danger alert-dismissible mt-2" role="alert">
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"
+                  onClick={() => {
+                    setIsAlertOpen(false); // Close the alert
+                  }}
+                ></button>
+                Make Sure This Number Matches the Products Barcode Number
+              </div>
               <label className="form-label">Barcode Number</label>
               <input
                 type="number"
                 className="form-control"
                 name="editedBarcodeNumber"
-                value={formData.editedBarcodeNumber}
-                onChange={handleInputChange}
+                defaultValue={searchBarcode} // Pre-fill with the searched barcode
+                onChange={handleInputChange} // Make it editable
                 required
               />
               <label className="form-label">Animal</label>
@@ -448,7 +474,7 @@ const AddStock = () => {
           )}
         </form>
 
-        <button className="btn mx-1 btn-rounded btn-success" onClick={handleSubmit}>
+        <button className="btn mx-1 btn-rounded btn-success" onClick={handleSubmit} disabled={isAlertOpen}>
           Submit
         </button>
         <button className="btn mx-1 btn-rounded btn-danger" onClick={closeModal}>

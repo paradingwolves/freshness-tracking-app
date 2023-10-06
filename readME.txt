@@ -139,6 +139,10 @@ npm packages installed:
     item into the firestore database (tedious at first, will result in auto matches once every barcode_number is 
     entered at least once)
 
+------------------------------------------------------------------
+    Date Modified: October 06, 2023
+------------------------------------------------------------------
+    1. added some form validation to the Add Stock form
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
