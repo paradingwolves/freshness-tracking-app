@@ -44,7 +44,13 @@ const ExpiredProducts = () => {
       <div className="container bg-light p-4 rounded">
         <h1 className="text-dark fw-bold text-center">Expired Products</h1>
         {loading ? (
-          <img src="https://i.pinimg.com/originals/d0/e3/ca/d0e3ca45bb78d6cf92bb88aaefdc020e.gif" alt="Loading..." />
+          <div className="row">
+            <div className="col-4"></div>
+            <div className="col-4">
+              <img className="justify-content-center" src="media/Loading.gif" alt="Loading..." />
+            </div>
+            <div className="col-4"></div>
+          </div>
         ) : (
           expiredStockData.length === 0 ? (
             <p className='text-center'>No products to display. We aim to keep our inventory fresh. Please remember to sell any items marked with red stickers promptly.

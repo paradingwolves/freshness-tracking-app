@@ -143,6 +143,8 @@ npm packages installed:
     Date Modified: October 06, 2023
 ------------------------------------------------------------------
     1. added some form validation to the Add Stock form
+    2. made loading gif smaller and centered it     
+        - might make this its own component
 
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

@@ -144,7 +144,9 @@ const StockTable = () => {
 
     // loading
     if (loading) {
-        return <p>Loading...</p>;
+        return (
+            <p className='text-center'>Loading...</p>
+        );
     }
     if (sortedStockData.length === 0) { // Check sortedStockData for empty data
         return <p>No stock data available.</p>;

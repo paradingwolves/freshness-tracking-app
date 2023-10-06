@@ -54,7 +54,13 @@ const ExpireToday = () => {
   return (
     <div className="container my-4">
       {loading ? (
-       <p>Loading...</p>
+       <div className="row">
+       <div className="col-4"></div>
+       <div className="col-4">
+         <img className="justify-content-center" src="media/Loading.gif" alt="Loading..." />
+       </div>
+       <div className="col-4"></div>
+     </div>
       ) : (
         <>
           {stockData.length === 0 ? (

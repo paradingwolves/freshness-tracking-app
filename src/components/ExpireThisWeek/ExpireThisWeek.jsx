@@ -92,7 +92,13 @@ const ExpireThisWeek = () => {
   return (
     <div className="container my-4">
       {loading ? (
-        <img src="https://i.pinimg.com/originals/d0/e3/ca/d0e3ca45bb78d6cf92bb88aaefdc020e.gif" alt="Loading..." />
+        <div className="row">
+          <div className="col-4"></div>
+          <div className="col-4">
+            <img className="justify-content-center" src="media/Loading.gif" alt="Loading..." />
+          </div>
+          <div className="col-4"></div>
+        </div>
       ) : (
         <Carousel data-bs-theme="dark" fade>
             {stockData.length === 0 ? (
