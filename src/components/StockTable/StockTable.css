@@ -50,6 +50,7 @@ ul { padding: 0 !important; list-style: none; }
     color: #a2a2a2;
     text-transform: uppercase;
 }
+.list-row:nth-child(even) { background-color: #a2a2a2; }
 .exp-soon { background-color: #e3cf9c !important; }
 .list-row.exp-soon:nth-child(even) { background-color: #c1ae74 !important; }
 .exp-week { background-color: #e7bda0 !important; }
@@ -165,7 +166,7 @@ ul { padding: 0 !important; list-style: none; }
 .shortened-name {
     white-space: nowrap;
 }
-@media only screen and (max-width: 834px) {
+@media only screen and (max-width: 1150px) {
     .stock-table {
         margin: 0 !important;
         padding: 0 !important;
