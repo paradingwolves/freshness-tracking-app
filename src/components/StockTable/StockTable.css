@@ -50,7 +50,7 @@ ul { padding: 0 !important; list-style: none; }
     color: #a2a2a2;
     text-transform: uppercase;
 }
-.list-row:nth-child(even) { background-color: #a2a2a2; }
+.list-row:nth-child(even) { background-color: #cfcfcf; }
 .exp-soon { background-color: #e3cf9c !important; }
 .list-row.exp-soon:nth-child(even) { background-color: #c1ae74 !important; }
 .exp-week { background-color: #e7bda0 !important; }
