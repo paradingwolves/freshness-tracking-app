@@ -35,7 +35,7 @@ const EditStock = () => {
   return (
     <div>
       <Header />
-      {!itemData ? (
+      {itemData ? (
         <div>
           <p>Name: {itemData.name}</p>
           <p>Brand: {itemData.brand}</p>
