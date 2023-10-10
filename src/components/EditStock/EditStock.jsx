@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams
-import { collection, getDoc, doc } from 'firebase/firestore'; // Import Firebase Firestore functions
-import { db } from '../../lib/firebase'; // Import your Firebase configuration
+import { useParams } from 'react-router-dom';
+import { collection, getDoc, doc } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import Loading from '../Loading/Loading';
 
-const EditStock = () => {
-  const { id } = useParams(); // Get the 'id' parameter from the URL
+// Function to format a timestamp as "mm/dd/yyyy"
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+};
 
+const EditStock = () => {
+  const { id } = useParams();
   const [itemData, setItemData] = useState(null);
 
   useEffect(() => {
-    // Fetch the item's data based on the 'id' parameter
     const fetchItemData = async () => {
       try {
-        const itemRef = doc(db, 'Stock', id); // Assuming 'Stock' is your collection name
+        const itemRef = doc(db, 'Stock', id);
         const itemDoc = await getDoc(itemRef);
         if (itemDoc.exists()) {
           const item = itemDoc.data();
           setItemData(item);
         } else {
-          // Handle the case where the item with the given ID doesn't exist
           console.error(`Item with ID ${id} not found.`);
         }
       } catch (error) {
@@ -41,7 +47,7 @@ const EditStock = () => {
           <p>Brand: {itemData.brand}</p>
           <p>Quantity: {itemData.quantity}</p>
           <p>Updated: {itemData.updated}</p>
-          <p>Expiry Date: {itemData.expiry_date}</p>
+          <p>Expiry Date: {formatDate(itemData.expiry_date)}</p> {/* Format the date here */}
           <p>Item Number: {itemData.item_number}</p>
           <p>Barcode Number: {itemData.barcode_number}</p>
           <p>Animal: {itemData.animal}</p>
