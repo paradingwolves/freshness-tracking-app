@@ -50,6 +50,13 @@ const AddStock = () => {
     if (searchBarcode) {
       const sanitizedBarcode = searchBarcode.startsWith('0') ? searchBarcode.substring(1) : searchBarcode;
       setDetectedBarcode(sanitizedBarcode);
+  
+      // Set the scanned barcode to the form input
+      setFormData({
+        ...formData,
+        editedBarcodeNumber: sanitizedBarcode,
+      });
+  
       openModal();
     } else {
       // Show the barcode alert when the searchBarcode is empty
