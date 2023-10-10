@@ -16,7 +16,7 @@ const AddStock = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const [stockData, setStockData] = useState([]);
-  const [searchBarcode, setSearchBarcode] = useState('');
+ /*  const [searchBarcode, setSearchBarcode] = useState(''); */
   const [isAlertOpen, setIsAlertOpen] = useState(true); // Alert state
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
 
@@ -269,7 +269,7 @@ const AddStock = () => {
             className="my-input"
             placeholder="Search by barcode number"
             value={detectedBarcode}
-            onChange={(e) => setSearchBarcode(e.target.value)}
+            onChange={(e) => setDetectedBarcode(e.target.value)}
           />
           <button className="btn btn-primary my-button" onClick={handleSearch}>
             Search
