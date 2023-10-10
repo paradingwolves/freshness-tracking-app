@@ -47,16 +47,9 @@ const AddStock = () => {
 
   const handleSearch = () => {
     // Trigger a search by barcode_number action here
-    if (searchBarcode) {
-      const sanitizedBarcode = searchBarcode.startsWith('0') ? searchBarcode.substring(1) : searchBarcode;
+    if (detectedBarcode) {
+      const sanitizedBarcode = detectedBarcode.startsWith('0') ? detectedBarcode.substring(1) : detectedBarcode;
       setDetectedBarcode(sanitizedBarcode);
-  
-      // Set the scanned barcode to the form input
-      setFormData({
-        ...formData,
-        editedBarcodeNumber: sanitizedBarcode,
-      });
-  
       openModal();
     } else {
       // Show the barcode alert when the searchBarcode is empty
@@ -275,7 +268,7 @@ const AddStock = () => {
             type="number"
             className="my-input"
             placeholder="Search by barcode number"
-            value={searchBarcode}
+            value={detectedBarcode}
             onChange={(e) => setSearchBarcode(e.target.value)}
           />
           <button className="btn btn-primary my-button" onClick={handleSearch}>
@@ -451,7 +444,7 @@ const AddStock = () => {
                 type="number"
                 className="form-control"
                 name="editedBarcodeNumber"
-                defaultValue={searchBarcode} // Pre-fill with the searched barcode
+                defaultValue={detectedBarcode} // Pre-fill with the searched barcode
                 onChange={handleInputChange} // Make it editable
                 required
               />
