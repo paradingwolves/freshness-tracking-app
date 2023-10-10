@@ -19,6 +19,7 @@ const AddStock = () => {
  /*  const [searchBarcode, setSearchBarcode] = useState(''); */
   const [isAlertOpen, setIsAlertOpen] = useState(true); // Alert state
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
+  
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -50,12 +51,22 @@ const AddStock = () => {
     if (detectedBarcode) {
       const sanitizedBarcode = detectedBarcode.startsWith('0') ? detectedBarcode.substring(1) : detectedBarcode;
       setDetectedBarcode(sanitizedBarcode);
+      console.log(sanitizedBarcode);
+
       openModal();
     } else {
       // Show the barcode alert when the searchBarcode is empty
       /* setIsAlertOpen(true); */
     }
   };
+  useEffect(() => {
+    if (detectedBarcode) {
+      setFormData({
+        ...formData,
+        editedBarcodeNumber: detectedBarcode,
+      });
+    }
+  }, [detectedBarcode]);
 
   useEffect(() => {
     const startCamera = async () => {
@@ -321,6 +332,7 @@ const AddStock = () => {
                 onChange={handleInputChange}
                 required
               >
+                <option value="0">0%</option>
                 <option value="1">20%</option>
                 <option value="2">35%</option>
                 <option value="3">50%</option>
@@ -407,6 +419,7 @@ const AddStock = () => {
                 onChange={handleInputChange}
                 required
               >
+                <option value="0">0%</option>
                 <option value="1">20%</option>
                 <option value="2">35%</option>
                 <option value="3">50%</option>
@@ -444,8 +457,8 @@ const AddStock = () => {
                 type="number"
                 className="form-control"
                 name="editedBarcodeNumber"
-                defaultValue={detectedBarcode} // Pre-fill with the searched barcode
-                onChange={handleInputChange} // Make it editable
+                value={formData.editedBarcodeNumber}
+                onChange={handleInputChange}
                 required
               />
                {/* Updated the barcode_number input */}

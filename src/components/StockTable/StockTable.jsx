@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { addDays, isBefore, isToday } from 'date-fns';
+import Loading from '../Loading/Loading';
 import useAllStockData from "../../hooks/ViewStock";
 import FilterSelect from "./FilterSelect";
 import SearchBar from './SearchBar';
 import useUpdateQuantityToZero from '../../hooks/RemoveStock';
+import { Link } from 'react-router-dom';
 import './StockTable.css';
 
 const StockTable = () => {
-    const { stockData, loading } = useAllStockData();
+    const { stockData: fetchedStockData, loading } = useAllStockData(); // Use a different name for the fetched stockData
     const [sortedStockData, setSortedStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(30);
@@ -19,15 +21,15 @@ const StockTable = () => {
     const [selectedProductIndex, setSelectedProductIndex] = useState(null);
 
     useEffect(() => {
-        if(!loading && stockData.length > 0) {
-            const sortedData = [...stockData].sort((a, b) =>
+        if(!loading && fetchedStockData.length > 0) {
+            const sortedData = [...fetchedStockData].sort((a, b) =>
                 new Date(a.expiry_date) - new Date(b.expiry_date)
             );
 
             // Update the sortedStockData state with the sorted data
             setSortedStockData(sortedData);
         }
-    }, [stockData, loading]);
+    }, [fetchedStockData, loading]);
 
     // Shortened name for mobile view handler
     useEffect(() => {
@@ -66,6 +68,8 @@ const StockTable = () => {
     // Function to calculate the "Red Sticker" value based on the 'updated' property
     const calculateRedStickerValue = (updatedValue) => {
         switch (updatedValue) {
+            case 0:
+                return '00%';
             case 1:
                 return '20%';
             case 2:
@@ -144,9 +148,7 @@ const StockTable = () => {
 
     // loading
     if (loading) {
-        return (
-            <p className='text-center'>Loading...</p>
-        );
+        <Loading />
     }
     if (sortedStockData.length === 0) { // Check sortedStockData for empty data
         return <p>No stock data available.</p>;
@@ -155,7 +157,7 @@ const StockTable = () => {
     return (
         <div className="list-table-container">
             <div className="table-controls">
-            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
                 <FilterSelect
                     options={filterOptions}
@@ -208,13 +210,13 @@ const StockTable = () => {
                             // onMouseLeave={handleRowLeave}
                         >
                             <div className={`stock-delete ${selectedProductIndex === index ? 'visible' : ''}`}>
-                <button onClick={() => handleDelete(product)}>Remove Product</button>
-            </div>
+                                <button onClick={() => handleDelete(product)}>Remove Product</button>
+                            </div>
                             <div className={`list-cell list-cell-id ${shortenName ? 'shortened-name' : ''}`}>
-                            {product.item_number}
+                                {product.item_number}
                             </div>
                             <div className={`list-cell list-cell-name ${shortenName ? 'shortened-name' : ''}`}>
-                            {getShortenedName(product)}
+                                <Link className='text-dark text-decoration-none' to={`/edit_stock/${product.id}`}>{getShortenedName(product)}</Link>
                             </div>
                             <div className="list-cell list-cell-brand">{product.brand}</div>
                             <div className="list-cell list-cell-red">{calculateRedStickerValue(product.updated)}</div>

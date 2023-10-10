@@ -146,5 +146,17 @@ npm packages installed:
     2. made loading gif smaller and centered it     
         - might make this its own component
 
+------------------------------------------------------------------
+    Date Modified: October 10, 2023
+------------------------------------------------------------------
+    I noticed when demo'ing the app that when you scan a barcode and there is no match that the barcode_number
+field in the form is not prefilled like it should be (manual searching does).
+    1. to fix this issue, I removed the searchBarcode and setSearchBarcode state, and replaced their implementations
+    with the already existing detectBarcode and setDetectBarcode state
+    2. Removed the 'Remove Product' option from Header.jsx
+    3. Created the EditStock.jsx component that recieves information about a single product
+    4. Created a route for EditStock that routes to a product based on the ID
+
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

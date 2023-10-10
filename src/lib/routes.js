@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, useParams } from "react-router-dom";
 import React from "react";
 import Home from "../components/Layout";
 import Header from "../components/Layout/Header";
@@ -7,12 +7,14 @@ import AddStock from "../components/AddStock/AddStock";
 import SeedData from "../components/SeedDB/SeedData";
 import Login from "../components/Administrator/Login";
 import ExpiredProducts from "../components/ExpiredProducts/ExpiredProducts";
+import EditStock from "../components/EditStock/EditStock";
 
 export const ROOT = "/";
 export const ADD_STOCK = "/add_stock";
 export const SEED_DATA = "/seed_data";
 export const EXPIRED_PRODUCTS = "/expired_products";
 export const LOGIN = "/login";
+export const EDIT_STOCK = "/edit_stock/:id";
 
 
 
@@ -21,9 +23,9 @@ export const router = createBrowserRouter([
   { path: ROOT, element: <Home /> },
   { path: ADD_STOCK, element: <AddStock /> },
   { path: SEED_DATA, element: <SeedData /> },
-  { path: SEED_DATA, element: <SeedData /> },
   { path: EXPIRED_PRODUCTS, element: <ExpiredProducts /> },
   { path: LOGIN, element: <Login /> },
+  { path: EDIT_STOCK, element: <EditStock /> },
   { path: "*", element: <NotFound /> }
 ]);
 

@@ -4,6 +4,7 @@ import { Modal, Button, Carousel } from 'react-bootstrap';
 import useUpdateQuantityToZero from '../../hooks/RemoveStock'; 
 import useIncrementUpdatedValue from '../../hooks/UpdateSticker';
 import './ExpireThisWeek.css';
+import Loading from '../Loading/Loading';
 
 function isExpiringToday(expiryDate) {
   const today = new Date();
@@ -92,13 +93,7 @@ const ExpireThisWeek = () => {
   return (
     <div className="container my-4">
       {loading ? (
-        <div className="row">
-          <div className="col-4"></div>
-          <div className="col-4">
-            <img className="justify-content-center" src="media/Loading.gif" alt="Loading..." />
-          </div>
-          <div className="col-4"></div>
-        </div>
+        <Loading />
       ) : (
         <Carousel data-bs-theme="dark" fade>
             {stockData.length === 0 ? (
