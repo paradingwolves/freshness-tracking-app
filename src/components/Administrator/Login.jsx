@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import useAuth from '../../hooks/Admin';
-import Header from '../Layout/Header';
-import Footer from '../Layout/Footer';
+/* import Header from '../Layout/Header';
+import Footer from '../Layout/Footer'; */
 
 const Login = () => {
   const redirectToAdmin = () => {
@@ -20,7 +20,7 @@ const Login = () => {
 
   return (
     <div> 
-      <Header />
+     {/*  <Header /> */}
       <div id="contact" className="container my-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
@@ -60,7 +60,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-      <Footer />
+     {/*  <Footer /> */}
     </div>
     
   );
