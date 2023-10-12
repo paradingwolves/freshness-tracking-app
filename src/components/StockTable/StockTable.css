@@ -174,4 +174,8 @@ ul { padding: 0 !important; list-style: none; }
         overflow-x: scroll;
     }
 }
-
+@media only screen and (max-width: 550px) {
+    .stock-table {
+        width: 250%;
+    }
+}
