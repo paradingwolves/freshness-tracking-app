@@ -228,7 +228,7 @@ const AddStock = () => {
           brand: formData.editedBrand,
           size: formData.editedSize,
           quantity: parseFloat(formData.editedQuantity), // Parse quantity as a number
-          updated: parseFloat(formData.editedUpdated), // Parse "updated" as a number
+          updated: Number(formData.editedUpdated), // Parse "updated" as a number
           expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
           item_number: Number(formData.editedItemNumber),
           barcode_number: Number(formData.editedBarcodeNumber),
