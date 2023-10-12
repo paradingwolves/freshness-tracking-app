@@ -58,8 +58,11 @@ const StockTable = () => {
     const currentData = sortedStockData.slice(firstIndex, lastIndex);
     const totalPages = Math.ceil(sortedStockData.length / rowsPerPage);
     const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
     };
+    
     const handleRowsPerPageChange = (newRowsPerPage) => {
         setRowsPerPage(newRowsPerPage);
         setCurrentPage(1);
@@ -176,7 +179,7 @@ const StockTable = () => {
                     <div className="list-cell list-cell-qty">Qty.</div>
                     <div className="list-cell list-cell-date">Exp.</div>
                 </li>
-                {filteredData.map((product, index) => {
+                {currentData.map((product, index) => {
                     // Determine the class name based on the expiry date
                     let className = '';
                     const expiryDate = new Date(product.expiry_date);
@@ -241,10 +244,13 @@ const StockTable = () => {
                     </select>
                 </div>
                 <div className="pagination">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}>&laquo;
-                    </button>
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                >
+                    &laquo;
+                </button>
+
                     {Array.from({ length: totalPages }, (_, index) => (
                         <button
                             key={index + 1}
