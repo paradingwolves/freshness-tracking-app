@@ -192,7 +192,7 @@ const AddStock = () => {
           querySnapshot.forEach(async (doc) => {
             const docRef = doc.data();
             const newQuantity =
-              docRef.quantity + parseFloat(formData.editedQuantity);
+              docRef.quantity + Number(formData.editedQuantity);
   
             // Update the quantity of the existing document
             await updateDoc(doc.ref, { quantity: newQuantity });
@@ -206,8 +206,8 @@ const AddStock = () => {
             name: largestExpiryItem.name,
             brand: largestExpiryItem.brand,
             size: largestExpiryItem.size,
-            quantity: parseFloat(formData.editedQuantity), // Parse quantity as a number
-            updated: parseFloat(formData.editedUpdated), // Parse "updated" as a number
+            quantity: Number(formData.editedQuantity), // Parse quantity as a number
+            updated: Number(formData.editedUpdated), // Parse "updated" as a number
             expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
             item_number: largestExpiryItem.item_number,
             barcode_number: largestExpiryItem.barcode_number,
@@ -227,7 +227,7 @@ const AddStock = () => {
           name: formData.editedName,
           brand: formData.editedBrand,
           size: formData.editedSize,
-          quantity: parseFloat(formData.editedQuantity), // Parse quantity as a number
+          quantity: Number(formData.editedQuantity), // Parse quantity as a number
           updated: Number(formData.editedUpdated), // Parse "updated" as a number
           expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
           item_number: Number(formData.editedItemNumber),
