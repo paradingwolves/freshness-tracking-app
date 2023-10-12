@@ -370,14 +370,22 @@ const AddStock = () => {
                 required
                 disabled
               />
-              <label className="form-label">Animal</label>
-              <input
-                type="text"
-                className="form-control"
-                value={matchingItems[0].animal}
-                required
-                disabled
-              />
+              <label htmlFor="animal" className="form-label fw-bold fs-5">
+                Animal Type
+              </label>
+              <select
+                className="form-select"
+                id="animal"
+                name="animal"
+                defaultValue={matchingItems[0].animal}
+              >
+                <option value="Cat">Cat</option>
+                <option value="Dog">Dog</option>
+                <option value="Small Animal">Small Animal</option>
+                <option value="Bird">Bird</option>
+                <option value="Fish">Fish</option>
+                <option value="Reptile">Reptile</option>
+              </select>
             </div>
           ) : (
             <div className="mb-3">
@@ -474,15 +482,22 @@ const AddStock = () => {
                 ></button>
                 Make Sure This Number Matches the Products Barcode Number
               </div>
-              <label className="form-label">Animal</label>
-              <input
-                type="text"
-                className="form-control"
-                name="editedAnimal"
-                value={formData.editedAnimal}
-                onChange={handleInputChange}
-                required
-              />
+              <label htmlFor="animal" className="form-label fw-bold fs-5">
+                Animal Type
+              </label>
+              <select
+                className="form-select"
+                id="animal"
+                name="animal"
+                defaultValue={formData.animal}
+              >
+                <option value="Cat">Cat</option>
+                <option value="Dog">Dog</option>
+                <option value="Small Animal">Small Animal</option>
+                <option value="Bird">Bird</option>
+                <option value="Fish">Fish</option>
+                <option value="Reptile">Reptile</option>
+              </select>
               {/* Add other fields here */}
             </div>
           )}
