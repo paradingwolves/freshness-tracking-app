@@ -215,7 +215,7 @@ const AddStock = () => {
             updated: Number(formData.editedUpdated), // Parse "updated" as a number
             expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
             item_number: largestExpiryItem.item_number,
-            barcode_number: largestExpiryItem.barcode_number,
+            barcode_number: Number(largestExpiryItem.barcode_number),
             animal: largestExpiryItem.animal,
           };
   
