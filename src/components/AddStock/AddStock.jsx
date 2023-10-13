@@ -38,11 +38,13 @@ const AddStock = () => {
 
   const openModal = () => {
     setModalIsOpen(true);
+    setIsAlertOpen(true);
     stopScanning();
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
+    setIsAlertOpen(false);
     startScanning();
   };
 
@@ -74,20 +76,23 @@ const AddStock = () => {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
         });
-
+  
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.play();
         }
       } catch (error) {
         console.error('Error accessing rear camera:', error);
-      } /* finally {
-        setIsAlertOpen(false); // Close the alert after submission
-      } */
+      } finally {
+        if (matchingItems.length === 0) {
+          setIsAlertOpen(true);
+        }
+      }
     };
-
+  
     startCamera();
-  }, []);
+  }, [matchingItems]);
+  
 
   useEffect(() => {
     if (scanningEnabled) {
@@ -370,6 +375,18 @@ const AddStock = () => {
                 required
                 disabled
               />
+              <div className="alert alert-danger alert-dismissible mt-2" role="alert">
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"
+                  onClick={() => {
+                    setIsAlertOpen(false); // Close the alert
+                  }}
+                ></button>
+                Make Sure This Number Matches the Products Barcode Number
+              </div>
               <label htmlFor="animal" className="form-label fw-bold fs-5">
                 Animal Type
               </label>
