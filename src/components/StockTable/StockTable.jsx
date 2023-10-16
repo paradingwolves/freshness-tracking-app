@@ -16,9 +16,13 @@ const StockTable = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [shortenName, setShortenName] = useState(false);
-    const [hoveredRow, setHoveredRow] = useState(null);
     const { updateQuantityToZero, isLoading } = useUpdateQuantityToZero();
     const [selectedProductIndex, setSelectedProductIndex] = useState(null);
+
+    const exp90days = addDays(new Date(), 90);
+    const exp7days = addDays(new Date(), 7);
+    const expToday = addDays(new Date(), 1);
+    const today = new Date();
 
     useEffect(() => {
         if(!loading && fetchedStockData.length > 0) {
@@ -52,22 +56,6 @@ const StockTable = () => {
         return product.name;
     };
 
-    // Pagination variables
-    const lastIndex = currentPage * rowsPerPage;
-    const firstIndex = lastIndex - rowsPerPage;
-    const currentData = sortedStockData.slice(firstIndex, lastIndex);
-    const totalPages = Math.ceil(sortedStockData.length / rowsPerPage);
-    const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= totalPages) {
-            setCurrentPage(newPage);
-        }
-    };
-    
-    const handleRowsPerPageChange = (newRowsPerPage) => {
-        setRowsPerPage(newRowsPerPage);
-        setCurrentPage(1);
-    };
-
     // Function to calculate the "Red Sticker" value based on the 'updated' property
     const calculateRedStickerValue = (updatedValue) => {
         switch (updatedValue) {
@@ -84,8 +72,70 @@ const StockTable = () => {
         }
     };
 
+    // Apply both filter and pagination
+    const applyFiltersAndPagination = (data) => {
+        const numberPattern = /\d+/;
+        const query = searchQuery.toLowerCase();
+
+        return data
+        .filter((product) => {
+            const itemNumber = product.item_number.toString();
+            return (
+            (numberPattern.test(itemNumber) && itemNumber.includes(query)) ||
+            product.name.toLowerCase().includes(query) ||
+            product.brand.toLowerCase().includes(query)
+            );
+        })
+        .filter((product) => {
+            const expiryDate = new Date(product.expiry_date);
+
+            switch (selectedFilter) {
+            case '90days':
+                return expiryDate <= exp90days && expiryDate > exp7days;
+            case '7days':
+                return expiryDate <= exp7days && !isToday(expiryDate);
+            case '1day':
+                return expiryDate.getTime() === expToday.getTime();
+            case 'past':
+                return isBefore(expiryDate, today);
+            default:
+                return true; // Return true for 'all'
+            }
+        });
+    };
+
+    // expiry date filter
+    const filterOptions = [
+        { label: 'All', value: 'all' },
+        { label: 'Expires in 90 Days', value: '90days' },
+        { label: 'Expires in 7 Days', value: '7days' },
+        { label: 'Expires Today', value: '1day' },
+        { label: 'Expired', value: 'past' },
+    ];
+  const filteredAndPaginatedData = applyFiltersAndPagination(sortedStockData);
+  const totalPages = Math.ceil(filteredAndPaginatedData.length / rowsPerPage);
+  const lastIndex = currentPage * rowsPerPage;
+  const firstIndex = lastIndex - rowsPerPage;
+  const currentData = filteredAndPaginatedData.slice(firstIndex, lastIndex);
+
+
+/*     // Pagination variables
+    const lastIndex = currentPage * rowsPerPage;
+    const firstIndex = lastIndex - rowsPerPage;
+    const currentData = sortedStockData.slice(firstIndex, lastIndex);
+    const totalPages = Math.ceil(sortedStockData.length / rowsPerPage);
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
+    
+    const handleRowsPerPageChange = (newRowsPerPage) => {
+        setRowsPerPage(newRowsPerPage);
+        setCurrentPage(1);
+    };
     // search filter
-    let filteredData = sortedStockData;
+    let filteredData = currentData;
     if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const numberPattern = /\d+/; // Regular expression to match numbers
@@ -110,10 +160,6 @@ const StockTable = () => {
     const handleFilterChange = (value) => {
         setSelectedFilter(value);
     };
-    const exp90days = addDays(new Date(), 90);
-    const exp7days = addDays(new Date(), 7);
-    const expToday = addDays(new Date(), 1);
-    const today = new Date();
     switch(selectedFilter) {
         case '90days':
             filteredData = filteredData.filter((product) => {
@@ -140,14 +186,14 @@ const StockTable = () => {
         default:
             break;
     }
+ */
+
 
     // Delete Button
     const handleDelete = (product) => {
         // Call the updateQuantityToZero function from the hook
         updateQuantityToZero(product.name, product.expiry_date);
     };
-    const handleRowHover = (index) => { setHoveredRow(index); };
-    const handleRowLeave = () => {setHoveredRow(null); };
 
     // loading
     if (loading) {
@@ -165,7 +211,7 @@ const StockTable = () => {
                 <FilterSelect
                     options={filterOptions}
                     value={selectedFilter}
-                    onChange={handleFilterChange} 
+                    onChange={(value) => setSelectedFilter(value)} 
                 />
             </div>
             <div className="table-responsive listTable-container">
@@ -199,74 +245,78 @@ const StockTable = () => {
 
                     return (
                         <li
-                            key={product.id} className={`list-row ${className}`}
-                            onClick={() => {
-                                if (selectedProductIndex === index) {
-                                    // If the button is already visible, hide it
-                                    setSelectedProductIndex(null);
-                                } else {
-                                    // Otherwise, show the button for the clicked product
-                                    setSelectedProductIndex(index);
-                                }
-                            }} 
-                            // onMouseEnter={() => handleRowHover(index)}
-                            // onMouseLeave={handleRowLeave}
+                        key={product.id}
+                        className={`list-row ${className}`}
+                        onClick={() => {
+                            if (selectedProductIndex === index) {
+                            // If the button is already visible, hide it
+                            setSelectedProductIndex(null);
+                            } else {
+                            // Otherwise, show the button for the clicked product
+                            setSelectedProductIndex(index);
+                            }
+                        }}
                         >
-                            <div className={`stock-delete ${selectedProductIndex === index ? 'visible' : ''}`}>
-                                <button onClick={() => handleDelete(product)}>Remove Product</button>
-                            </div>
-                            <div className={`list-cell list-cell-id ${shortenName ? 'shortened-name' : ''}`}>
-                                {product.item_number}
-                            </div>
-                            <div className={`list-cell list-cell-name ${shortenName ? 'shortened-name' : ''}`}>
-                                <Link className='text-dark text-decoration-none' to={`/edit_stock/${product.id}`}>{getShortenedName(product)}</Link>
-                            </div>
-                            <div className="list-cell list-cell-brand">{product.brand}</div>
-                            <div className="list-cell list-cell-red">{calculateRedStickerValue(product.updated)}</div>
-                            <div className="list-cell list-cell-qty">{product.quantity}</div>
-                            <div className="list-cell list-cell-date">{product.expiry_date}</div>
+                        <div className={`stock-delete ${selectedProductIndex === index ? 'visible' : ''}`}>
+                            <button onClick={() => handleDelete(product)}>Remove Product</button>
+                        </div>
+                        <div className={`list-cell list-cell-id ${shortenName ? 'shortened-name' : ''}`}>
+                            {product.item_number}
+                        </div>
+                        <div className={`list-cell list-cell-name ${shortenName ? 'shortened-name' : ''}`}>
+                            <Link className='text-dark text-decoration-none' to={`/edit_stock/${product.id}`}>
+                            {getShortenedName(product)}
+                            </Link>
+                        </div>
+                        <div className="list-cell list-cell-brand">{product.brand}</div>
+                        <div className="list-cell list-cell-red">{calculateRedStickerValue(product.updated)}</div>
+                        <div className="list-cell list-cell-qty">{product.quantity}</div>
+                        <div className="list-cell list-cell-date">{product.expiry_date}</div>
                         </li>
                     );
-                })}
+                    })}
+
                 </ul>
             </div>
-
             <div className="pagination-container">
-                <div className="rows-per-page">
-                    <label>Results per page:</label>
-                    <select 
-                        onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
-                        className='select'
+                    <div className="rows-per-page">
+                        <label>Results per page:</label>
+                        <select
+                            onChange={(e) => setRowsPerPage(Number(e.target.value))}
+                            className='select'
                         >
-                        <option value={30}>30</option>
-                        <option value={50}>50</option>
-                        <option value={100}>100</option>
-                    </select>
-                </div>
-                <div className="pagination">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                >
-                    &laquo;
-                </button>
-
-                    {Array.from({ length: totalPages }, (_, index) => (
+                            <option value={30}>30</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
+                    <div className="pagination">
                         <button
-                            key={index + 1}
-                            onClick={() => handlePageChange(index + 1)}
-                            className={currentPage === index + 1 ? 'active' : ''}>
-                            {index + 1}
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            &laquo;
                         </button>
-                    ))}
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}>&raquo;
-                    </button>
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index + 1}
+                                onClick={() => setCurrentPage(index + 1)}
+                                className={currentPage === index + 1 ? 'active' : ''}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+                        <button
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                        >
+                            &raquo;
+                        </button>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
+
     );
 };
 
