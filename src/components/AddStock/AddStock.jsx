@@ -505,8 +505,9 @@ const AddStock = () => {
               <select
                 className="form-select"
                 id="animal"
-                name="animal"
-                defaultValue={formData.animal}
+                name="editedAnimal"
+                defaultValue={formData.editedAnimal}
+                onChange={handleInputChange}
               >
                 <option value="Cat">Cat</option>
                 <option value="Dog">Dog</option>
