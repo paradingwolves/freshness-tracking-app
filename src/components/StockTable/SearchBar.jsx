@@ -4,7 +4,7 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
     <div className="search-control">
       <input
-        className="search"
+        className="search mt-1"
         type="text"
         placeholder="Search by ID, name, or brand"
         value={searchQuery}
