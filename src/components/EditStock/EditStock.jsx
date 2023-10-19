@@ -43,11 +43,11 @@ const EditStock = () => {
       const newData = {
         name: e.target.name.value,
         brand: e.target.brand.value,
-        quantity: e.target.quantity.value,
+        quantity: Number(e.target.quantity.value),
         updated: Number(e.target.updated.value),
         expiry_date: expiryDate,
-        item_number: e.target.item_number.value,
-        barcode_number: e.target.barcode_number.value,
+        item_number: Number(e.target.item_number.value),
+        barcode_number: Number(e.target.barcode_number.value),
         animal: e.target.animal.value,
       };
       await setDoc(itemRef, newData, { merge: true });
