@@ -300,7 +300,6 @@ const AddStock = () => {
         onRequestClose={closeModal}
         contentLabel="Detected Barcode Modal"
       >
-        <h3>Matching Item:</h3>
         <form>
           {matchingItems.length > 0 ? ( // Check if there are matching items
             <div className="mb-3">
