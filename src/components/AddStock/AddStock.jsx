@@ -209,13 +209,13 @@ const AddStock = () => {
         } else {
           // Document doesn't exist, add a new one
           const newFormData = {
-            name: largestExpiryItem.name,
-            brand: largestExpiryItem.brand,
-            size: largestExpiryItem.size,
+            name: largestExpiryItem.name.toUpperCase(),
+            brand: largestExpiryItem.brand.toUpperCase(),
+            size: largestExpiryItem.size.toUpperCase(),
             quantity: Number(formData.editedQuantity), // Parse quantity as a number
             updated: Number(formData.editedUpdated), // Parse "updated" as a number
             expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
-            item_number: largestExpiryItem.item_number,
+            item_number: largestExpiryItem.item_number.toUpperCase(),
             barcode_number: Number(largestExpiryItem.barcode_number),
             animal: largestExpiryItem.animal,
           };
