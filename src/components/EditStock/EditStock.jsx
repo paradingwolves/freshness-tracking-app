@@ -41,12 +41,12 @@ const EditStock = () => {
     try {
       const itemRef = doc(db, 'Stock', id);
       const newData = {
-        name: e.target.name.value,
-        brand: e.target.brand.value,
+        name: e.target.name.value.toUpperCase(),
+        brand: e.target.brand.value.toUpperCase(),
         quantity: Number(e.target.quantity.value),
         updated: Number(e.target.updated.value),
         expiry_date: expiryDate,
-        item_number: Number(e.target.item_number.value),
+        item_number: e.target.item_number.value.toUpperCase(),
         barcode_number: Number(e.target.barcode_number.value),
         animal: e.target.animal.value,
       };

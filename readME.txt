@@ -159,5 +159,12 @@ field in the form is not prefilled like it should be (manual searching does).
     4. Created a route for EditStock that routes to a product based on the ID
 
 
+------------------------------------------------------------------
+    Date Modified: November23, 2023
+------------------------------------------------------------------
+- any strings uploaded are now uppercase
+- allowing letters in the item_number field
+JB
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries

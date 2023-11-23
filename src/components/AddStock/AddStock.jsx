@@ -81,6 +81,34 @@ const AddStock = () => {
           videoRef.current.srcObject = stream;
           videoRef.current.play();
         }
+  
+        // Initialize Quagga with the video stream
+        Quagga.init(
+          {
+            inputStream: {
+              type: 'LiveStream',
+              constraints: {
+                width: { min: 640 },
+                height: { min: 480 },
+                facingMode: 'environment', // Use the rear camera
+              },
+              target: videoRef.current,
+            },
+            decoder: {
+              readers: ['code_128_reader', 'ean_reader', 'upc_reader', 'code_39_reader'],
+            },
+          },
+          (err) => {
+            if (err) {
+              console.error('QuaggaJS initialization error:', err);
+              return;
+            }
+            // Start Quagga and locate method
+            Quagga.start();
+            Quagga.onDetected(handleDetected);
+            Quagga.onProcessed(handleProcessed);
+          }
+        );
       } catch (error) {
         console.error('Error accessing rear camera:', error);
       } finally {
@@ -90,8 +118,34 @@ const AddStock = () => {
       }
     };
   
+    const handleProcessed = (result) => {
+      const drawingCtx = Quagga.canvas.ctx.overlay;
+      const drawingCanvas = Quagga.canvas.dom.overlay;
+  
+      if (result && result.boxes) {
+        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width')), parseInt(drawingCanvas.getAttribute('height')));
+  
+        result.boxes.filter((box) => box !== result.box).forEach((box) => {
+          Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: 'green', lineWidth: 2 });
+        });
+      }
+    };
+  
+    const handleDetected = (result) => {
+      const barcodeValue = result.codeResult.code;
+      const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
+      console.log('Detected barcode:', sanitizedBarcode);
+      setDetectedBarcode(sanitizedBarcode);
+      openModal();
+    };
+  
     startCamera();
+  
+    return () => {
+      Quagga.stop();
+    };
   }, [matchingItems]);
+  
   
 
   useEffect(() => {
@@ -229,13 +283,13 @@ const AddStock = () => {
         const stockRef = collection(db, 'Stock');
   
         const newFormData = {
-          name: formData.editedName,
-          brand: formData.editedBrand,
-          size: formData.editedSize,
+          name: formData.editedName.toUpperCase(),
+          brand: formData.editedBrand.toUpperCase(),
+          size: formData.editedSize.toUpperCase(),
           quantity: Number(formData.editedQuantity), // Parse quantity as a number
           updated: Number(formData.editedUpdated), // Parse "updated" as a number
           expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
-          item_number: Number(formData.editedItemNumber),
+          item_number: formData.editedItemNumber.toUpperCase(),
           barcode_number: Number(formData.editedBarcodeNumber),
           animal: formData.editedAnimal,
         };
@@ -412,7 +466,7 @@ const AddStock = () => {
                 type="text"
                 className="form-control"
                 name="editedName"
-                value={formData.editedName}
+                value={formData.editedName.toUpperCase()}
                 onChange={handleInputChange}
                 required
               />
@@ -422,7 +476,7 @@ const AddStock = () => {
                 type="text"
                 className="form-control"
                 name="editedBrand"
-                value={formData.editedBrand}
+                value={formData.editedBrand.toUpperCase()}
                 onChange={handleInputChange}
                 required
               />
@@ -431,7 +485,7 @@ const AddStock = () => {
                 type="number"
                 className="form-control"
                 name="editedQuantity"
-                value={formData.editedQuantity}
+                value={formData.editedQuantity.toUpperCase()}
                 onChange={handleInputChange}
                 required
               />
@@ -462,16 +516,16 @@ const AddStock = () => {
                 type="text"
                 className="form-control"
                 name="editedSize"
-                value={formData.editedSize}
+                value={formData.editedSize.toUpperCase()}
                 onChange={handleInputChange}
                 required
               />
               <label className="form-label">Item Number</label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 name="editedItemNumber"
-                value={formData.editedItemNumber}
+                value={formData.editedItemNumber.toUpperCase()}
                 onChange={handleInputChange}
                 required
               />
