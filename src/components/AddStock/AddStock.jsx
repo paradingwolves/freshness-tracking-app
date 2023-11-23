@@ -82,33 +82,59 @@ const AddStock = () => {
           videoRef.current.play();
         }
   
-        // Initialize Quagga with the video stream
-        Quagga.init(
-          {
-            inputStream: {
-              type: 'LiveStream',
-              constraints: {
-                width: { min: 640 },
-                height: { min: 480 },
-                facingMode: 'environment', // Use the rear camera
-              },
-              target: videoRef.current,
-            },
-            decoder: {
-              readers: ['code_128_reader', 'ean_reader', 'upc_reader', 'code_39_reader'],
-            },
-          },
-          (err) => {
-            if (err) {
-              console.error('QuaggaJS initialization error:', err);
-              return;
+        // Add touch event listeners to the video element
+        if (videoRef.current) {
+          let lastTouchDistance = 0;
+  
+          videoRef.current.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+              // If there are two touches, calculate the initial touch distance
+              lastTouchDistance = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY
+              );
             }
-            // Start Quagga and locate method
-            Quagga.start();
-            Quagga.onDetected(handleDetected);
-            Quagga.onProcessed(handleProcessed);
-          }
-        );
+          });
+  
+          videoRef.current.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+              // If there are two touches, calculate the new touch distance
+              const newTouchDistance = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY
+              );
+  
+              // Adjust the zoom based on the change in touch distance
+              const zoomFactor = newTouchDistance / lastTouchDistance;
+              lastTouchDistance = newTouchDistance;
+  
+              // Update Quagga configuration to adjust zoom
+              Quagga.offProcessed(); // Remove existing event listener
+              Quagga.onProcessed((result) => {
+                // Access the video stream and update zoom
+                const video = Quagga.CameraAccess.getActiveStreamLabel();
+                const track = stream.getVideoTracks()[0];
+  
+                if (video && track) {
+                  const capabilities = track.getCapabilities();
+  
+                  if (capabilities.zoom) {
+                    const currentZoom = capabilities.zoom;
+                    const newZoom = currentZoom * zoomFactor;
+  
+                    if (newZoom >= capabilities.minZoom && newZoom <= capabilities.maxZoom) {
+                      track.applyConstraints({
+                        advanced: [{ zoom: newZoom }],
+                      });
+                    }
+                  }
+                }
+  
+                Quagga.start();
+              });
+            }
+          });
+        }
       } catch (error) {
         console.error('Error accessing rear camera:', error);
       } finally {
@@ -118,32 +144,7 @@ const AddStock = () => {
       }
     };
   
-    const handleProcessed = (result) => {
-      const drawingCtx = Quagga.canvas.ctx.overlay;
-      const drawingCanvas = Quagga.canvas.dom.overlay;
-  
-      if (result && result.boxes) {
-        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width')), parseInt(drawingCanvas.getAttribute('height')));
-  
-        result.boxes.filter((box) => box !== result.box).forEach((box) => {
-          Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: 'green', lineWidth: 2 });
-        });
-      }
-    };
-  
-    const handleDetected = (result) => {
-      const barcodeValue = result.codeResult.code;
-      const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
-      console.log('Detected barcode:', sanitizedBarcode);
-      setDetectedBarcode(sanitizedBarcode);
-      openModal();
-    };
-  
     startCamera();
-  
-    return () => {
-      Quagga.stop();
-    };
   }, [matchingItems]);
   
   
