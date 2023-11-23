@@ -19,6 +19,7 @@ const AddStock = () => {
  /*  const [searchBarcode, setSearchBarcode] = useState(''); */
   const [isAlertOpen, setIsAlertOpen] = useState(true); // Alert state
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
+  const [zoom, setZoom] = useState(1);
   
 
   const { user } = useAuth();
@@ -81,60 +82,6 @@ const AddStock = () => {
           videoRef.current.srcObject = stream;
           videoRef.current.play();
         }
-  
-        // Add touch event listeners to the video element
-        if (videoRef.current) {
-          let lastTouchDistance = 0;
-  
-          videoRef.current.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-              // If there are two touches, calculate the initial touch distance
-              lastTouchDistance = Math.hypot(
-                e.touches[0].pageX - e.touches[1].pageX,
-                e.touches[0].pageY - e.touches[1].pageY
-              );
-            }
-          });
-  
-          videoRef.current.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2) {
-              // If there are two touches, calculate the new touch distance
-              const newTouchDistance = Math.hypot(
-                e.touches[0].pageX - e.touches[1].pageX,
-                e.touches[0].pageY - e.touches[1].pageY
-              );
-  
-              // Adjust the zoom based on the change in touch distance
-              const zoomFactor = newTouchDistance / lastTouchDistance;
-              lastTouchDistance = newTouchDistance;
-  
-              // Update Quagga configuration to adjust zoom
-              Quagga.offProcessed(); // Remove existing event listener
-              Quagga.onProcessed((result) => {
-                // Access the video stream and update zoom
-                const video = Quagga.CameraAccess.getActiveStreamLabel();
-                const track = stream.getVideoTracks()[0];
-  
-                if (video && track) {
-                  const capabilities = track.getCapabilities();
-  
-                  if (capabilities.zoom) {
-                    const currentZoom = capabilities.zoom;
-                    const newZoom = currentZoom * zoomFactor;
-  
-                    if (newZoom >= capabilities.minZoom && newZoom <= capabilities.maxZoom) {
-                      track.applyConstraints({
-                        advanced: [{ zoom: newZoom }],
-                      });
-                    }
-                  }
-                }
-  
-                Quagga.start();
-              });
-            }
-          });
-        }
       } catch (error) {
         console.error('Error accessing rear camera:', error);
       } finally {
@@ -146,7 +93,6 @@ const AddStock = () => {
   
     startCamera();
   }, [matchingItems]);
-  
   
 
   useEffect(() => {
