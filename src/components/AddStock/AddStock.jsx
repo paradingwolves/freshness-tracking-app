@@ -394,7 +394,7 @@ const AddStock = () => {
                 className="form-select"
                 id="animal"
                 name="animal"
-                defaultValue={matchingItems[0].animal}
+                value={matchingItems[0].animal}
               >
                 <option value="Cat">Cat</option>
                 <option value="Dog">Dog</option>
