@@ -395,6 +395,7 @@ const AddStock = () => {
                 id="animal"
                 name="animal"
                 value={matchingItems[0].animal}
+                disabled
               >
                 <option value="Cat">Cat</option>
                 <option value="Dog">Dog</option>
