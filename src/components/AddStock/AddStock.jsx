@@ -363,7 +363,7 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                value={matchingItems[0].item_number}
+                value={matchingItems[0].item_number.toUpperCase()}
                 required
               />
               <label className="form-label">Barcode Number</label>
