@@ -236,7 +236,7 @@ const AddStock = () => {
           quantity: Number(formData.editedQuantity), // Parse quantity as a number
           updated: Number(formData.editedUpdated), // Parse "updated" as a number
           expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
-          item_number: formData.editedItemNumber,
+          item_number: formData.editedItemNumber.toUpperCase(),
           barcode_number: Number(formData.editedBarcodeNumber),
           animal: formData.editedAnimal,
         };
@@ -363,7 +363,7 @@ const AddStock = () => {
               <input
                 type="text"
                 className="form-control"
-                value={matchingItems[0].item_number.toUpperCase()}
+                value={matchingItems[0].item_number}
                 required
               />
               <label className="form-label">Barcode Number</label>
