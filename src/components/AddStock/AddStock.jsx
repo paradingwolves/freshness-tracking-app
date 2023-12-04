@@ -365,7 +365,6 @@ const AddStock = () => {
                 className="form-control"
                 value={matchingItems[0].item_number}
                 required
-                disabled
               />
               <label className="form-label">Barcode Number</label>
               <input
