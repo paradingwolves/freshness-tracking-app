@@ -236,7 +236,7 @@ const AddStock = () => {
           quantity: Number(formData.editedQuantity), // Parse quantity as a number
           updated: Number(formData.editedUpdated), // Parse "updated" as a number
           expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
-          item_number: formData.editedItemNumber.toUpperCase(),
+          item_number: formData.editedItemNumber,
           barcode_number: Number(formData.editedBarcodeNumber),
           animal: formData.editedAnimal,
         };
