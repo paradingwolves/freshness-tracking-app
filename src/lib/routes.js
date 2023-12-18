@@ -8,12 +8,16 @@ import SeedData from "../components/SeedDB/SeedData";
 import Login from "../components/Administrator/Login";
 import ExpiredProducts from "../components/ExpiredProducts/ExpiredProducts";
 import EditStock from "../components/EditStock/EditStock";
+import AddBugReport from "../components/BugReports/AddBugReport";
+import ViewBugReports from "../components/BugReports/ViewBugReports";
 
 export const ROOT = "/";
 export const ADD_STOCK = "/add_stock";
 export const SEED_DATA = "/seed_data";
 export const EXPIRED_PRODUCTS = "/expired_products";
 export const LOGIN = "/login";
+export const ADD_BUG_REPORT = "/add_bug_report";
+export const VIEW_BUG_REPORTS = "/view_bug_reports";
 export const EDIT_STOCK = "/edit_stock/:id";
 
 
@@ -26,6 +30,8 @@ export const router = createBrowserRouter([
   { path: EXPIRED_PRODUCTS, element: <ExpiredProducts /> },
   { path: LOGIN, element: <Login /> },
   { path: EDIT_STOCK, element: <EditStock /> },
+  { path: ADD_BUG_REPORT, element: <AddBugReport /> },
+  { path: VIEW_BUG_REPORTS, element: <ViewBugReports /> },
   { path: "*", element: <NotFound /> }
 ]);
 

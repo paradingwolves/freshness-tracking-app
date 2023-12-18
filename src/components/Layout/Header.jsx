@@ -22,6 +22,7 @@ const Header = () => {
                             <li><a href="/">Home</a></li>
                             <li><a href="/add_stock">Add Stock</a></li>
                             <li><a href="/expired_products">Expired Products</a></li>
+                            <li><a href="/add_bug_report">Submit Bug Report</a></li>
                         </ul>
                     </div>
                 </div>
@@ -37,6 +38,9 @@ const Header = () => {
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="/expired_products">Expired Products</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/add_bug_report">Submit Bug Report</a>
                     </li>
                 </ul>
             </div>

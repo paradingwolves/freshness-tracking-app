@@ -37,6 +37,22 @@ const AddStock = () => {
     editedBrand: '',
   });
 
+  useEffect(() => {
+    const checkUserAuth = async () => {
+      const unsubscribe = auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          console.log("signed in admin", user.uid);
+        } else {
+          navigate('/login');
+        }
+      });
+
+      return () => unsubscribe();
+    };
+
+    checkUserAuth();
+  }, []);
+
   const openModal = () => {
     setModalIsOpen(true);
     setIsAlertOpen(true);

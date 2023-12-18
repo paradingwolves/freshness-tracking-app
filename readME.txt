@@ -166,5 +166,12 @@ field in the form is not prefilled like it should be (manual searching does).
 - allowing letters in the item_number field
 JB
 
+
+------------------------------------------------------------------
+    Date Modified: December 18, 2023
+------------------------------------------------------------------
+- Added BugReports
+JB
+
 This Application was created by Justin Brierley and Chantal Monette.
 Visit https://justinbrierley.ca/ or https://chantalmonette.ca/ for website inqueries
