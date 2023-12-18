@@ -231,7 +231,7 @@ const AddStock = () => {
             quantity: Number(formData.editedQuantity), // Parse quantity as a number
             updated: Number(formData.editedUpdated), // Parse "updated" as a number
             expiry_date: expiryTimestamp, // Use the timestamp in milliseconds
-            item_number: largestExpiryItem.item_number.toUpperCase(),
+            item_number: largestExpiryItem.item_number,
             barcode_number: Number(largestExpiryItem.barcode_number),
             animal: largestExpiryItem.animal,
           };
@@ -381,7 +381,6 @@ const AddStock = () => {
                 className="form-control"
                 value={matchingItems[0].item_number}
                 required
-                disabled
               />
               <label className="form-label">Barcode Number</label>
               <input
