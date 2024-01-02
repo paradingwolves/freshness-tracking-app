@@ -15,9 +15,9 @@ const AddStock = () => {
   const [detectedBarcode, setDetectedBarcode] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [scanningEnabled, setScanningEnabled] = useState(true);
+  const [barcodeDetected, setBarcodeDetected] = useState(false); // New state for barcode detection
   const [stockData, setStockData] = useState([]);
- /*  const [searchBarcode, setSearchBarcode] = useState(''); */
-  const [isAlertOpen, setIsAlertOpen] = useState(true); // Alert state
+  const [isAlertOpen, setIsAlertOpen] = useState(true);
   const { matchingItems, startScanning, stopScanning } = useMatchingStockData(detectedBarcode);
   const [zoom, setZoom] = useState(1);
   
@@ -137,18 +137,28 @@ const AddStock = () => {
       );
 
       Quagga.onDetected(async (result) => {
-        const barcodeValue = result.codeResult.code;
-        const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
-        console.log('Detected barcode:', sanitizedBarcode);
-        setDetectedBarcode(sanitizedBarcode);
-        openModal();
+        if (!barcodeDetected) { // Check if barcode has not been detected yet
+          const barcodeValue = result.codeResult.code;
+          const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
+          console.log('Detected barcode:', sanitizedBarcode);
+          setDetectedBarcode(sanitizedBarcode);
+          setBarcodeDetected(true); // Set barcodeDetected to true to stop further scanning
+          openModal();
+        }
       });
 
       return () => {
         Quagga.stop();
       };
     }
-  }, [scanningEnabled]);
+  }, [scanningEnabled, barcodeDetected]); // Include barcodeDetected in the dependency array
+
+  useEffect(() => {
+    // Reset barcodeDetected when modal is closed
+    if (!modalIsOpen) {
+      setBarcodeDetected(false);
+    }
+  }, [modalIsOpen]);
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -281,10 +291,6 @@ const AddStock = () => {
     }
   };
 
-  const toggleScan = () => {
-    setScanningEnabled((prev) => !prev);
-  };
-
   return (
     <div>
       <Header />
@@ -310,9 +316,6 @@ const AddStock = () => {
           />
           <button className="btn btn-primary my-button" onClick={handleSearch}>
             Search
-          </button>
-          <button className="btn btn-warning my-button" onClick={toggleScan}>
-            {scanningEnabled ? 'Stop Scan' : 'Start Scan'}
           </button>
         </div>
 
