@@ -112,7 +112,7 @@ const AddStock = () => {
   
 
   useEffect(() => {
-    const initializeScanner = () => {
+    if (scanningEnabled) {
       Quagga.init(
         {
           inputStream: {
@@ -132,12 +132,10 @@ const AddStock = () => {
             console.error('QuaggaJS initialization error:', err);
             return;
           }
-          if (!modalIsOpen) {
-            Quagga.start();
-          }
+          Quagga.start();
         }
       );
-  
+
       Quagga.onDetected(async (result) => {
         const barcodeValue = result.codeResult.code;
         const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
@@ -145,16 +143,12 @@ const AddStock = () => {
         setDetectedBarcode(sanitizedBarcode);
         openModal();
       });
-  
+
       return () => {
         Quagga.stop();
       };
-    };
-  
-    if (!modalIsOpen) {
-      initializeScanner();
     }
-  }, [modalIsOpen]);
+  }, [scanningEnabled]);
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -287,6 +281,10 @@ const AddStock = () => {
     }
   };
 
+  const toggleScan = () => {
+    setScanningEnabled((prev) => !prev);
+  };
+
   return (
     <div>
       <Header />
@@ -312,6 +310,9 @@ const AddStock = () => {
           />
           <button className="btn btn-primary my-button" onClick={handleSearch}>
             Search
+          </button>
+          <button className="btn btn-warning my-button" onClick={toggleScan}>
+            {scanningEnabled ? 'Stop Scan' : 'Start Scan'}
           </button>
         </div>
 
