@@ -112,7 +112,7 @@ const AddStock = () => {
   
 
   useEffect(() => {
-    if (scanningEnabled) {
+    const initializeScanner = () => {
       Quagga.init(
         {
           inputStream: {
@@ -132,10 +132,12 @@ const AddStock = () => {
             console.error('QuaggaJS initialization error:', err);
             return;
           }
-          Quagga.start();
+          if (!modalIsOpen) {
+            Quagga.start();
+          }
         }
       );
-
+  
       Quagga.onDetected(async (result) => {
         const barcodeValue = result.codeResult.code;
         const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
@@ -143,12 +145,16 @@ const AddStock = () => {
         setDetectedBarcode(sanitizedBarcode);
         openModal();
       });
-
+  
       return () => {
         Quagga.stop();
       };
+    };
+  
+    if (!modalIsOpen) {
+      initializeScanner();
     }
-  }, [scanningEnabled]);
+  }, [modalIsOpen]);
 
   useEffect(() => {
     const fetchStockData = async () => {
