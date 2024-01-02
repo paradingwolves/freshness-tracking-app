@@ -56,12 +56,14 @@ const AddStock = () => {
   const openModal = () => {
     setModalIsOpen(true);
     setIsAlertOpen(true);
+    setScanningEnabled(false);
     stopScanning();
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
     setIsAlertOpen(false);
+    setScanningEnabled(true);
     startScanning();
   };
 
@@ -141,6 +143,7 @@ const AddStock = () => {
         const sanitizedBarcode = barcodeValue.startsWith('0') ? barcodeValue.substring(1) : barcodeValue;
         console.log('Detected barcode:', sanitizedBarcode);
         setDetectedBarcode(sanitizedBarcode);
+        setScanningEnabled(false);
         openModal();
       });
 
